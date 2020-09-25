@@ -1,0 +1,15 @@
+#!/bin/bash
+
+case "$(uname -s)" in
+
+   Darwin)
+      node ./Other/dist/index.js
+     ;;
+
+   Linux)
+     /opt/rh/rh-nodejs10/root/usr/bin/node ./Other/dist/index.js
+     ;;
+
+   *)
+
+esac

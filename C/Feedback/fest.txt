@@ -1,0 +1,1122 @@
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+---------------------------------
+(*** score 0)
+(*** on)
+'("hi"
+  #hasheq((hi . "matthias"))
+  #t
+  #f
+  0
+  0.0
+  ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2.0))
+(*** expected)
+'(#hasheq((count . 7)
+          (seq
+           .
+           ("hi"
+            #hasheq((hi . "matthias"))
+            #t
+            #f
+            0
+            0.0
+            ("hi"
+             #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+             2
+             2.0))))
+  (7
+   ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2.0)
+   0.0
+   0
+   #f
+   #t
+   #hasheq((hi . "matthias"))
+   "hi"))
+(*** but received)
+'(((plain fast with-newline plain-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((plain fast with-newline escaped-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((plain fast with-space plain-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((plain fast with-space escaped-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((plain slow with-newline plain-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((plain slow with-newline escaped-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((plain slow with-space plain-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((plain slow with-space escaped-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((pretty fast with-newline plain-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((pretty fast with-newline escaped-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((pretty fast with-space plain-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((pretty fast with-space escaped-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((pretty slow with-newline plain-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((pretty slow with-newline escaped-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((pretty slow with-space plain-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi")))
+  ((pretty slow with-space escaped-unicode)
+   (#hasheq((count . 7)
+            (seq
+             .
+             ("hi"
+              #hasheq((hi . "matthias"))
+              #t
+              #f
+              0
+              0
+              ("hi"
+               #hasheq((my . #hasheq((name . #hasheq((is . "awesome"))))))
+               2
+               2))))
+    (7
+     ("hi" #hasheq((my . #hasheq((name . #hasheq((is . "awesome")))))) 2 2)
+     0
+     0
+     #f
+     #t
+     #hasheq((hi . "matthias"))
+     "hi"))))
+
+
+()
+((passed 0) (total 1) (partial-score 0))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+---------------------------------
+(*** score 0)
+(*** on)
+'(#hasheq((hello . "world"))
+  999999999999999999999999999999999999999
+  (1 #f "null" null))
+(*** expected)
+'(#hasheq((count . 3)
+          (seq
+           .
+           (#hasheq((hello . "world"))
+            999999999999999999999999999999999999999
+            (1 #f "null" null))))
+  (3
+   (1 #f "null" null)
+   999999999999999999999999999999999999999
+   #hasheq((hello . "world"))))
+(*** but received)
+'(((plain fast with-newline plain-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((plain fast with-newline escaped-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((plain fast with-space plain-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((plain fast with-space escaped-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((plain slow with-newline plain-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((plain slow with-newline escaped-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((plain slow with-space plain-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((plain slow with-space escaped-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((pretty fast with-newline plain-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((pretty fast with-newline escaped-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((pretty fast with-space plain-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((pretty fast with-space escaped-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((pretty slow with-newline plain-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((pretty slow with-newline escaped-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((pretty slow with-space plain-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world")))))
+  ((pretty slow with-space escaped-unicode)
+   (#hasheq((count . 3)
+            (seq . (#hasheq((hello . "world")) 1e+39 (1 #f "null" null))))
+    (3 (1 #f "null" null) 1e+39 #hasheq((hello . "world"))))))
+
+
+()
+((passed 0) (total 1) (partial-score 0))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+---------------------------------
+(*** score 0)
+(*** on)
+'(45
+  6.6
+  (4 5)
+  #hasheq((value1 . "s..tring"))
+  "str.i.ng2"
+  "string3"
+  5
+  #t
+  #f
+  null
+  (-1.0 (-0.52 (-3))))
+(*** expected)
+'(#hasheq((count . 11)
+          (seq
+           .
+           (45
+            6.6
+            (4 5)
+            #hasheq((value1 . "s..tring"))
+            "str.i.ng2"
+            "string3"
+            5
+            #t
+            #f
+            null
+            (-1.0 (-0.52 (-3))))))
+  (11
+   (-1.0 (-0.52 (-3)))
+   null
+   #f
+   #t
+   5
+   "string3"
+   "str.i.ng2"
+   #hasheq((value1 . "s..tring"))
+   (4 5)
+   6.6
+   45))
+(*** but received)
+'(((plain fast with-newline plain-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((plain fast with-newline escaped-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((plain fast with-space plain-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((plain fast with-space escaped-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((plain slow with-newline plain-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((plain slow with-newline escaped-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((plain slow with-space plain-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((plain slow with-space escaped-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((pretty fast with-newline plain-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((pretty fast with-newline escaped-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((pretty fast with-space plain-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((pretty fast with-space escaped-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((pretty slow with-newline plain-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((pretty slow with-newline escaped-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((pretty slow with-space plain-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45)))
+  ((pretty slow with-space escaped-unicode)
+   (#hasheq((count . 11)
+            (seq
+             .
+             (45
+              6.6
+              (4 5)
+              #hasheq((value1 . "s..tring"))
+              "str.i.ng2"
+              "string3"
+              5
+              #t
+              #f
+              null
+              (-1 (-0.52 (-3))))))
+    (11
+     (-1 (-0.52 (-3)))
+     null
+     #f
+     #t
+     5
+     "string3"
+     "str.i.ng2"
+     #hasheq((value1 . "s..tring"))
+     (4 5)
+     6.6
+     45))))
+
+
+()
+((passed 0) (total 1) (partial-score 0))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+
+(testing /home/types/cs4500/2/repo/rosebud/C/xjson)
+(testing /home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json)
+((/home/types/cs4500/2/repo/C/??/Test/1-in.json /home/types/cs4500/2/repo/C/??/Test/1-out.json))
+((passed 1) (total 1) (partial-score 1))
+

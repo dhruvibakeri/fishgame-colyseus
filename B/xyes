@@ -1,0 +1,5 @@
+#!/bin/bash
+
+source /opt/rh/rh-nodejs10/enable
+# cd Other && npm run run --silent -- "$@"
+node ./Other/dist/index.js "$@"
