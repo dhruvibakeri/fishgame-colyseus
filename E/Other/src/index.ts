@@ -67,24 +67,18 @@ if (args.length > 1) {
     process.exit()
 }
 
-
 // this creates a new server
 const server = new Net.Server();
 
 
 // starts listening for connections/ waiting for a client to connect
-
 server.listen(port, () => {
-    // console.log(`Server waiting on a connection localhost:${port}.`);
     setTimeout(noConnection, 3000);
 });
 
 function noConnection() {
-
     server.getConnections(function (error: any, count: any) {
-
         if (count == 0) {
-
             throw Error('Wait time > 3 seconds')
         }
 
@@ -100,10 +94,7 @@ function noConnection() {
 // so the user can use it to interact with the client.
 server.on('connection', (socket: any) => {
 
-
     let strArray: string[] = []
-
-    // console.log('A new connection has been established.');
 
     // when the event 'data' is received,
     // server can read the data from its client
@@ -119,9 +110,7 @@ server.on('connection', (socket: any) => {
     // unless  (allowHalfOpen is true) and end the connection
     socket.on('end', () => {
         //console.log('Terminating connection with the client');
-
     });
-
 
     socket.on('error', (err: any) => {
         server.close();

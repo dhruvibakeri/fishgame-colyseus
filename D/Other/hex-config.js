@@ -1,1 +1,1 @@
-const size = 300
+const size = 100
