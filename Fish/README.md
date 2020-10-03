@@ -41,6 +41,18 @@ Interpretation.
 
 A **`Color`** is one of: `"red"` | `"white"` | `"brown"` | `"black"`
 
+Interpretation. Represents the color of the penguin on tha board. 
+
+**An example Board**:
+
+```
+[
+ [ 0, 5,     3, "black", 2, 2      ],
+ [ 0, "red", 1, 2,       2, "brown"],
+ [ 4, false, 4, false,   0, false  ]
+]
+```
+
 **Interface to be implemented**
 
 - `BoardPosn -> Board`: The dimension of the game board (See a `4 x 3` board on [_Fish - Overview_](https://www.ccs.neu.edu/home/matthias/4500-f20/fish.html)) to the actual `Board` datastructure defined above. 
