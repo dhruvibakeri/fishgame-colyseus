@@ -20,7 +20,7 @@ This one is a practice run to make sure you get
   - the need for an explicit Interface specification between the (remote) AI 
     players and the game system?
 
-    **No, but it is mentioned in one of our milestones (week 5) and we the Colyseus (our chosen gaming framework) has a way to incorporate "AI" players (through a protocol)**
+    **No, but it is mentioned in one of our milestones (week 5) and we are sure that Colyseus (our chosen gaming framework) has a way to incorporate "AI" players (through a protocol)**
 
   - the need for a referee sub-system for managing individual games
 
