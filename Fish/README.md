@@ -25,6 +25,10 @@ A **`Board`** is a 2 dimensional array of `Tile`s
 ```
 type Board = (Tile | false)[][]
 ```
+Interpretation.
+
+- `Tile` is a standard game tile defined below.
+- `false` is the lack of a tile (so nothing is rendered for it) -- it is present because: [Important:] _Boards with odd number of rows have tiles on the odd-th column on the last row missing in the 2d-array representation_. 
 
 A **`Tile`** is one of: `0` | `PositiveInteger` | `Color`
 
@@ -37,6 +41,9 @@ Interpretation.
 
 A **`Color`** is one of: `"red"` | `"white"` | `"brown"` | `"black"`
 
+**Interface to be implemented**
+
+- `BoardPosn -> Board`: The dimension of the game board (See a `4 x 3` board on [_Fish - Overview_](https://www.ccs.neu.edu/home/matthias/4500-f20/fish.html)) to the actual `Board` datastructure defined above. 
 
 
 
