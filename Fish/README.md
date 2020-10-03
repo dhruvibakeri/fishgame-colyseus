@@ -30,22 +30,12 @@ Interpretation.
 - `Tile` is a standard game tile defined below.
 - `false` is the lack of a tile (so nothing is rendered for it) -- it is present because: [Important:] _Boards with odd number of rows have tiles on the odd-th column on the last row missing in the 2d-array representation_. 
 
-A **`Tile`** is one of: `0` | `PositiveInteger` | `Color`
-
-Interpretation. 
-
-- `Color` is the color of the penguin placed on a given tile.
-- `0` is when there are 0 fishe on the tile -- it's blank.
-- `PositiveInteger` is the number of fishes on the tile.
-
-
-A **`Color`** is one of: `"red"` | `"white"` | `"brown"` | `"black"`
-
-Interpretation. Represents the color of the penguin on tha board. 
+Examples:
 
 **An example Board**:
 
 ```
+exampleBoard1 = 
 [
  [ 0, 5,     3, "black", 2, 2      ],
  [ 0, "red", 1, 2,       2, "brown"],
@@ -53,9 +43,48 @@ Interpretation. Represents the color of the penguin on tha board.
 ]
 ```
 
+A **`Tile`** is one of: `0` | `PositiveInteger` | `PenguinColor`
+
+Examples
+
+```
+blankTile = 0
+oneFishTile = 1
+twoFishTile = 2
+threeFishTile = 3
+fourFishTile = 4
+fiveFishTile = 5
+redPenguinTile = "red"
+whitePenguinTile = "white"
+brownPenguinTile = "brown"
+blackPenguinTile = "black"
+```
+
+Interpretation. 
+
+- `PenguinColor` is the color of the penguin placed on a given tile.
+- `0` is when there are 0 fishe on the tile -- it's blank.
+- `PositiveInteger` is the number of fishes on the tile.
+
+
+A **`PenguinColor`** is one of: `"red"` | `"white"` | `"brown"` | `"black"`
+
+Interpretation. Represents the color of a given penguin on the board. 
+
+Examples: 
+
+```
+penguinColorRed = "red"
+penguinColorWhite = "white"
+penguinColorBrown = "brown"
+penguinColorBlack = "black"
+``` 
+
+
 **Interface to be implemented**
 
 - `BoardPosn -> Board`: The dimension of the game board (See a `4 x 3` board on [_Fish - Overview_](https://www.ccs.neu.edu/home/matthias/4500-f20/fish.html)) to the actual `Board` datastructure defined above. 
+- `Boardm PositiveInteger -> void`: Draws a given Board onto the Canvas with hexagon of the given size.
 
 
 
