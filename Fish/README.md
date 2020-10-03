@@ -80,11 +80,15 @@ penguinColorBrown = "brown"
 penguinColorBlack = "black"
 ``` 
 
+A **`HexSize`** is a `PositiveInteger`
+
+Interpretation. HexSize is a number s such that `s * 2` is the height of a hex, and `s * 3` is the width of a hex.
+The horizontal lines are of length `s` and the slanting lines are of length `sqrt(s)`.
 
 **Interface to be implemented**
 
-- `BoardPosn -> Board`: The dimension of the game board (See a `4 x 3` board on [_Fish - Overview_](https://www.ccs.neu.edu/home/matthias/4500-f20/fish.html)) to the actual `Board` datastructure defined above. 
-- `Boardm PositiveInteger -> void`: Draws a given Board onto the Canvas with hexagon of the given size.
-
+- `BoardDimension -> Board`: The dimension of the game board (See a `4 x 3` board on [_Fish - Overview_](https://www.ccs.neu.edu/home/matthias/4500-f20/fish.html)) to the actual `Board` datastructure defined above. 
+- `Boardimension PositiveInteger -> void`: Draws a given Board onto the Canvas with hexagon of the given size.
+- `BoardDimension, HexSize -> CanvasDimension`: Given a board dimension and size of each hexagon.
 
 
