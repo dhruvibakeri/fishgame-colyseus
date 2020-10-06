@@ -247,48 +247,62 @@ function addHoles(board, holes) {
 function getReachable(board, boardPosn) {
     let paths = getPaths(board, boardPosn)
     return [
-        ...paths.n,
-        ...paths.s,
-        ...paths.nw,
-        ...paths.ne,
-        ...paths.sw,
-        ...paths.se
+        ...paths.north,
+        ...paths.south,
+        ...paths.northWest,
+        ...paths.northEast,
+        ...paths.southWest,
+        ...paths.southEast
     ]
 }
 
+
+// `Direction` is all possible directions a player may move:
+//  "north" | "south" | "northWest" | "northEast" | "southWest" | "southEast"
+// 
+// Paths specifies longest paths in all `Direction`s as an object 
+// with `Direction`s as the keys and `BoardPosn`s as the values. 
+
 // Board BoardPosn -> Paths
-// TODO: define Paths as a data definition
+// gets a `Path` object from `booardPosn` in `baord`.
 function getPaths(board, boardPosn) {
     return {
-        n: getPathInDirection(board, boardPosn, get_n),
-        s: getPathInDirection(board, boardPosn, get_s),
-        nw: getPathInDirection(board, boardPosn, get_nw),
-        ne: getPathInDirection(board, boardPosn, get_ne),
-        sw: getPathInDirection(board, boardPosn, get_sw),
-        se: getPathInDirection(board, boardPosn, get_se)
+        "north": getPathInDirection(board, boardPosn, getNeighborNorth),
+        "south": getPathInDirection(board, boardPosn, getNeighborSouth),
+        "northWest": getPathInDirection(board, boardPosn, getNeighborNorthWest),
+        "northEast": getPathInDirection(board, boardPosn, getNeighborNorthEast),
+        "southWest": getPathInDirection(board, boardPosn, getNeighborSouthWest),
+        "southEast": getPathInDirection(board, boardPosn, getNeighborSouthEast)
     }
 }
 
 
 // BoardPosn [BoardPosn -> BoardPosn] -> BoardPosn[]
-function getPathInDirection(board, boardPosn, getPosnInDirection) {
+// longest path in a direction that getNeighborInDirection
+// generates the neighbors for.
+function getPathInDirection(board, boardPosn, getNeighborInDirection) {
     let res = []
-    let next = getPosnInDirection(boardPosn);
-    // TODO: TERMINATION argument
-    while (!unreachableTile(board, next)) {
+    let next = getNeighborInDirection(boardPosn);
+
+    // TERMINATION ARGUMENT: 
+    // getNeighborInDirection: BoardPosn -> BoardPosn 
+    // will eventiall hit the edge of the board or
+    // water (which are unreachable).
+    while (!isNeighborUnreachable(board, next)) {
         res.push(next);
-        next = getPosnInDirection(next);
+        next = getNeighborInDirection(next);
     }
 
     return res;
 }
 
 
+
 // Board BoardPosn -> Boolean
 // TODO: purpose statement
 // TODO: remove MAGIC numbers
-function unreachableTile(board, boardPosn) {
-    let [c, r] = [boardPosn[0], boardPosn[1]]
+function isNeighborUnreachable(board, boardPosn) {
+    let [c, r] = [getColBoardPosn(boardPosn), getRowBoardPosn(boardPosn)]
     const row = board[r]
     return row === undefined ||
         row[c] === -1 ||
@@ -305,36 +319,41 @@ function removeTile(board, boardPosn) {
     return board;
 }
 
-
-
-function get_n(boardPosn) {
-    let [c, r] = [boardPosn[0], boardPosn[1]]
-    return c % 2 === 0 ? [c, r - 1] : [c, r - 1]
+// BoardPosn -> BoardPosn
+// get the neighbor in the North direction
+function getNeighborNorth(boardPosn) {
+    let [column, row] = [getColBoardPosn(boardPosn), getRowBoardPosn(boardPosn)]
+    return isEven(column) ? [column, row - 1] : [column, row - 1]
 }
-
-function get_s(boardPosn) {
-    let [c, r] = [boardPosn[0], boardPosn[1]]
-    return c % 2 === 0 ? [c, r + 1] : [c, r + 1]
+// BoardPosn -> BoardPosn
+// get the neighbor in the South direction
+function getNeighborSouth(boardPosn) {
+    let [column, row] = [getColBoardPosn(boardPosn), getRowBoardPosn(boardPosn)]
+    return isEven(column) ? [column, row + 1] : [column, row + 1]
 }
-
-function get_nw(boardPosn) {
-    let [c, r] = [boardPosn[0], boardPosn[1]]
-    return c % 2 === 0 ? [c - 1, r - 1] : [c - 1, r]
+// BoardPosn -> BoardPosn
+// get the neighbor in the NorthWest direction
+function getNeighborNorthWest(boardPosn) {
+    let [column, row] = [getColBoardPosn(boardPosn), getRowBoardPosn(boardPosn)]
+    return isEven(column) ? [column - 1, row - 1] : [column - 1, row]
 }
-
-function get_ne(boardPosn) {
-    let [c, r] = [boardPosn[0], boardPosn[1]]
-    return c % 2 === 0 ? [c + 1, r + 1] : [c + 1, r]
+// BoardPosn -> BoardPosn
+// get the neighbor in the NorthEast direction
+function getNeighborNorthEast(boardPosn) {
+    let [column, row] = [getColBoardPosn(boardPosn), getRowBoardPosn(boardPosn)]
+    return isEven(column) ? [column + 1, row + 1] : [column + 1, row]
 }
-
-function get_sw(boardPosn) {
-    let [c, r] = [boardPosn[0], boardPosn[1]]
-    return c % 2 === 0 ? [c - 1, r] : [c - 1, r + 1]
+// BoardPosn -> BoardPosn
+// get the neighbor in the SouthWest direction
+function getNeighborSouthWest(boardPosn) {
+    let [column, row] = [getColBoardPosn(boardPosn), getRowBoardPosn(boardPosn)]
+    return isEven(column) ? [column - 1, row] : [column - 1, row + 1]
 }
-
-function get_se(boardPosn) {
-    let [c, r] = [boardPosn[0], boardPosn[1]]
-    return c % 2 === 0 ? [c + 1, r] : [c + 1, r + 1]
+// BoardPosn -> BoardPosn
+// get the neighbor in the SouthEast direction
+function getNeighborSouthEast(boardPosn) {
+    let [column, row] = [getColBoardPosn(boardPosn), getRowBoardPosn(boardPosn)]
+    return isEven(column) ? [column + 1, row] : [column + 1, row + 1]
 }
 
 // Functions on board posn
