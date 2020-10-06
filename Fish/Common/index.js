@@ -5,6 +5,7 @@ const ICE_TILE_BORDER = 'rgba(255, 255, 255, 1.00)'
 const CANVAS_SELECTION_COLOR = 'rgba(190, 211, 229, 0.40)'
 const CANVAS_BACKGROUND_COLOR = 'rgb(190, 190, 190)' // 'rgba(30, 137, 201, 0.50)'
 
+const INNER_CANVAS = document.getElementById('canvas')
 
 // A Board is Tile[][]
 // interpretation. The game board.
@@ -71,7 +72,7 @@ render(75, 4, 3)
 // `width` and `height`. Assumption: the canvas element 
 // should have its id set to "canvas"
 function setCanvasHTMLElemDimensions(width, height) {
-    setHTMLElemDimensions(document.getElementById('canvas'), width, height)
+    setHTMLElemDimensions(INNER_CANVAS, width, height)
 }
 
 // HTMLElement, Number, Number -> void
@@ -211,9 +212,6 @@ function genHexConfig(boardP) {
 }
 
 
-function log(x) {
-    console.log(JSON.stringify(x))
-}
 
 
 // Event Listeners
@@ -351,4 +349,22 @@ function isEven(n) {
 // is the number odd?
 function isOdd(n) {
     return n % 2 === 1;
+}
+
+// Any, String -> void
+// EFFECT: prints to stdout/browser console
+// ASSUMPTION: config = "console" | "json" | "table"
+// various printing options for debugging
+function log(x, config) {
+    if (config === "console") {
+        console.log(x)
+    } else if (config === "json") {
+        console.log(JSON.stringify(x))
+    } else if (config === "table") {
+        console.table(x)
+    } else {
+        console.log("log spec is not correct.")
+        log(x, "json");
+    }
+
 }
