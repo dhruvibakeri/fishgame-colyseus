@@ -337,6 +337,26 @@ function get_se(boardPosn) {
     return c % 2 === 0 ? [c + 1, r] : [c + 1, r + 1]
 }
 
+// Functions on board posn
+
+// BoardPosn -> Number
+// get the row of a board posn
+function getRowBoardPosn(boardPosn) {
+    return boardPosn[1];
+}
+
+// BoardPosn -> Number
+// get the column of a board posn
+function getColBoardPosn(boardPosn) {
+    return boardPosn[0]
+}
+
+// Number Number -> Boolean
+// make a board posn from column and row
+function makeBoardPosn(col, row) {
+    return [col, row];
+}
+
 // Utility functions
 
 // Number -> Boolean
