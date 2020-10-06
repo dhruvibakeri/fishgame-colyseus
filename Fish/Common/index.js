@@ -1,4 +1,5 @@
 const MOUSE_OVER_COLOR = 'rgb(255, 165, 0, 0.3)' // 'rgba(220, 231, 245, 0.65)'
+const MOUSE_PATH_COLOR = 'rgb(255, 165, 0, 0.6)'
 const ICE_TILE_COLOR = 'rgb(255, 165, 0, 1)' // 'rgba(220, 231, 245, 0.95)'
 const ICE_TILE_BORDER = 'rgba(255, 255, 255, 1.00)'
 const CANVAS_SELECTION_COLOR = 'rgba(190, 211, 229, 0.40)'
@@ -38,6 +39,7 @@ const CANVAS_BACKGROUND_COLOR = 'rgb(190, 190, 190)' // 'rgba(30, 137, 201, 0.50
 // - - - 
 
 
+let BOARD;
 
 
 
@@ -51,6 +53,7 @@ let canvas = new fabric.Canvas('canvas');
 setCanvasConfig();
 
 function rerender(size, rows, cols) {
+    dimensionToBoard(row, cols)
     canvas.clear();
     setCanvasConfig();
     render(size, rows, cols)
@@ -126,7 +129,7 @@ function makeHex(size, xOffset, yOffset, boardP) {
     return [corners, boardP]
 }
 
-// PosInt PosInt -> Tile[][]
+// PosInt PosInt -> Board
 // generates a board with 1 fish on each tile.
 // ASSUMPTION: row > 1
 function dimensionToBoard(boardHeight, boardWidth) {
@@ -176,19 +179,17 @@ function boardPosns(size, board) {
     return hexes;
 }
 
+
+
 // Number Number Number -> void
 function allHexes(size, rows, cols) {
-    let hexes = boardPosns(size, dimensionToBoard(rows, cols))
+    let board = dimensionToBoard(rows, cols)
+    BOARD = board;
+    let hexes = boardPosns(size, board)
 
     hexes.forEach(hex => {
         canvas.add(new fabric.Polygon(hex[0], genHexConfig(hex[1])));
     });
-
-    l = []
-    for (let i = 0; i < hexes.length; i++) {
-        l.push(hexes[i][1])
-    }
-    log(l)
 }
 
 // [Number, Number] -> { ... }
@@ -275,10 +276,8 @@ function getPaths(board, boardPosn) {
 function getPathInDirection(board, boardPosn, getPosnInDirection) {
     let res = []
     let next = getPosnInDirection(boardPosn);
-    console.log(`res = ${JSON.stringify(res)}, next = ${JSON.stringify(next)}`)
     // TODO: TERMINATION argument
     while (!unreachableTile(board, next)) {
-        console.log(`res = ${JSON.stringify(res)}, next = ${JSON.stringify(next)}`)
         res.push(next);
         next = getPosnInDirection(next);
     }
@@ -338,4 +337,18 @@ function get_sw(boardPosn) {
 function get_se(boardPosn) {
     let [c, r] = [boardPosn[0], boardPosn[1]]
     return c % 2 === 0 ? [c + 1, r] : [c + 1, r + 1]
+}
+
+// Utility functions
+
+// Number -> Boolean
+// is the number even?
+function isEven(n) {
+    return n % 2 === 0;
+}
+
+// Number -> Boolean
+// is the number odd?
+function isOdd(n) {
+    return n % 2 === 1;
 }
