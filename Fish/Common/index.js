@@ -5,6 +5,7 @@ const ICE_TILE_BORDER = 'rgba(255, 255, 255, 1.00)'
 const CANVAS_SELECTION_COLOR = 'rgba(190, 211, 229, 0.40)'
 const CANVAS_BACKGROUND_COLOR = 'rgb(190, 190, 190)' // 'rgba(30, 137, 201, 0.50)'
 
+// html canvas element
 const INNER_CANVAS = document.getElementById('canvas')
 
 // A Board is Tile[][]
@@ -31,7 +32,7 @@ const INNER_CANVAS = document.getElementById('canvas')
 //   Q. TODO: we have the code, need to add TESTS. 
 // 4. removing a tile from a board; and
 // done
-// 5. rendering a tile graphically.
+// 5. rendering the tiles graphically.
 //  DONE (initially in GUI now implemented in Fabric)
 // 6. If your programming language supports pictures as values—like say BSL and ISL in F I—-your method or
 //    function may return such a picture. Otherwise it consumes a window and adds it to a window.
@@ -40,33 +41,50 @@ const INNER_CANVAS = document.getElementById('canvas')
 // - - - 
 
 
+//hexagonal tiles board
 let BOARD;
 
+//----------------------- SETTING UP CANVAS AND BACKGROUND -------------------------------------------------------
 
+// creating a fabric canvas with id 'canvas'
+let canvas = new fabric.Canvas('canvas');
 
 // -> void
+//sets the canvas object color configuration
 function setCanvasConfig() {
     canvas.selectionColor = CANVAS_SELECTION_COLOR;
     canvas.backgroundColor = CANVAS_BACKGROUND_COLOR;
 }
 
-let canvas = new fabric.Canvas('canvas');
 setCanvasConfig();
 
-function rerender(size, rows, cols) {
-    dimensionToBoard(row, cols)
-    canvas.clear();
-    setCanvasConfig();
-    render(size, rows, cols)
-}
+// ----------------------------------- RENDERING THE BOARD -----------------------------------------------------
 
+render(55, 4, 3)
+
+// renders the hexagonal board
 function render(size, rows, cols) {
     let backgDim = backgDimensions(rows, cols, size);
     setCanvasDimension(backgDim[0], backgDim[1]);
     allHexes(size, rows, cols);
 }
 
-render(75, 4, 3)
+/*function rerender(size, rows, cols) {
+    dimensionToBoard(row, cols)
+    canvas.clear();
+    setCanvasConfig();
+    render(size, rows, cols)
+}*/
+
+// ------------------------------------ SETTING UP CANVAS AND BACKGROUND DIMENSIONS ----------------------------------------------
+
+// Number Number -> Void
+// // sets the html element `width` and `height` attributes
+// // sets the fabric canvas dimensions.
+function setCanvasDimension(w, h) {
+    setCanvasHTMLElemDimensions(w, h);
+    canvas.setDimensions({ width: w, height: h })
+}
 
 // set the width and height of the the canvas element to 
 // `width` and `height`. Assumption: the canvas element 
@@ -74,6 +92,8 @@ render(75, 4, 3)
 function setCanvasHTMLElemDimensions(width, height) {
     setHTMLElemDimensions(INNER_CANVAS, width, height)
 }
+
+
 
 // HTMLElement, Number, Number -> void
 // Side Efect: Sets the size of the html element c to w and h
@@ -93,42 +113,191 @@ function toggleFullScreen() {
     }
 }
 
-// Number Number -> Void
-// // sets the html element `width` and `height` attributes
-// // sets the fabric canvas dimensions.
-function setCanvasDimension(w, h) {
-    setCanvasHTMLElemDimensions(w, h);
-    canvas.setDimensions({ width: w, height: h })
-}
+
 
 
 // Number, Number, Number -> [Number, Number]
 // height and width of the background
+
 // row:
 // each column (2 tiles) has the width 5. but every
 // subsequent column shares `size` worth of width on
 // either side. So the subtraction accounts for that.
+
 // col:
 // the tiles that are on the right are not relevant
 // but each tile has height 2 * size. The last tile
 // (on the right) adds half its height i.e. size amount
 // of height
+
 function backgDimensions(rows, cols, size) {
+    console.log("size: " + size);
+    console.log("rows: " + rows);
+    console.log("cols: " + cols);
+    console.log([((5 * size) * cols) - ((cols - 1) * size), (rows + 1) * size])
+
     return [((5 * size) * cols) - ((cols - 1) * size), (rows + 1) * size]
 }
 
-// Number, Number, Number -> [{x: Number, y: Number}[], [Number, Number]]
-function makeHex(size, xOffset, yOffset, boardP) {
-    const corners = [
-        { x: 0 + xOffset, y: size + yOffset },
-        { x: size + xOffset, y: 0 + yOffset },
-        { x: 2 * size + xOffset, y: 0 + yOffset },
-        { x: 3 * size + xOffset, y: size + yOffset },
-        { x: 2 * size + xOffset, y: 2 * size + yOffset },
-        { x: size + xOffset, y: 2 * size + yOffset }
-    ]
-    return [corners, boardP]
+
+
+
+
+
+// ------------------------- CREATING THE HEXAGON TILES, GENERATING THE BOARD -----------------------------------------------------------
+
+
+
+// Number Number Number -> void
+function allHexes(size, rows, cols) {
+    let board = dimensionToBoard(rows, cols)
+    BOARD = board;
+    
+   let hexes = boardPosns(size, board)
+
+   /* board = noOfFish(board, 1,2,0)
+    board = noOfFish(board, 1, 1, 4)
+    board = noOfFish(board, 0,2,5)
+    board = noOfFish(board, 0,1,5)
+    board = makeHole(board, 1,3)
+    board[0][0] = 'black'
+    board[1][0] = 'red'
+    board[0][3] = 'brown'
+    board[1][5] = 'white'*/
+
+   board = makeBoardHoles(board, 5, [[0,1], [4,1]])
+
+    console.log("hexes: " + hexes)
+
+    hexes.forEach(hex => {
+
+        boardPosnVal = board[hex[1][1]][hex[1][0]];
+        console.log("hex-x: " + hex[1][1], "hex-y: " + hex[1][0])
+
+        console.log("hexval: " + JSON.stringify(boardPosnVal))
+
+       
+    
+      if(boardPosnVal != -1) {
+
+        canvas.add(new fabric.Polygon(hex[0], genHexConfig(hex[1])));
+        
+
+        if(Number.isInteger(boardPosnVal)) {
+
+            let fishPos = 0;
+        
+            for(let i = 0; i < boardPosnVal; i++) {
+            
+             addFish(hex[0][0].x + size,hex[0][0].y - fishPos, boardPosnVal);
+
+            fishPos += 10;
+             }
+        }
+
+         else {
+
+             addPenguin(hex[0][0].x + size ,hex[0][0].y - size, boardPosnVal)
+
+            }
+      }
+    
+        
+    });
+
 }
+
+
+function makeHole(board, x, y) {
+    board[x][y] = -1;
+    return board;
+}
+
+
+
+function noOfFish(board, x, y, n) {
+    board[x][y] = n;
+    return board;
+}
+
+
+
+function addFish(x,y, fishCount) {
+
+    if (fishCount > 0) {
+    var imgElement = document.getElementById('my-image');
+         var imgInstance = new fabric.Image(imgElement, {
+            left: x,
+             top: y
+             
+        }); 
+
+        smallImg = imgInstance.scale(0.2);
+
+        canvas.add(smallImg); 
+    }
+}
+
+function addPenguin(x,y, color) {
+
+    var imgElement = document.getElementById(color);
+         var imgInstanceP = new fabric.Image(imgElement, {
+            left: x,
+             top: y
+             
+        }); 
+
+        smallImgP = imgInstanceP.scale(0.2);
+
+        canvas.add(smallImgP); 
+
+}
+
+
+//ASSUMPTIONS: 
+// -> Total positions - hposns is >= fishes
+// -> fishes is a natural number
+function makeBoardHoles(board, fishes, hposns) {
+    
+    // add holes
+    hposns.forEach(hposn => {
+        console.log("hpson: " + hposn)
+        board[hpson[0]][hpson[1]] = -1;
+    })
+
+    // add fishes
+    _.take(shuffle([...board].filter(p => p !== 0 && p !== -1)), fishes).forEach(p => {
+        board[p[0]][p[1]] = 1;
+    })
+
+    return board;
+}
+
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+  
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+  
+      // Pick a remaining element...
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+  
+      // And swap it with the current element.
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+  
+    return array;
+  }
+
+
+
+
+
+
+
 
 // PosInt PosInt -> Board
 // generates a board with 1 fish on each tile.
@@ -180,17 +349,19 @@ function boardPosns(size, board) {
     return hexes;
 }
 
-
-
-// Number Number Number -> void
-function allHexes(size, rows, cols) {
-    let board = dimensionToBoard(rows, cols)
-    BOARD = board;
-    let hexes = boardPosns(size, board)
-
-    hexes.forEach(hex => {
-        canvas.add(new fabric.Polygon(hex[0], genHexConfig(hex[1])));
-    });
+// Number, Number, Number -> [{x: Number, y: Number}[], [Number, Number]]
+function makeHex(size, xOffset, yOffset, boardP) {
+    const corners = [
+        { x: 0 + xOffset, y: size + yOffset },
+        { x: size + xOffset, y: 0 + yOffset },
+        { x: 2 * size + xOffset, y: 0 + yOffset },
+        { x: 3 * size + xOffset, y: size + yOffset },
+        { x: 2 * size + xOffset, y: 2 * size + yOffset },
+        { x: size + xOffset, y: 2 * size + yOffset }
+    ]
+    console.log("boardP: " + boardP)
+    return [corners, boardP]
+    
 }
 
 // [Number, Number] -> { ... }
@@ -212,6 +383,10 @@ function genHexConfig(boardP) {
 }
 
 
+// ----------------------------------------------- EVENT LISTENERS ------------------------------------------------
+
+
+
 
 
 // Event Listeners
@@ -231,7 +406,7 @@ canvas.on('mouse:out', function(e) {
 });
 
 
-// - - - - - - - - - - - - -
+// ----------------------------------------- BOARD FUNCTIONALITY ---------------------------------------------------
 
 // Board BoardPosn[] -> Board
 // add holes in board according to holes
@@ -309,7 +484,6 @@ function isNeighborUnreachable(board, boardPosn) {
         row[c] === 0 ||
         row[c] === undefined;
 }
-
 
 
 // remove a tile from the board
