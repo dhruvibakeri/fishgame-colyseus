@@ -70,9 +70,8 @@ setCanvasConfig();
 
 // ----------------------------------- RENDERING THE BOARD -----------------------------------------------------
 
-setTimeout(() => {
-    render(55, 4, 3)
-}, 2);
+render(55, 4, 3)
+
 
 // renders the hexagonal board
 function render(size, rows, cols) {
