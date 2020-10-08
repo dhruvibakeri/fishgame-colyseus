@@ -10,3 +10,8 @@
 | 6                           | determine the positions reachable via straight lines from a given position                                                                                                                                  | getReachable : Board Posn \-> Posn\[\]                                            |
 | 7                           | remove a tile from a board                                                                                                                                                                                  | removeTile : Board Posn \-> Board                                                 |
 | 8                           | render the tiles graphically                                                                                                                                                                                | \[TO\-FIX\] allHexes : Number Number Number \-> void BUT should be Board \-> void |
+
+
+
+
+![](assignment-annotation.png)
