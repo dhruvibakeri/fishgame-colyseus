@@ -133,18 +133,14 @@ function toggleFullScreen() {
 // (on the right) adds half its height i.e. size amount
 // of height
 
+//ASSUMPTION: 
+// - rows is > 0
+// - size is > -1
+
 function backgDimensions(rows, cols, size) {
-    console.log("size: " + size);
-    console.log("rows: " + rows);
-    console.log("cols: " + cols);
-    console.log([((5 * size) * cols) - ((cols - 1) * size), (rows + 1) * size])
 
     return [((5 * size) * cols) - ((cols - 1) * size), (rows + 1) * size]
 }
-
-
-
-
 
 
 // ------------------------- CREATING THE HEXAGON TILES, GENERATING THE BOARD -----------------------------------------------------------
@@ -175,12 +171,12 @@ function allHexes(size, rows, cols) {
         imagePosnY = hex[0][0].y;
  
         // checks whether cur hex is a hole 
-        if(isHole(boardPosnVal)) {
+        if(isNotHole(boardPosnVal)) {
             // adds hex to canvas
             canvas.add(new fabric.Polygon(hex[0], genHexConfig(hex[1])));
         
             // checks whether given tile is not occupied by a penguin
-            if(isPenguin(boardPosnVal)) {
+            if(isNotPenguin(boardPosnVal)) {
                 let fishPos = 0;
                 // adds fish on the cur hex
                 for(let i = 0; i < boardPosnVal; i++) {
@@ -196,13 +192,15 @@ function allHexes(size, rows, cols) {
     });
 }
 
-// checks if given value represents a penguin
-function isPenguin(x) {
+// checks if given value does not represent a penguin
+// ASSUMPTION: penguin values are always one of:
+// - 'red' , 'brown', 'black', 'white'
+function isNotPenguin(x) {
     return Number.isInteger(x);
 }
 
-// checks if given value represents a hole
-function isHole(x) {
+// checks if given value does not represents a hole
+function isNotHole(x) {
     return x != HOLE;
 }
 
@@ -221,9 +219,8 @@ function getBoardSpecs(size, board) {
     board = placePenguin(board,1,0, 'red')
     board = placePenguin(board,0,3, 'brown')
     board = placePenguin(board,1,5, 'white')
-
     board = addBoardHolesMinFish(board, 3, [[1,1], [1,4]])
-
+    
     return hexes;
 
 }
@@ -231,19 +228,32 @@ function getBoardSpecs(size, board) {
 
 // creates a hole in the board (no tile)
 function makeHole(board, row, col) {
-    board[row][col] = HOLE;
+    if(board[row][col] != BLANK_TILE) {
+         board[row][col] = HOLE;
+    }
     return board;
 }
 
 // places n amount of fish on board[x][y]
 function noOfFish(board, row, col, n) {
-    board[row][col] = n;
+
+    val = board[row][col]
+
+    if(isChangeableState(val) || val == 1) {
+        board[row][col] = n;
+    }
     return board;
 }
 
 // places penguin of given color on board[x][y]
 function placePenguin(board, row, col, color) {
-    board[row][col] = color;
+
+    val = board[row][col]
+
+    if((val != BLANK_TILE) && (val != HOLE)) {
+
+        board[row][col] = color;
+    }
     return board;
 }
 
@@ -279,7 +289,7 @@ function addBoardHolesMinFish(board, fishes, hposns) {
         brow = hposns[i][0]
         bcol = hposns[i][1]
         
-        board[brow][bcol] = HOLE
+        makeHole(board, brow, bcol)
     }
 
     // add 1-fish tiles only if board
@@ -340,6 +350,7 @@ function getChangablePoints(array) {
     return res;
 
 }
+
 
 // checks whether given value represents
 // a changeable tile
@@ -425,6 +436,7 @@ function boardPosns(size, board) {
     return hexes;
 }
 
+
 // Number, Number, Number -> [{x: Number, y: Number}[], [Number, Number]]
 // creates a hexagon of desired size
 function makeHex(size, xOffset, yOffset, boardP) {
@@ -439,6 +451,7 @@ function makeHex(size, xOffset, yOffset, boardP) {
 
     return [corners, boardP] 
 }
+
 
 // [Number, Number] -> { ... }
 // configures the hexagon
@@ -556,6 +569,8 @@ function getPathInDirection(board, boardPosn, getNeighborInDirection) {
 
 
 
+
+
 // Board BoardPosn -> Boolean
 // Checks if a neighbouring tile is not a valid move
 function isNeighborUnreachable(board, boardPosn) {
@@ -564,7 +579,8 @@ function isNeighborUnreachable(board, boardPosn) {
     return row === undefined ||
         row[c] === HOLE ||
         row[c] === BLANK_TILE ||
-        row[c] === undefined;
+        row[c] === undefined ;
+        //!isNotPenguin(row[c]);
 }
 
 
