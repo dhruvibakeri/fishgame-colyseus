@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <title>Hey, that's my Fish!</title>
+  <link rel="stylesheet"
+        href="reset.css">
+  <link rel="shortcut icon"
+        href="assets/favicon.ico"
+        type="image/x-icon">
+  <link rel="stylesheet"
+        href="style.css">
+</head>
+
+<body>
+  <br>
+  <!-- The header image  -->
+  <p style="text-align: center;">
+    <img src="assets/banner.jpg"
+         width="600px">
+  </p>
+  <br>
+
+  <!-- The canvas -->
+  <p align="center">
+    <canvas id="canvas">
+      <img src="assets/fish.png"
+           id="fish-image"></img>
+      <img src="assets/black.png"
+           id="black"></img>
+      <img src="assets/brown.png"
+           id="brown"></img>
+      <img src="assets/red.png"
+           id="red"></img>
+      <img src="assets/white.png"
+           id="white"></img>
+    </canvas>
+
+  </p>
+
+  <br>
+  <!-- Toggling fullscreen mode  -->
+  <p style="text-align: center;">
+    <button onclick="toggleFullScreen()">
+      Toggle Fullscreen
+    </button>
+  </p>
+
+  <br>
+
+
+  <script src="fabric.min.js"></script>
+  <script src="fish.js"></script>
+</body>
+
+</html>

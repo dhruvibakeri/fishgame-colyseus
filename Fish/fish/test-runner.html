@@ -1,0 +1,33 @@
+<html>
+
+<head>
+  <title>Mocha</title>
+  <!-- CSS TO STYLE TEST RESULTS -->
+  <link rel="stylesheet"
+        href="mocha.css" />
+  <!-- TESTING LIBRARY -->
+  <script src="mocha.js"></script>
+  <!-- ASSERTION LIBRARY -->
+  <script src="chai.js"></script>
+</head>
+
+<body>
+  <!-- TEST SETUP -->
+  <script>
+    mocha.setup('bdd');
+  </script>
+  <!-- CODE TO TEST -->
+  <script src="fish.js"></script>
+  <!-- TEST SUITE -->
+  <script src="tests.js"></script>
+  <!-- RUNNING TESTS -->
+  <script>
+    window.onload = () => {
+      mocha.run();
+    };
+  </script>
+  <!-- DISPLAYING TESTS -->
+  <div id="mocha"></div>
+</body>
+
+</html>
