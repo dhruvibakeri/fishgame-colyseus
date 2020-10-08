@@ -4,9 +4,7 @@
 // 
 // Board is Tile[]
 // 
-// PlayerScores = [PlayerColor, Score][]
-// 
-// Score is a ℕ
+// PlayerScores = [PlayerColor, ℕ][]
 // 
 // Tile = { kind: "blank_space", tile_info: TileInfo }
 //      | { kind: "hole", tile_info: TileInfo }
@@ -23,9 +21,7 @@
 //
 // - Board is the board representation it is a 2 dimensional array of tiles.
 //
-// - PlayerScores is an association list of player color and their score.
-//
-// - Score is a natural number and is the number of tiles collected upto this point.
+// - PlayerScores is an association list of player color and their score which is a Natural number
 //
 // - Tile is either a blank space (because transforming a hex grid onto a 2d array leaves some blank spaces) or a tile
 //        with a certain number of fishes on it or a tile with a player on it or (when the player eats the fish) a hole
@@ -37,15 +33,30 @@
 //
 // ------------------------------------------- Templates --------------------------------------------------------------
 
+const PLAYER_COLOR_RED = "red"
+const PLAYER_COLOR_BROWN = "brown"
+const PLAYER_COLOR_BLACK = "black"
+const PLAYER_COLOR_WHITE = "white"
+
+const TILE_KIND_BLANK_SPACE = "blank_space"
+const TILE_KIND_HOLE = "hole"
+const TILE_KIND_FISHES = "fishes"
+const TILE_KIND_PLAYER = "player"
+
+
 // GameState -> void
 function gamestate_template(gamestate) {
     // ...
-    gamestate.board
+    board_template(gamestate.board)
     // ...
     if(is_playercolor) {
-        playercolor_template(gamestate)
+        // ...
+        playercolor_template(gamestate.next_move)
+        // ...
     } else {
-        gamestate
+        // ...
+        gamestate.next_move
+        // ...
     }
     // ...
     playerscores_template(gamestate.players)
@@ -56,16 +67,113 @@ function gamestate_template(gamestate) {
 // is `anything` a PlayerColor?
 function is_playercolor(anything) {
     return (typeof anything === "string")
-    &&  (anything === "red" || anything === "brown" || anything === "black" || anything === "white");
+    &&  (anything === PLAYER_COLOR_RED
+         || anything === PLAYER_COLOR_BROWN 
+         || anything === PLAYER_COLOR_BLACK 
+         || anything === PLAYER_COLOR_WHITE);
 }
 
+// Board -> void
+function board_template(board) {
+    for(let row = 0; row < board.length; ++row) {
+        for(let col = 0; k < board[row].length; ++col) {
+            const tile = board[row][col]
+            // ...
+            tile_template(tile);
+            // ...
+        }
+    }
+}
 
+// PlayerScores -> void
+function playerscores_template(playerscores) {
+    for(let i = 0; i < playerscores.length; i++) {
+        // ...
+        playercolor_template(playerscores[i].playercolor)
+        // ...
+        playerscores.score
+        // ...
+    }
+}
 
+// Tile -> void
+function tile_template(tile) {
+    switch (tile.kind) {
+        case TILE_KIND_BLANK_SPACE:
+            // ...
+            tile.kind
+            // ...
+            tileinfo_template(tile.tile_info)
+            // ...
+            break;
+        case TILE_KIND_HOLE:
+            // ...
+            tile.kind
+            // ...
+            tileinfo_template(tile.tile_info)
+            // ...
+            break;
+        case TILE_KIND_FISHES:
+            // ...
+            tile.kind
+            // ...
+            tileinfo_template(tile.tile_info)
+            // ...
+            tile.fishes
+            // ...
+            break;
+        case TILE_KIND_PLAYER:
+            // ...
+            tile.kind
+            // ...
+            tileinfo_template(tile.tile_info)
+            // ...
+            tile.player
+            // ...
+            break;
+        default:
+            throw Error("Not a valid tile kind")
+    }
+}
 
+// TileInfo -> Void
+function tileinfo_template(tileinfo) {
+    // ...
+    tileinfo.size 
+    // ...
+    tileinfo.max_fishes
+    // ...
+}
 
+// PlayerColor -> Void
+function playercolor_template(playercolor) {
+    switch (playercolor) {
+        case PLAYER_COLOR_RED:
+            // ...
+            playercolor
+            // ...
+            break;
+        case PLAYER_COLOR_BROWN:
+            // ...
+            playercolor
+            // ...
+            break;
+        case PLAYER_COLOR_BLACK:
+            // ...
+            playercolor
+            // ...
+            break;
+        case PLAYER_COLOR_BLACK:
+            // ...
+            playercolor
+            // ...
+            break;
+        default:
+            throw Error("Not a valid player color")
+    }
+}
 
-
-
+// --------------------------------------------------------------------------------------------------------------------
 
 
 function add3(z) {
