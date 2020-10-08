@@ -32,17 +32,17 @@ certain colored player or a certain number of fishes.
 ### `Player`
 is one of:
 
-- `**RED_PLAYER**`
-- `**BROWN_PLAYER**`
-- `**BLACK_PLAYER**`
-- `**WHITE_PLAYER**`
+- **`RED_PLAYER`**
+- **`BROWN_PLAYER`**
+- **`BLACK_PLAYER`**
+- **`WHITE_PLAYER`**
 
 where 
 
-- `**RED_PLAYER**` is "red"
-- `**BROWN_PLAYER**` is "brown"
-- `**BLACK_PLAYER**` is "black"
-- `**WHITE_PLAYER**` is "white"
+- **`RED_PLAYER`** is "red"
+- **`BROWN_PLAYER`** is "brown"
+- **`BLACK_PLAYER`** is "black"
+- **`WHITE_PLAYER`** is "white"
 
 **_Interpretation._** Different player pieces are determined by their color.
 
