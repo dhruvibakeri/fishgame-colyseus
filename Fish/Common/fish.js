@@ -37,6 +37,27 @@
 //
 // ------------------------------------------- Templates --------------------------------------------------------------
 
+// GameState -> void
+function gamestate_template(gamestate) {
+    // ...
+    gamestate.board
+    // ...
+    if(is_playercolor) {
+        playercolor_template(gamestate)
+    } else {
+        gamestate
+    }
+    // ...
+    playerscores_template(gamestate.players)
+    // ...
+}
+
+// Any -> Boolean
+// is `anything` a PlayerColor?
+function is_playercolor(anything) {
+    return (typeof anything === "string")
+    &&  (anything === "red" || anything === "brown" || anything === "black" || anything === "white");
+}
 
 
 
