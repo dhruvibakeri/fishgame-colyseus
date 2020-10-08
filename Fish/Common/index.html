@@ -2,77 +2,58 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-    <title>Hey, that's my Fish!</title>
-    <link rel="stylesheet"
-          href="reset.css">
-    <link rel="shortcut icon"
-          href="assets/favicon.ico"
-          type="image/x-icon">
-    <style>
-        body {
-            background-color: rgb(183, 212, 230)
-        }
-
-        canvas {
-            box-shadow: rgba(30, 45, 72, 0.5) 0 0 5px;
-            border: 1px solid rgb(4, 52, 75);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+  <title>Hey, that's my Fish!</title>
+  <link rel="stylesheet"
+        href="reset.css">
+  <link rel="shortcut icon"
+        href="assets/favicon.ico"
+        type="image/x-icon">
+  <link rel="stylesheet"
+        href="style.css">
 </head>
 
 <body>
-    <br>
-    <!-- The header image  -->
-    <p style="text-align: center;">
-        <img src="assets/fish.jpg"
-             width="600px">
+  <br>
+  <!-- The header image  -->
+  <p style="text-align: center;">
+    <img src="assets/banner.jpg"
+         width="600px">
+  </p>
+  <br>
 
-    </p>
+  <!-- The canvas -->
+  <p align="center">
+    <canvas id="canvas">
+      <img src="assets/fish.png"
+           id="fish-image"></img>
+      <img src="assets/black.png"
+           id="black"></img>
+      <img src="assets/brown.png"
+           id="brown"></img>
+      <img src="assets/red.png"
+           id="red"></img>
+      <img src="assets/white.png"
+           id="white"></img>
+    </canvas>
 
-    <br>
+  </p>
 
-    <!-- The canvas -->
-    <p align="center">
-        <!-- <div class="canvas-container" -->
-        <!-- > -->
-        <canvas id="canvas">
-            <img src="./assets/standard-fish.png"
-                 id="my-image"></img>
-            <img src="./assets/black.png"
-                 id="black"></img>
-            <img src="./assets/brown.png"
-                 id="brown"></img>
-            <img src="./assets/red.png"
-                 id="red"></img>
-            <img src="./assets/white.png"
-                 id="white"></img>
-        </canvas>
+  <br>
+  <!-- Toggling fullscreen mode  -->
+  <p style="text-align: center;">
+    <button onclick="toggleFullScreen()">
+      Toggle Fullscreen
+    </button>
+  </p>
 
-        <!-- </div> -->
-    </p>
+  <br>
 
-    <br>
 
-    <!-- Toggling fullscreen mode  -->
-    <p style="text-align: center;">
-        <button onclick="toggleFullScreen()">
-            Toggle Fullscreen
-        </button>
-    </p>
-
-    <br>
-
-    <!-- Seeded Knuth Shuffle -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/knuth-shuffle-seeded@1.0.6/index.min.js"></script> -->
-    <!-- Lodash -->
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
-    <!-- Fabric -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.2.0/fabric.js"></script>
-    <!-- Our Code -->
-    <script src="index.js"></script>
+  <script src="fabric.min.js"></script>
+  <script src="fish.js"></script>
 </body>
 
 </html>
