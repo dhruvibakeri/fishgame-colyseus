@@ -385,3 +385,27 @@ describe("create a hexagon with given configs", () => {
     })
 
 })
+
+describe("get tiles that are reachable from given boardPosn", () => {
+
+    let board = [[1,1,1,1,1,1], [1,1,1,1,1,1]]
+    let board2 = [[1,1,1,-1,1,1], [1,0,1,0,1,0]]
+
+    it("paths reachable from [0,0]", () => {
+        assert.deepEqual(getReachable(board, [0,0]), [[0,1], [1,0], [2,1], [3,1]])
+    })
+
+    it("paths reachable from a point in last row", () => {
+        assert.deepEqual(getReachable(board, [3,1]), [[3,0], [2,1], [1,0], [0,0], [4,1], [5,0]])
+    })
+
+    it("paths reachable from a point in top row", () => {
+        assert.deepEqual(getReachable(board, [2,0]), [[2,1], [1,0], [0,1], [3,0], [4,1], [5,1]])
+    })
+
+    it("paths with unreachable tiles", () => {
+        assert.deepEqual(getReachable(board2, [2,1]), [[2,0], [1,0], [0,0]])
+    })
+
+
+})
