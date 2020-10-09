@@ -439,15 +439,14 @@ function boardPosns(size, board) {
         for (let col = 0; col < board[row].length; ++col) {
             // col comes first since col represents the 
             // x-coordinate on the fabric canvas
-            let boardP = [col, row];
             let xOffset = (size * 2) * col
             if (col % 2 === 0) {
                 let yOffset = size * fst
-                hexes.push(makeHex(size, xOffset, yOffset, boardP))
+                hexes.push(makeHex(size, xOffset, yOffset, row, col))
             } else {
                 if (board[row][col].kind === "fishes") {
                     let yOffset = size * snd
-                    hexes.push(makeHex(size, xOffset, yOffset, boardP))
+                    hexes.push(makeHex(size, xOffset, yOffset, row, col))
                 }
             }
         }
@@ -469,34 +468,18 @@ function boardPosns(size, board) {
  * RHS: The corresponding Hex's corners in terms of canvas px position.
  */
 function makeHex(size, xOffset, yOffset, row, col) {
-    const corners = [
+    return [
+        {col: col, row, row}, [
         { x: 0 + xOffset, y: size + yOffset },
         { x: size + xOffset, y: 0 + yOffset },
         { x: 2 * size + xOffset, y: 0 + yOffset },
         { x: 3 * size + xOffset, y: size + yOffset },
         { x: 2 * size + xOffset, y: 2 * size + yOffset },
         { x: size + xOffset, y: 2 * size + yOffset }
-    ]
-
-    return [corners, boardP]
-
-    // PROPOSED CHANGE:
-    // return [
-    //     {col: col, row, row}, [
-    //     { x: 0 + xOffset, y: size + yOffset },
-    //     { x: size + xOffset, y: 0 + yOffset },
-    //     { x: 2 * size + xOffset, y: 0 + yOffset },
-    //     { x: 3 * size + xOffset, y: size + yOffset },
-    //     { x: 2 * size + xOffset, y: 2 * size + yOffset },
-    //     { x: size + xOffset, y: 2 * size + yOffset }
-    // ]]
-
+    ]]
 }
 
-
 // ------------------------- CREATING THE HEXAGON TILES, GENERATING THE BOARD -----------------------------------------------------------
-
-
 
 // Number Number Number -> void
 // places all hexes on the canvas 
@@ -508,7 +491,7 @@ function allHexes(size, rows, cols) {
     //  ex: min no. if 1-fish tiles
     //  creates a hole where specified
     //  places player on tile
-    let hexes = getBoardSpecs(size, board)
+    let hexes = getBoardSpecs(boardPosns(size, board))
 
     // goes through each hex is hexes and
     // adds relevent graphics for that hex tile
@@ -562,9 +545,9 @@ function isNotHole(x) {
 
 
 // configures board specifications
-function getBoardSpecs(size, board) {
+function getBoardSpecs( board) {
 
-    let hexes = boardPosns(size, board)
+    
 
     board = noOfFish(board, 1, 2, 5)
     board = noOfFish(board, 1, 1, 4)
