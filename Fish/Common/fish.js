@@ -44,6 +44,8 @@ const TILE_KIND_FISHES = "fishes"
 const TILE_KIND_PLAYER = "player"
 
 
+
+
 // GameState -> void
 function gamestate_template(gamestate) {
     // ...
@@ -181,6 +183,7 @@ const ICE_TILE_COLOR = 'rgb(255, 165, 0, 1)'
 const ICE_TILE_BORDER = 'rgba(255, 255, 255, 1.00)'
 const CANVAS_SELECTION_COLOR = 'rgba(190, 211, 229, 0.40)'
 const CANVAS_BACKGROUND_COLOR = 'rgb(190, 190, 190)'
+const DEFAULT_SIZE = 55
 
 // HTML <canvas> element
 // We'll just use this once to set the size:
@@ -201,7 +204,7 @@ let canvas = new fabric.Canvas('canvas');
 // CanvasDimension - [width, height] - represents canvas dimensions
 
 // rendering>>>
-render(65, 4, 3);
+render(DEFAULT_SIZE, 4, 3);
 
 // - - - - - - - - - - Configurations for canvas objects - - - - - - - - - -
 
@@ -341,7 +344,7 @@ function backgDimensions(boardRows, boardCols, hexSize) {
     1   1   1      
 */
 
-function dimensionToBoard(boardHeight, boardWidth) {
+function dimensionToBoard(boardHeight, boardWidth, size) {
     // gets actual row count
     let actualRows = boardHeight % 2 === 0 ? boardHeight / 2 : (boardHeight + 1) / 2;
     // gets actual col count
@@ -357,15 +360,16 @@ function dimensionToBoard(boardHeight, boardWidth) {
                 row === actualRows - 1 && // Tells if the row is the last one
                 col % 2 === 1 // The holes only occur on the odd-th column on the last row
             ) {
-                thisRow[col] = 0;
+                thisRow[col] = {"kind" : "blank_space", "tile_info" : {"size" : size, "max_fishes": 0 }};
             } else {
-                thisRow[col] = 1;
+                thisRow[col] = {"kind" : "fishes", "tile_info" : {"size" : size, "max_fishes": 5 }, "fishes" : 1};
             }
         }
         board[row] = thisRow
     }
     return board;
 }
+
 
 // Number Number -> [{x: Number, y: Number}[], [Number, Number]][]
 // retreives all hex tile formations for the board
@@ -386,7 +390,7 @@ function boardPosns(size, board) {
                 let yOffset = size * fst
                 hexes.push(makeHex(size, xOffset, yOffset, boardP))
             } else {
-                if (board[row][col] === 1) {
+                if (board[row][col].kind === "fishes") {
                     let yOffset = size * snd
                     hexes.push(makeHex(size, xOffset, yOffset, boardP))
                 }
@@ -423,7 +427,7 @@ function makeHex(size, xOffset, yOffset, boardP) {
 // places all hexes on the canvas 
 // according to their specs
 function allHexes(size, rows, cols) {
-    let board = dimensionToBoard(rows, cols)
+    let board = dimensionToBoard(rows, cols, size)
 
     //  gets the board specifications
     //  ex: min no. if 1-fish tiles
@@ -442,21 +446,28 @@ function allHexes(size, rows, cols) {
         imagePosnY = hex[0][0].y;
 
         // checks whether cur hex is a hole 
-        if (isNotHole(boardPosnVal)) {
+        if (isNotHole(boardPosnVal.kind)) {
+            let fishPosUp = 0;
+            let fishPosDown = - (size / 5);
             // adds hex to canvas
             canvas.add(new fabric.Polygon(hex[0], genHexConfig(hex[1])));
+            console.log(boardPosnVal)
 
             // checks whether given tile is not occupied by a penguin
-            if (isNotPenguin(boardPosnVal)) {
+            if (isNotPenguin(boardPosnVal.kind)) {
                 let fishPos = 0;
                 // adds fish on the cur hex
-                for (let i = 0; i < boardPosnVal; i++) {
-                    addIcon(imagePosnX + size, imagePosnY - fishPos, 'fish-image');
-                    fishPos += 10;
+                for (let i = 0; i < boardPosnVal.fishes; i++) {
+                    (i % 2 == 0) ?
+                     addIcon(imagePosnX + size, imagePosnY - fishPosUp, 'fish-image', size) :
+                     addIcon(imagePosnX + size, imagePosnY - fishPosDown, 'fish-image', size)
+                    
+                     fishPosUp += (size / 5);
+                     fishPosDown -= (size / 5);
                 }
             } else {
                 // if not fish or hole,  add player penguin
-                addIcon(imagePosnX + size, imagePosnY - size, boardPosnVal)
+                addIcon(imagePosnX + size, imagePosnY - size, boardPosnVal.player, size)
             }
         }
     });
@@ -466,12 +477,12 @@ function allHexes(size, rows, cols) {
 // ASSUMPTION: penguin values are always one of:
 // - 'red' , 'brown', 'black', 'white'
 function isNotPenguin(x) {
-    return Number.isInteger(x);
+    return x != "player";
 }
 
 // checks if given value does not represents a hole
 function isNotHole(x) {
-    return x != -1;
+    return x != "hole";
 }
 
 
@@ -482,14 +493,16 @@ function getBoardSpecs(size, board) {
 
     board = noOfFish(board, 1, 2, 5)
     board = noOfFish(board, 1, 1, 4)
-    board = noOfFish(board, 0, 2, 5)
+    board = noOfFish(board, 0, 2, 2)
     board = noOfFish(board, 0, 1, 5)
+   //board = noOfFish(board, 1, 3, 3)
     board = makeHole(board, 1, 3)
     board = placePenguin(board, 0, 0, 'black')
     board = placePenguin(board, 1, 0, 'red')
     board = placePenguin(board, 0, 3, 'brown')
     board = placePenguin(board, 1, 5, 'white')
     board = addBoardHolesMinFish(board, 3, [ [1, 1], [1, 4] ])
+    console.log(board)
 
     return hexes;
 }
@@ -497,8 +510,8 @@ function getBoardSpecs(size, board) {
 // Board Number Number -> Board
 // creates a hole in the board (no tile)
 function makeHole(board, row, col) {
-    if (board[row][col] != 0) {
-        board[row][col] = -1;
+    if (board[row][col].kind != "blank_space") {
+        board[row][col] = { kind: "hole", tile_info: { size: DEFAULT_SIZE, max_fishes: 0} };
     }
     return board;
 }
@@ -507,8 +520,9 @@ function makeHole(board, row, col) {
 // places n amount of fish on board[x][y]
 function noOfFish(board, row, col, n) {
     let val = board[row][col]
-    if (isChangeableState(val) || val == 1) {
-        board[row][col] = n;
+
+    if (val.kind == "fishes" &&  n <= val.tile_info.max_fishes) {
+        board[row][col].fishes = n;
     }
     return board;
 }
@@ -517,8 +531,10 @@ function noOfFish(board, row, col, n) {
 // places penguin of given color on board[x][y]
 function placePenguin(board, row, col, color) {
     let val = board[row][col]
-    if ((val != 0) && (val != -1)) {
-        board[row][col] = color;
+
+    if ((val.kind != "blank_space") && (val.kind != "hole")) {
+
+        board[row][col] = { kind: "player", tile_info: { size: DEFAULT_SIZE, max_fishes: 0}, player: color };
     }
     return board;
 }
@@ -528,10 +544,11 @@ function placePenguin(board, row, col, color) {
 // according to the id specified then
 // adds it onto the canvas at the given 
 // coordinates
-function addIcon(imageX, imageY, image_id) {
+function addIcon(imageX, imageY, image_id, size) {
+    console.log(image_id)
     let imgElement = document.getElementById(image_id);
     let imgInstanceP = new fabric.Image(imgElement, genImageConfig(imageX, imageY));
-    smallImgP = imgInstanceP.scale(0.2);
+    smallImgP = imgInstanceP.scale(size / 275);
     canvas.add(smallImgP);
 
 }
@@ -552,6 +569,7 @@ function addBoardHolesMinFish(board, fishes, hposns) {
 
     // add 1-fish tiles only if board
     // does not meet min requirement
+
     if (!hasMinFish(board, fishes)) {
 
         // gets list of changeable points
@@ -569,7 +587,7 @@ function addBoardHolesMinFish(board, fishes, hposns) {
             srow = selected[i][0]
             scol = selected[i][1]
 
-            board[srow][scol] = 1;
+            board[srow][scol].fishes = 1;
         }
     }
 
@@ -586,9 +604,11 @@ function countOneFishTiles(board) {
     fcount = 0;
     for (let i = 0; i < board.length; i++) {
         for(let j = 0; j < board[i].length; j++) {
-            if(board[i][j] === 1) {
+            if(board[i][j].kind == "fishes") {
+                if(board[i][j].fishes === 1) {
                 fcount = fcount + 1;
             }
+        }
         }
     }
     return fcount;
@@ -600,6 +620,7 @@ function getChangablePoints(board) {
     let res = []
     for (let col = 0; col < board.length; col++) {
         for (let row = 0; row < board[col].length; row++) {
+            
             if (isChangeableState(board[col][row])) {
                 res.push([col, row])
             }
@@ -615,7 +636,8 @@ function getChangablePoints(board) {
 // - Positive integer > 1
 // (we do not have to change 1)
 function isChangeableState(p) {
-    return (Number.isInteger(p) && p > 1);
+    return p.kind == "fishes" && p.fishes > 1;
+    
 }
 
 // Board BoardPosn[] -> Board
@@ -623,7 +645,7 @@ function isChangeableState(p) {
 function addHoles(board, holes) {
     for (let i = 0; i < holes.length; i++) {
         let [col, row] = [holes[i][0], holes[i][1]]
-        board[row][col] = HOLE;
+        board[row][col].kind = "hole";
     }
     return board;
 }
