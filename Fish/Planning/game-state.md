@@ -45,3 +45,12 @@ PlayerColor = "red" | "brown" | "black" | "white"
 ```
 PlayerColor is the color of a player and is one of 4 specified colors. 
 
+---
+
+Game state and each sub-data definition comes with the interface:
+
+- **constructors** to make each sub-part
+- **predicates** for each sub-part (useful for distinguishing enumerations)
+- **selectors** to retrieve each piece
+
+
