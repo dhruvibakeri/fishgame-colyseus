@@ -462,11 +462,13 @@ function boardPosns(size, board) {
  * @param {Natural} size 
  * @param {Natural} xOffset 
  * @param {Natural} yOffset 
+ * @param {Natural} row
+ * @param {Natural} col
  * @returns The pair of 2 things: 
  * LHS: The 2d-array Board position.
  * RHS: The corresponding Hex's corners in terms of canvas px position.
  */
-function makeHex(size, xOffset, yOffset, boardP) {
+function makeHex(size, xOffset, yOffset, row, col) {
     const corners = [
         { x: 0 + xOffset, y: size + yOffset },
         { x: size + xOffset, y: 0 + yOffset },
