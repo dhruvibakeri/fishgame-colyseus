@@ -189,11 +189,6 @@ const INNER_CANVAS = document.getElementById('canvas')
 // We'll be using this to draw everything:
 let canvas = new fabric.Canvas('canvas');
 
-// ------------------------------------------------ Logical Constants -------------------------------------------------
-
-const BLANK_TILE = 0;
-const HOLE = -1;
-
 // --------------------------------------------------------------------------------------------------------------------
 
 // Some internal Data Definitions:
@@ -204,16 +199,9 @@ const HOLE = -1;
 // CanvasPosn - [x, y] - represents a coordinate on canvas
 // BoardDimension - [width, height] - represents board dimensions
 // CanvasDimension - [width, height] - represents canvas dimensions
-//
 
-
-
-
-
-// TODO: make sure the penguins and fishes are not movable!
-render(45, 6, 7);
-
-
+// rendering>>>
+render(65, 4, 3);
 
 // - - - - - - - - - - Configurations for canvas objects - - - - - - - - - -
 
@@ -427,20 +415,6 @@ function makeHex(size, xOffset, yOffset, boardP) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ------------------------- CREATING THE HEXAGON TILES, GENERATING THE BOARD -----------------------------------------------------------
 
 
@@ -515,15 +489,12 @@ function getBoardSpecs(size, board) {
     board = placePenguin(board, 1, 0, 'red')
     board = placePenguin(board, 0, 3, 'brown')
     board = placePenguin(board, 1, 5, 'white')
-    board = addBoardHolesMinFish(board, 3, [
-        [1, 1],
-        [1, 4]
-    ])
+    board = addBoardHolesMinFish(board, 3, [ [1, 1], [1, 4] ])
 
     return hexes;
 }
 
-
+// Board Number Number -> Board
 // creates a hole in the board (no tile)
 function makeHole(board, row, col) {
     if (board[row][col] != 0) {
@@ -532,24 +503,21 @@ function makeHole(board, row, col) {
     return board;
 }
 
+// Board Number Number, Number -> Board
 // places n amount of fish on board[x][y]
 function noOfFish(board, row, col, n) {
-
-    val = board[row][col]
-
+    let val = board[row][col]
     if (isChangeableState(val) || val == 1) {
         board[row][col] = n;
     }
     return board;
 }
 
+// Board Number Number, String -> Board
 // places penguin of given color on board[x][y]
 function placePenguin(board, row, col, color) {
-
-    val = board[row][col]
-
+    let val = board[row][col]
     if ((val != 0) && (val != -1)) {
-
         board[row][col] = color;
     }
     return board;
@@ -561,10 +529,8 @@ function placePenguin(board, row, col, color) {
 // adds it onto the canvas at the given 
 // coordinates
 function addIcon(imageX, imageY, image_id) {
-
-    var imgElement = document.getElementById(image_id);
-    var imgInstanceP = new fabric.Image(imgElement, genImageConfig(imageX, imageY));
-
+    let imgElement = document.getElementById(image_id);
+    let imgInstanceP = new fabric.Image(imgElement, genImageConfig(imageX, imageY));
     smallImgP = imgInstanceP.scale(0.2);
     canvas.add(smallImgP);
 
@@ -652,20 +618,18 @@ function isChangeableState(p) {
     return (Number.isInteger(p) && p > 1);
 }
 
-
-
-
-
-
-
-
+// Board BoardPosn[] -> Board
+// add holes in board according to holes
+function addHoles(board, holes) {
+    for (let i = 0; i < holes.length; i++) {
+        let [col, row] = [holes[i][0], holes[i][1]]
+        board[row][col] = HOLE;
+    }
+    return board;
+}
 
 
 // ----------------------------------------------- EVENT LISTENERS ------------------------------------------------
-
-
-
-
 
 // Event Listeners
 
@@ -687,17 +651,9 @@ canvas.on('mouse:out', function(e) {
 });
 
 
-// ----------------------------------------- BOARD FUNCTIONALITY ---------------------------------------------------
+// - - - - - - - - - - Neighbors and Paths - - - - - - - - - -
 
-// Board BoardPosn[] -> Board
-// add holes in board according to holes
-function addHoles(board, holes) {
-    for (let i = 0; i < holes.length; i++) {
-        let [col, row] = [holes[i][0], holes[i][1]]
-        board[row][col] = HOLE;
-    }
-    return board;
-}
+
 
 // Board BoardPosn -> BoardPosn[]
 // gets board positions of all valid moves
@@ -712,9 +668,6 @@ function getReachable(board, boardPosn) {
         ...paths.southEast
     ]
 }
-
-
-
 
 // `Direction` is all possible directions a player may move:
 //  "north" | "south" | "northWest" | "northEast" | "southWest" | "southEast"
