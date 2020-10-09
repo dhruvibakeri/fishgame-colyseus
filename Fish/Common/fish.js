@@ -209,8 +209,13 @@ render(DEFAULT_SIZE, 4, 3);
 // - - - - - - - - - - Configurations for canvas objects - - - - - - - - - -
 
 
-// BoardPosn -> JSObject
-// gets configuration object for the rendering of a Tile at boardPosn
+/**
+ * 
+ * @param {{row: PositiveInteger, col: PositiveInteger}} posn The position (row, col) of the 
+ * tile within Board that this hexagon is a rendering of. 
+ * @returns A configuration object for fabric.Polygon that specifies
+ * rendering properties like border, stroke, hover properties etc. 
+ */
 function genHexConfig(boardP) {
     return {
         boardPosn: boardP,
@@ -228,8 +233,13 @@ function genHexConfig(boardP) {
     }
 }
 
-// Number Number -> JSObject
-// gets configuration object for the rendering of Penguin or Fishes at the given position
+/**
+ * The configuration object for the fabric.Image.
+ * @param {Number} x The top left point's x coordinate.
+ * @param {Number} y The top left point's y coordinate.
+ * @returns A configuration object that makes the image unselectable, unmovable,
+ * changes the cursor to pointer, and provides the coordinates for its position. 
+ */
 function genImageConfig(imageX, imageY) {
     return {
         left: imageX,
@@ -241,8 +251,11 @@ function genImageConfig(imageX, imageY) {
     }
 }
 
-// -> void
-// EFFECT: Sets the configuration for canvas object directly
+/**
+ * Sets the selection color and background color of the fabric canvas.
+ * EFFECT: changes the fabric.canvas properties. 
+ * @returns void
+ */
 function setCanvasConfig() {
     canvas.selectionColor = CANVAS_SELECTION_COLOR;
     canvas.backgroundColor = CANVAS_BACKGROUND_COLOR;
@@ -251,9 +264,13 @@ function setCanvasConfig() {
 // - - - - - - - - - - Rendering the Board - - - - - - - - - - 
 
 
-// Number Number Number -> void
-// Renders the board initially by setting the canvas config, 
-// the background dimentions, and generating the board
+/**
+ * Renders the board by setting the canvas configurations, the background dimensions and by 
+ * generating the Board itself. 
+ * @param {Natural} size The width of the hexagon is 3 * size and the height of the hexagon is 2 * size.
+ * @param {Natural > 1} rows The number of rows of the hexagonal grid i.e. the Board. 
+ * @param {Natural > 0} cols The number of columns of the hexagonal grid i.e. the Board. 
+ */
 function render(size, rows, cols) {
     setCanvasConfig();
     const [canvasWidth, canvasHeight] = [...backgDimensions(rows, cols, size)]
@@ -261,33 +278,39 @@ function render(size, rows, cols) {
     allHexes(size, rows, cols);
 }
 
-// Number Number Number -> void
-// Any requests to rerender the board are given to rerender
-// because it first 
+/**
+ * Clears out the existing canvas and renders a new one with the given size, rows, and cols. 
+ * @param {Natural} size The width of the hexagon is 3 * size and the height of the hexagon is 2 * size.
+ * @param {Natural > 1} rows The number of rows of the hexagonal grid i.e. the Board. 
+ * @param {Natural > 0} cols The number of columns of the hexagonal grid i.e. the Board. 
+ * @returns void because it just clears and renders the canvas. 
+ */ 
 function rerender(size, rows, cols) {
     canvas.clear();
-    setCanvasConfig();
     render(size, rows, cols)
 }
 
 // - - - - - - - - - - Setting Canvas Dimensions - - - - - - - - - - 
 
-// Number Number -> Void
-// sets width and height of HTML and Fabric canvas
-// EFFECT: mutates INNER_CANVAS HTML Element 
+/**
+ * EFFECT: Sets the width and the height of the HTML and Fabric Canvases. 
+ * @param {PositiveNumber} width The width of the canvas to set.
+ * @param {PositiveNumber} height The height of the canvas to set.
+ */
 function setCanvasDimension(width, height) {
     INNER_CANVAS.width = width;
     INNER_CANVAS.height = height;
     canvas.setDimensions({ width: width, height: height })
 }
 
-
-
-// Number, Number, Number -> CanvasPosn
-// height and width of the full board based on the rows, cols and hexSize
-//ASSUMPTION: 
-// - rows is > 0
-// - size is > -1
+/**
+ * Converts a row by column dimension of a board to a height by width 
+ * dimension of the canvas.
+ * @param {Natural > 1} boardRows 
+ * @param {Natural > 0} boardCols 
+ * @param {PositiveInteger} hexSize 
+ * @returns {CanvasDimension} The height and width of the canvas in pixels.
+ */
 function backgDimensions(boardRows, boardCols, hexSize) {
     return [
         // board width
@@ -327,23 +350,26 @@ function backgDimensions(boardRows, boardCols, hexSize) {
 
 
 
-// PosInt PosInt -> Board
-// generates a board with 1 fish on each tile.
-// ASSUMPTION: row > 1
-// even rows:
-/*
-    1   1   1          1  1  1  1  1  1  
-      1   1   1    =>  1  1  1  1  1  1 
-    1   1   1   
-      1   1   1  
-*/
-// odd rows:
-/*
-    1   1   1          1  1  1  1  1  1  
-      1   1   1    =>  1  0  1  0  1  0 
-    1   1   1      
-*/
-
+/**
+ * Even rows:
+ * 
+ *  1   1   1          1  1  1  1  1  1  
+ *    1   1   1    =>  1  1  1  1  1  1 
+ *  1   1   1   
+ *    1   1   1  
+ * 
+ * Odd rows:
+ * 
+ *   1   1   1          1  1  1  1  1  1  
+ *     1   1   1    =>  1  0  1  0  1  0 
+ *   1   1   1   
+ * 
+ * Turns the specification of a hexagonal grid into a 2d-array representation.
+ * 
+ * @param {Natural} size The size of a single tile
+ * @param {PositiveInteger > 1} hexCol The rows in the board.
+ * @param {PositiveInteger > 0} hexRow The columns of the board.
+ */
 function dimensionToBoard(boardHeight, boardWidth, size) {
     // gets actual row count
     let actualRows = boardHeight % 2 === 0 ? boardHeight / 2 : (boardHeight + 1) / 2;
@@ -356,9 +382,9 @@ function dimensionToBoard(boardHeight, boardWidth, size) {
         for (let col = 0; col < actualCols; ++col) {
             // 
             if (
-                boardHeight % 2 === 1 && // Only the boards with odd height have holes in the last row
+                isOdd(boardHeight) && // Only the boards with odd height have holes in the last row
                 row === actualRows - 1 && // Tells if the row is the last one
-                col % 2 === 1 // The holes only occur on the odd-th column on the last row
+                isOdd(col) // The holes only occur on the odd-th column on the last row
             ) {
                 thisRow[col] = {"kind" : "blank_space", "tile_info" : {"size" : size, "max_fishes": 0 }};
             } else {
@@ -368,6 +394,35 @@ function dimensionToBoard(boardHeight, boardWidth, size) {
         board[row] = thisRow
     }
     return board;
+}
+
+
+/**
+ * Is the number's parity odd?
+ * @param {Natural} n The number whose parity is to be determined.
+ * @returns Whether the number is odd?
+ */
+function isOdd(n) {
+    return n % 2 === 1;
+}
+
+/**
+ * Is the number's parity even?
+ * @param {Natural} n The number whose parity is to be determined.
+ * @returns Whether the number is even.
+ */
+function isEven(n) {
+    return n % 2 === 0;
+}
+
+/**
+ * Converts row and columns for the hexagonal grid to row and columns
+ * for our 2-dimensional array representation.
+ * @param {PositiveInteger > 1} col The cols in the board
+ * @param {PositiveInteger > 0} row The rows in the board
+ */
+function hexToRect(col, row) {
+    return { col: col * 2, row: row % 2 === 0 ? row / 2 : (row + 1) / 2 };
 }
 
 
@@ -401,8 +456,16 @@ function boardPosns(size, board) {
 }
 
 
-// Number, Number, Number -> [{x: Number, y: Number}[], [Number, Number]]
-// creates a hexagon of desired size
+/**
+ * 6 posns corresponding to the vertices of the given board posn
+ * with at the (xOffset, yOffset) position at top left corner. 
+ * @param {Natural} size 
+ * @param {Natural} xOffset 
+ * @param {Natural} yOffset 
+ * @returns The pair of 2 things: 
+ * LHS: The 2d-array Board position.
+ * RHS: The corresponding Hex's corners in terms of canvas px position.
+ */
 function makeHex(size, xOffset, yOffset, boardP) {
     const corners = [
         { x: 0 + xOffset, y: size + yOffset },
@@ -414,9 +477,19 @@ function makeHex(size, xOffset, yOffset, boardP) {
     ]
 
     return [corners, boardP]
+
+    // PROPOSED CHANGE:
+    // return [
+    //     {col: col, row, row}, [
+    //     { x: 0 + xOffset, y: size + yOffset },
+    //     { x: size + xOffset, y: 0 + yOffset },
+    //     { x: 2 * size + xOffset, y: 0 + yOffset },
+    //     { x: 3 * size + xOffset, y: size + yOffset },
+    //     { x: 2 * size + xOffset, y: 2 * size + yOffset },
+    //     { x: size + xOffset, y: 2 * size + yOffset }
+    // ]]
+
 }
-
-
 
 
 // ------------------------- CREATING THE HEXAGON TILES, GENERATING THE BOARD -----------------------------------------------------------
