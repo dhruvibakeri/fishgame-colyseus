@@ -53,4 +53,4 @@ Game state and each sub-data definition comes with the interface:
 - **predicates** for each sub-part (useful for distinguishing enumerations)
 - **selectors** to retrieve each piece
 
-
+A game state cannot be mutated, a fresh one must be created.
