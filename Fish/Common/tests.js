@@ -1,17 +1,5 @@
 var assert = chai.assert
 
-describe('testing add3', () => {
-    it('add3 on 0 is 3', () => {
-        assert(add3(0) === 3);
-    });
-});
-
-
-
-
-// 
-
-
 describe("get the background dimensions depending on the board dimension", () => {
     it("normal board dimension", () => {
         assert.deepEqual(backgDimensions(4, 3, 55), [715, 275])
@@ -53,7 +41,7 @@ describe("check if given board value does not represent a a hole", () => {
         assert.deepEqual(isNotHole(0), true)
     })
     it("actual hole", () => {
-        assert.deepEqual(isNotHole('red'), false)
+        assert.deepEqual(isNotHole(-1), false)
     })
     it("penguin color", () => {
         assert.deepEqual(isNotHole('red'), true)
@@ -76,7 +64,7 @@ describe("create a hole at given position", () => {
     })
 
     it("at [1,5]", () => {
-        assert.deepEqual(makeHole(board, 0, 0), [
+        assert.deepEqual(makeHole(board, 1, 5), [
             [-1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, -1]
         ])
@@ -207,8 +195,8 @@ describe("add holes at specified values and have a given min. number of 1-fish t
         [1, 0, 1, 0, 1, 0]
     ]
     let board2 = [
-        ['black', 1, 4, 'brown', 1, 3],
-        ['red', -1, 5, 1, 1, 'white']
+        ['black', 3, 4, 'brown', 2, 3],
+        ['red', -1, 5, 2, 2, 'white']
     ]
 
     addBoardHolesMinFish(board, 3, [
@@ -221,12 +209,10 @@ describe("add holes at specified values and have a given min. number of 1-fish t
         assert.deepEqual([board[0][1], board[1][3], board[2][2]], [-1, -1, -1])
     })
 
-    addBoardHolesMinFish(board2, 3, [
-        [1, 3]
-    ]);
+    addBoardHolesMinFish(board2, 3, [[1, 3]])
 
-    it("check whether 1-fish tiles have not been added if min req was satisfied", () => {
-        assert.deepEqual(countOneFishTiles(board2), 3)
+    it("check whether 1-fish tiles been been added if min req was satisfied", () => {
+        assert.deepEqual((countOneFishTiles(board2) >= 3), true)
     })
 
     addBoardHolesMinFish(board2, 5, [
@@ -388,24 +374,85 @@ describe("create a hexagon with given configs", () => {
 
 describe("get tiles that are reachable from given boardPosn", () => {
 
-    let board = [[1,1,1,1,1,1], [1,1,1,1,1,1]]
-    let board2 = [[1,1,1,-1,1,1], [1,0,1,0,1,0]]
+    let board = [
+        [1,1,1,1], 
+        [1,1,1,1],
+        [1,1,1,1]
+    ]
 
+    it("paths reachable from [2,1]", () => {
+        assert.deepEqual(getReachable(board, {col:2, row:1}), 
+        [
+            {col:2,row:0},
+            {col:2,row:2},
+            {col:1,row:0},
+            {col:3,row:0},
+            {col:1,row:2},
+            {col:3,row:2}
+        ])
+    })
     it("paths reachable from [0,0]", () => {
-        assert.deepEqual(getReachable(board, [0,0]), [[0,1], [1,0], [2,1], [3,1]])
+        assert.deepEqual(getReachable(board, {col:0, row:0}), 
+        [
+            {col:0,row:1},
+            {col:0,row:2},
+            {col:1,row:1},
+            {col:2,row:2}
+        ])
     })
-
-    it("paths reachable from a point in last row", () => {
-        assert.deepEqual(getReachable(board, [3,1]), [[3,0], [2,1], [1,0], [0,0], [4,1], [5,0]])
-    })
-
-    it("paths reachable from a point in top row", () => {
-        assert.deepEqual(getReachable(board, [2,0]), [[2,1], [1,0], [0,1], [3,0], [4,1], [5,1]])
-    })
-
-    it("paths with unreachable tiles", () => {
-        assert.deepEqual(getReachable(board2, [2,1]), [[2,0], [1,0], [0,0]])
-    })
-
 
 })
+
+
+describe("test getting neighbors in all directions for even and odd columns", () => {
+    it("test getNeighborNorth", () => { 
+        assert.deepEqual(getNeighborNorth({col: 2, row: 1}), {col:2,row:0}) 
+      })
+      
+      it("test getNeighborSouth", () => { 
+        assert.deepEqual(getNeighborSouth({col: 2, row: 1}), {col:2,row:2}) 
+      })
+      
+      it("test getNeighborNorthWest", () => { 
+        assert.deepEqual(getNeighborNorthWest({col: 2, row: 1}), {col:1,row:0}) 
+      })
+      
+      it("test getNeighborNorthEast", () => { 
+        assert.deepEqual(getNeighborNorthEast({col: 2, row: 1}), {col:3,row:0}) 
+      })
+      
+      it("test getNeighborSouthWest", () => { 
+        assert.deepEqual(getNeighborSouthWest({col: 2, row: 1}), {col:1,row:2}) 
+      })
+      
+      it("test getNeighborSouthEast", () => { 
+        assert.deepEqual(getNeighborSouthEast({col: 2, row: 1}), {col:3,row:2}) 
+      })
+      
+      it("test getNeighborNorth", () => { 
+        assert.deepEqual(getNeighborNorth({col: 1, row: 1}), {col:1,row:0}) 
+      })
+      
+      it("test getNeighborSouth", () => { 
+        assert.deepEqual(getNeighborSouth({col: 1, row: 1}), {col:1,row:2}) 
+      })
+      
+      it("test getNeighborNorthWest", () => { 
+        assert.deepEqual(getNeighborNorthWest({col: 1, row: 1}), {col:0,row:0}) 
+      })
+      
+      it("test getNeighborNorthEast", () => { 
+        assert.deepEqual(getNeighborNorthEast({col: 1, row: 1}), {col:2,row:0}) 
+      })
+      
+      it("test getNeighborSouthWest", () => { 
+        assert.deepEqual(getNeighborSouthWest({col: 1, row: 1}), {col:0,row:2}) 
+      })
+      
+      it("test getNeighborSouthEast", () => { 
+        assert.deepEqual(getNeighborSouthEast({col: 1, row: 1}), {col:2,row:2}) 
+      })
+})
+
+
+
