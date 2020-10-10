@@ -16,11 +16,11 @@ TAs can find:
 
 - the functionality for removing a tile:
 
-  - purpose: Purpose statement for removing a tile can be found on line [`756`](https://github.ccs.neu.edu/CS4500-F20/rosebud/blob/44dbbcb7612a0d31fb8cc6743ea8580cd868eb1c/Fish/Common/fish.js#L756)
+  - purpose: Purpose statement for removing a tile can be found on line [`498`](https://github.ccs.neu.edu/CS4500-F20/rosebud/blob/44dbbcb7612a0d31fb8cc6743ea8580cd868eb1c/Fish/Common/fish.js#L498)
   
-  - signature: We forgot the signature. But the function is simply a one-liner. 
+  - signature: signature for removing a tile can be found on line [`497`](https://github.ccs.neu.edu/CS4500-F20/rosebud/blob/44dbbcb7612a0d31fb8cc6743ea8580cd868eb1c/Fish/Common/fish.js#L497)
   
-  - unit tests: We did not test this. We thought the function is too trivial to test. 
+  - unit tests: tests for this function can be found on line [`52`](https://github.ccs.neu.edu/CS4500-F20/rosebud/blob/44dbbcb7612a0d31fb8cc6743ea8580cd868eb1c/Fish/Common/tests.js#L52) 
   
 
 - the functionality for reaching other tiles on the board:
