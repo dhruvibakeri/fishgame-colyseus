@@ -1,10 +1,4 @@
-// isPenguinColor
-// isPenguin
-// isFishes
-// isTileInfo
 var assert = chai.assert
-
-
 
 describe("Testing predicates for isPenguinColor", () => {
     it("isPenguinColor with true", () => {
