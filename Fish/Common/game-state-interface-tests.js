@@ -401,96 +401,102 @@ describe("testing predicate on unusablespace", () => {
 
 
 
-describe("testing the predicate for GameTile", () => {
-    it("isGameTile with true", () => {
-        assert.deepEqual(isGameTile(true), false)
+describe("testing the predicate for Tile", () => {
+    it("isTile with true", () => {
+        assert.deepEqual(isTile(true), false)
     })
-    it("isGameTile with false", () => {
-        assert.deepEqual(isGameTile(false), false)
+    it("isTile with false", () => {
+        assert.deepEqual(isTile(false), false)
     })
-    it("isGameTile with an empty object", () => {
-        assert.deepEqual(isGameTile({}), false)
+    it("isTile with an empty object", () => {
+        assert.deepEqual(isTile({}), false)
     })
-    it("isGameTile with a random object", () => {
-        assert.deepEqual(isGameTile({
+    it("isTile with a random object", () => {
+        assert.deepEqual(isTile({
     random: "random",
     object: "object",
     bye: 1.00,
     bool: true
 }), false)
     })
-    it("isGameTile with an add3 function", () => {
-        assert.deepEqual(isGameTile((x) => x + 3), false)
+    it("isTile with an add3 function", () => {
+        assert.deepEqual(isTile((x) => x + 3), false)
     })
-    it("isGameTile with null", () => {
-        assert.deepEqual(isGameTile(null), false)
+    it("isTile with null", () => {
+        assert.deepEqual(isTile(null), false)
     })
-    it("isGameTile with undefined", () => {
-        assert.deepEqual(isGameTile(undefined), false)
+    it("isTile with undefined", () => {
+        assert.deepEqual(isTile(undefined), false)
     })
-    it("isGameTile with a fraction", () => {
-        assert.deepEqual(isGameTile(123.0001), false)
+    it("isTile with a fraction", () => {
+        assert.deepEqual(isTile(123.0001), false)
     })
-    it("isGameTile with a string", () => {
-        assert.deepEqual(isGameTile("somestring"), false)
+    it("isTile with a string", () => {
+        assert.deepEqual(isTile("somestring"), false)
     })
-    it("actual gametile with false for occupied_by", () => {
-        assert.deepEqual(isGameTile({tile_info:{ size: 0, max_elements: 0 }, occupied_by:false}), true)
+    it("actual tile with false for occupied_by", () => {
+        assert.deepEqual(isTile({tile_info:{ size: 0, max_elements: 0 }, occupied_by:false}), true)
     })
-    it("actual gametile with a valid Fishes for occupied_by", () => {
-        assert.deepEqual(isGameTile({tile_info:{ size: 0, max_elements: 0 }, occupied_by:{ kind: "fishes", totalFishes: 1 }}), true)
+    it("tile that's occupied by true", () => {
+        assert.deepEqual(isTile({tile_info:{ size: 0, max_elements: 0 }, occupied_by:true}), false)
     })
-    it("actual gametile with a valid Penguin for occupied_by", () => {
-        assert.deepEqual(isGameTile({tile_info:{ size: 0, max_elements: 0 }, occupied_by:{ kind: "penguin", color: "red" }}), true)
+    it("actual tile with a valid Fishes for occupied_by", () => {
+        assert.deepEqual(isTile({tile_info:{ size: 0, max_elements: 0 }, occupied_by:{ kind: "fishes", totalFishes: 1 }}), true)
     })
-    it("gametile with an extra field", () => {
-        assert.deepEqual(isGameTile({tile_info:{ size: 0, max_elements: 0 }, occupied_by:{ kind: "penguin", color: "red" }, extra: "4"}), false)
+    it("actual tile with a valid Penguin for occupied_by", () => {
+        assert.deepEqual(isTile({tile_info:{ size: 0, max_elements: 0 }, occupied_by:{ kind: "penguin", color: "red" }}), true)
+    })
+    it("tile with an extra field", () => {
+        assert.deepEqual(isTile({tile_info:{ size: 0, max_elements: 0 }, occupied_by:{ kind: "penguin", color: "red" }, extra: "4"}), false)
     })
 })
 
-describe("testing the predicate for UsableGameTile", () => {
-    it("isUsableGameTile with true", () => {
-        assert.deepEqual(isUsableGameTile(true), false)
+describe("testing the predicate for usablespace", () => {
+    it("isUsableSpace with true", () => {
+        assert.deepEqual(isUsableSpace(true), false)
     })
-    it("isUsableGameTile with false", () => {
-        assert.deepEqual(isUsableGameTile(false), false)
+    it("isUsableSpace with false", () => {
+        assert.deepEqual(isUsableSpace(false), false)
     })
-    it("isUsableGameTile with an empty object", () => {
-        assert.deepEqual(isUsableGameTile({}), false)
+    it("isUsableSpace with an empty object", () => {
+        assert.deepEqual(isUsableSpace({}), false)
     })
-    it("isUsableGameTile with a random object", () => {
-        assert.deepEqual(isUsableGameTile({
+    it("isUsableSpace with a random object", () => {
+        assert.deepEqual(isUsableSpace({
     random: "random",
     object: "object",
     bye: 1.00,
     bool: true
 }), false)
     })
-    it("isUsableGameTile with an add3 function", () => {
-        assert.deepEqual(isUsableGameTile((x) => x + 3), false)
+    it("isUsableSpace with an add3 function", () => {
+        assert.deepEqual(isUsableSpace((x) => x + 3), false)
     })
-    it("isUsableGameTile with null", () => {
-        assert.deepEqual(isUsableGameTile(null), false)
+    it("isUsableSpace with null", () => {
+        assert.deepEqual(isUsableSpace(null), false)
     })
-    it("isUsableGameTile with undefined", () => {
-        assert.deepEqual(isUsableGameTile(undefined), false)
+    it("isUsableSpace with undefined", () => {
+        assert.deepEqual(isUsableSpace(undefined), false)
     })
-    it("isUsableGameTile with a fraction", () => {
-        assert.deepEqual(isUsableGameTile(123.0001), false)
+    it("isUsableSpace with a fraction", () => {
+        assert.deepEqual(isUsableSpace(123.0001), false)
     })
-    it("isUsableGameTile with a string", () => {
-        assert.deepEqual(isUsableGameTile("somestring"), false)
+    it("isUsableSpace with a string", () => {
+        assert.deepEqual(isUsableSpace("somestring"), false)
     })
     it("actual usableSpace with false", () => {
-        assert.deepEqual(isUsableGameTile({ kind: "usableSpace", occupied_by: false}), true)
+        assert.deepEqual(isUsableSpace({ kind: "usableSpace", occupied_by: false}), true)
     })
     it("actual usableSpace with false tile", () => {
-        assert.deepEqual(isUsableGameTile({ kind: "usableSpace", occupied_by: {tile_info:{ size: 0, max_elements: 0 }, occupied_by:false}}), true)
+        assert.deepEqual(isUsableSpace({ kind: "usableSpace", occupied_by: {tile_info:{ size: 0, max_elements: 0 }, occupied_by:false}}), true)
+    })
+    it("actual usableSpace with true tile", () => {
+        assert.deepEqual(isUsableSpace({ kind: "usableSpace", occupied_by: {tile_info:{ size: 0, max_elements: 0 }, occupied_by:true}}), false)
     })
     it("actual usableSpace with Fishes tile", () => {
-        assert.deepEqual(isUsableGameTile({ kind: "usableSpace", occupied_by: {tile_info:{ size: 0, max_elements: 0 }, occupied_by:{ kind: "fishes", totalFishes: 1 }}}), true)
+        assert.deepEqual(isUsableSpace({ kind: "usableSpace", occupied_by: {tile_info:{ size: 0, max_elements: 0 }, occupied_by:{ kind: "fishes", totalFishes: 1 }}}), true)
     })
     it("actual usableSpace with Penguin tile", () => {
-        assert.deepEqual(isUsableGameTile({ kind: "usableSpace", occupied_by: {tile_info:{ size: 0, max_elements: 0 }, occupied_by:{ kind: "penguin", color: "red" }}}), true)
+        assert.deepEqual(isUsableSpace({ kind: "usableSpace", occupied_by: {tile_info:{ size: 0, max_elements: 0 }, occupied_by:{ kind: "penguin", color: "red" }}}), true)
     })
 })
