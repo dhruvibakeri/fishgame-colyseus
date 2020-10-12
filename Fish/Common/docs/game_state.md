@@ -4,11 +4,11 @@
 
 **`Board`** = (`UsableSpace` | `UnusableSpace`)[][]
 
-**`UsableSpace`** = { kind: `"usableSpace"`, occupiedBy: `Tile` | `false` }
+**`UsableSpace`** = { kind: `"usableSpace"`, onUsableSpace: `Tile` | `false` }
 
 **`UnusableSpace`** = { kind: `"unusableSpace"` }
 
-**`Tile`** = { tileInfo: `TileInfo`, occupiedBy: `Fishes` | `Penguin` | `false` }
+**`Tile`** = { tileInfo: `TileInfo`, onTile: `Fishes` | `Penguin` | `false` }
 
 **`TileInfo`** = { size: `ℕ`, maxElements: `ℕ` }
 
