@@ -3,17 +3,17 @@
 // 
 // Board = (UsableSpace | UnusableSpace)[][]
 // 
-// UsableSpace = { kind: "usableSpace", occupied_by: Tile | false}
+// UsableSpace = { kind: "usableSpace", occupiedBy: Tile | false}
 // UnusableSpace = { kind: "unusableSpace" }
 // 
-// Tile = { tile_info: TileInfo, occupied_by: Fishes | Penguin | false}
+// Tile = { tileInfo: TileInfo, occupiedBy: Fishes | Penguin | false}
 // 
-// TileInfo = { size: ℕ, max_elements: ℕ }
+// TileInfo = { size: ℕ, maxElements: ℕ }
 // 
 // Fishes =  { kind: "fishes", totalFishes: ℤ+ }
 // Penguin = { kind: "penguin", color: PenguinColor }
 // 
-// PenguinColor = "red" | "brown" | "black" | "white"
+// PenguinColor = ("red" | "brown" | "black" | "white")
 //
 // Interpretation
 // --------------
@@ -46,6 +46,237 @@
 // Predicates
 // ----------
 //
+// Any -> Boolean
+// is `a` a Board?
+function isBoard(a) {
+  if(Array.isArray(a)) {
+    let allSpaces = true
+    for(let rowIdx = 0; rowIdx < a.length; rowIdx++) {
+      let currentRow = a[rowIdx];
+      for(let colIdx = 0; colIdx < currentRow.length; colIdx++) {
+        let currentSpace = currentRow[colIdx];
+        if(!isUsableSpace(currentSpace) && !isUnusableSpace(currentSpace)) {
+          allSpaces = false;
+        }
+      }
+    }
+    return allSpaces;
+  } else {
+    return false;
+  }
+}
+//
+// Any -> Boolean
+// is `a` an UsableSpace?
+function isUsableSpace(a) {
+  return isObj(a) &&
+         Object.keys(a).length === 2 &&
+         a.hasOwnProperty("kind") &&
+         a.hasOwnProperty("occupiedBy") &&
+         isStr(a.kind) &&
+         a.kind === "usableSpace" &&
+         (isFalse(a.occupiedBy) || isTile(a.occupiedBy));
+}
+// Any -> Boolean
+// is `a` a n UnusableSpace?
+function isUnusableSpace(a) {
+  return  isObj(a) &&
+          Object.keys(a).length === 1 &&
+          a.hasOwnProperty("kind") &&
+          isStr(a.kind) &&
+          a.kind === "unusableSpace";
+}
+// Any -> Boolean
+// is `a` a GameTile?
+function isTile(a) {
+  return isObj(a) &&
+         Object.keys(a).length === 2 &&
+         a.hasOwnProperty("tileInfo") &&
+         a.hasOwnProperty("occupiedBy") &&
+         isTileInfo(a.tileInfo) &&
+         (isFalse(a.occupiedBy) || isFishes(a.occupiedBy) || isPenguin(a.occupiedBy))
+}
+// Any -> Boolean
+// is `a` a TileInfo?
+function isTileInfo(a) {
+  return isObj(a) &&
+         Object.keys(a).length === 2 &&
+         a.hasOwnProperty("size") &&
+         a.hasOwnProperty("maxElements") &&
+         isNum(a.size) &&
+         isNumInt(a.size) &&
+         a.size >= 0 &&
+         isNum(a.maxElements) &&
+         isNumInt(a.maxElements) &&
+         a.maxElements >= 0
+}
+// Any -> Boolean
+// is `a` a Fishes?
+function isFishes(a) {
+  return isObj(a) &&
+         Object.keys(a).length === 2 &&
+         a.hasOwnProperty("kind") &&
+         a.hasOwnProperty("totalFishes") &&
+         isStr(a.kind) &&
+         a.kind === "fishes" &&
+         isNum(a.totalFishes) &&
+         isNumInt(a.totalFishes) &&
+         a.totalFishes > 0;
+}
+// Any -> Boolean
+// is `a` a Penguin?
+function isPenguin(a) {
+  return isObj(a) &&
+    (Object.keys(a).length === 2) &&
+    a.hasOwnProperty("kind") &&
+    a.hasOwnProperty("color") &&
+    isStr(a.kind) &&
+    a.kind === "penguin" &&
+    isPenguinColor(a.color);
+}
+// Any -> Boolean
+function isPenguinColor(a) {
+  return typeof isStr(a) && (a === "red" || a === "brown" || a === "black" || a === "white");
+}
+// 
+// Constructors
+// ------------
+//
+/**
+ * Even rows:
+ * 
+ *  1   1   1          1  1  1  1  1  1  
+ *    1   1   1    =>  1  1  1  1  1  1 
+ *  1   1   1   
+ *    1   1   1  
+ * 
+ * Odd rows:
+ * 
+ *   1   1   1          1  1  1  1  1  1  
+ *     1   1   1    =>  1  0  1  0  1  0 
+ *   1   1   1   
+ * 
+ * Turns the specification of a hexagonal grid into a 2d-array representation.
+ * 
+ * @param {Natural} size The size of a single tile
+ * @param {PositiveInteger > 1} hexCol The rows in the board.
+ * @param {PositiveInteger > 0} hexRow The columns of the board.
+ */
+function dimensionToBoard(size, hexRow, hexCol) {
+  let {rectCol, rectRow} = hexToRect(hexRow, hexCol);
+  let board = new Array(rectRow);
+  for (let curRow = 0; curRow < rectRow; curRow++) {
+    let thisRow = new Array(rectCol);
+    for (let curCol = 0; curCol < rectCol; curCol++) {
+        // last row's odd column elements on boards with odd height should be blank
+        const isUnusableSpace =  isOdd(hexRow) &&  curRow === rectRow - 1 &&  isOdd(curCol);
+        if(isUnusableSpace) {
+          thisRow[curCol] = makeUnusableSpace()
+        } else {
+          thisRow[curCol] = makeUsableSpace(false);
+        }
+    }
+    board[curRow] = thisRow
+  }
+  return board;
+}
+
+/**
+ * Converts row and columns for the hexagonal grid to row and columns
+ * for our 2-dimensional array representation.
+ * @param {PositiveInteger > 1} col The cols in the board
+ * @param {PositiveInteger > 0} row The rows in the board
+ */
+function hexToRect(col, row) {
+  return { col: col * 2, row: row % 2 === 0 ? row / 2 : (row + 1) / 2 };
+}
+
+/**
+ * Is the number's parity odd?
+ * @param {Natural} n The number whose parity is to be determined.
+ * @returns Whether the number is odd?
+ */
+function isOdd(n) {
+  return n % 2 === 1;
+}
+
+// String -> PenguinColor
+// Make a PenguinColor.
+function makePenguinColor(color) {
+  const res = color;
+  if(isPenguinColor(res)) {
+    return res;
+  } else { 
+    console.error("can't make PenguinColor");
+  }
+}
+//
+// --- 
+// 
+// PenguinColor -> Penguin
+// Makes a Penguin from a PenguinColor.
+function makePenguin(penguinColor) {
+  const res = {kind:"penguin", color: penguin_color};
+  if(isPenguin(res)) {
+    return res;
+  } else { 
+    console.error("can't make Penguin");
+  }
+}
+// ℤ+ -> Fishes
+// Makes a Fishes from the total number of fishes.
+function makeFishes(totalFishes) {
+  const res = {kind:"fishes",totalFishes:totalFishes};
+  if(isFishes(res)) {
+    return res;
+  } else { 
+    console.error("can't make Fishes");
+  }
+}
+// ℕ ℕ -> TileInfo
+// Makes a TileInfo from the its size an max elements it can have.
+function makeTileInfo(size, maxElements) {
+  const res = { size: size, maxElements: maxElements };
+  if(isTileInfo(res)) {
+    return res;
+  } else { 
+    console.error("can't make TileInfo");
+  }
+}
+// TileInfo (Fishes | Penguin | false) -> Tile
+// Makes a Tile either has Fishes or Penguin or nothing (false).
+function makeGameTile(tileInfo, occupiedBy) {
+  const res = {tileInfo: tileInfo, occupiedBy: occupiedBy};
+  if(isTile(res)) {
+    return res;
+  } else { 
+    console.error("can't make GameTile");
+  }
+}
+// Tile | false -> UsableSpace
+// Make a UsableSpace with either a Tile on it or nothing (false).
+function makeUsableSpace(occupiedBy) {
+  const res = { kind: "usableSpace", occupiedBy: occupiedBy};
+  if(isUsableSpace(res)) {
+    return res;
+  } else { 
+    console.error("can't make UsableSpace");
+  }
+}
+// -> UnusableSpace
+// Make an UnusableSpace.
+function makeUnusableSpace() {
+  const res = { kind: "unusableSpace" };
+  if(isUnusableSpace(res)) {
+    return res;
+  } else { 
+    console.error("can't make UnusableSpace");
+  }
+}
+//
+// Predicate Helpers
+// -----------------
+// 
 // Number -> Boolean
 // is the number `n` an integer?
 function isNumInt(n) {
@@ -71,163 +302,17 @@ function isNum(a) {
 function isObj(a) {
   return typeof a === "object" && a !== null;
 }
-// Any -> Boolean
-function isPenguinColor(a) { // testing done
-  return typeof isStr(a) && (a === "red" || a === "brown" || a === "black" || a === "white");
-}
-// Any -> Boolean
-// is `a` a Penguin?
-function isPenguin(a) { // testing done
-  return isObj(a) &&
-    (Object.keys(a).length === 2) &&
-    a.hasOwnProperty("kind") &&
-    a.hasOwnProperty("color") &&
-    isStr(a.kind) &&
-    a.kind === "penguin" &&
-    isPenguinColor(a.color);
-}
-// Any -> Boolean
-// is `a` a Fishes?
-function isFishes(a) { // testing done
-return isObj(a) &&
-       Object.keys(a).length === 2 &&
-       a.hasOwnProperty("kind") &&
-       a.hasOwnProperty("totalFishes") &&
-       isStr(a.kind) &&
-       a.kind === "fishes" &&
-       isNum(a.totalFishes) &&
-       isNumInt(a.totalFishes) &&
-       a.totalFishes > 0;
-}
-// Any -> Boolean
-// is `a` a TileInfo?
-function isTileInfo(a) { // testing done
-  return isObj(a) &&
-         Object.keys(a).length === 2 &&
-         a.hasOwnProperty("size") &&
-         a.hasOwnProperty("max_elements") &&
-         isNum(a.size) &&
-         isNumInt(a.size) &&
-         a.size >= 0 &&
-         isNum(a.max_elements) &&
-         isNumInt(a.max_elements) &&
-         a.max_elements >= 0
-}
-// Any -> Boolean
-// is `a` a GameTile?
-function isTile(a) {
-  return isObj(a) &&
-         Object.keys(a).length === 2 &&
-         a.hasOwnProperty("tile_info") &&
-         a.hasOwnProperty("occupied_by") &&
-         isTileInfo(a.tile_info) &&
-         (isFalse(a.occupied_by) || isFishes(a.occupied_by) || isPenguin(a.occupied_by))
-}
-// Any -> Boolean
-// is `a` an UsableSpace?
-function isUsableSpace(a) {
-  return isObj(a) &&
-         Object.keys(a).length === 2 &&
-         a.hasOwnProperty("kind") &&
-         a.hasOwnProperty("occupied_by") &&
-         isStr(a.kind) &&
-         a.kind === "usableSpace" &&
-         (isFalse(a.occupied_by) || isTile(a.occupied_by));
-}
-// Any -> Boolean
-// is `a` a n UnusableSpace?
-function isUnusableSpace(a) { // testing done
-  return  isObj(a) &&
-          Object.keys(a).length === 1 &&
-          a.hasOwnProperty("kind") &&
-          isStr(a.kind) &&
-          a.kind === "unusableSpace";
-}
-// 
-// Constructors
-// ------------
-//
-// String -> PenguinColor
-// Make a PenguinColor.
-function makePenguinColor(color) {
-  const res = color;
-  if(isPenguinColor(res)) {
-    return res;
-  } else { 
-    console.error("can't make PenguinColor");
-  }
-}
-// PenguinColor -> Penguin
-// Makes a Penguin from a PenguinColor.
-function makePenguin(penguinColor) {
-  const res = {kind:"penguin", color: penguin_color};
-  if(isPenguin(res)) {
-    return res;
-  } else { 
-    console.error("can't make Penguin");
-  }
-}
-// ℤ+ -> Fishes
-// Makes a Fishes from the total number of fishes.
-function makeFishes(totalFishes) {
-  const res = {kind:"fishes",totalFishes:totalFishes};
-  if(isFishes(res)) {
-    return res;
-  } else { 
-    console.error("can't make Fishes");
-  }
-}
-// ℕ ℕ -> TileInfo
-// Makes a TileInfo from the its size an max elements it can have.
-function makeTileInfo(size, max_elements) {
-  const res = { size: size, max_elements: max_elements };
-  if(isTileInfo(res)) {
-    return res;
-  } else { 
-    console.error("can't make TileInfo");
-  }
-}
-// TileInfo (Fishes | Penguin | false) -> Tile
-// Makes a Tile either has Fishes or Penguin or nothing (false).
-function makeGameTile(tile_info, occupied_by) {
-  const res = {tile_info: tile_info, occupied_by: occupied_by};
-  if(isTile(res)) {
-    return res;
-  } else { 
-    console.error("can't make GameTile");
-  }
-}
-// Tile | false -> UsableSpace
-// Make a UsableSpace with either a Tile on it or nothing (false).
-function makeUsableSpace(occupied_by) {
-  const res = { kind: "usableSpace", occupied_by: occupied_by};
-  if(isUsableSpace(res)) {
-    return res;
-  } else { 
-    console.error("can't make UsableSpace");
-  }
-}
-// -> UnusableSpace
-// Make an UnusableSpace.
-function makeUnusableSpace() {
-  const res = { kind: "unusableSpace" };
-  if(isUnusableSpace(res)) {
-    return res;
-  } else { 
-    console.error("can't make UnusableSpace");
-  }
-}
 //
 // Selectors
 // ---------
 // 
 // Board -> Number
-// 
+// Total rows in a Board.
 function totalRowsInBoard(board) {
   return board.length;
 }
 // Board -> Number
-// 
+// Total columns in the first row of a Board. 
 function totalColsInBoard(board) {
   return board[0].length;
 }
@@ -239,12 +324,12 @@ function getSpaceFromBoard(board, row, col) {
 // Tile -> TileInfo
 // Get the tile info from a Tile.
 function tileInfoFromTile(tile) {
-  return tile.tile_info;
+  return tile.tileInfo;
 }
 // Tile -> Fishes | Penguin | false
 // Get what the Tile is occupied by.
 function tileIsOccupiedBy(tile) {
-  return tile.occupied_by;
+  return tile.occupiedBy;
 }
 // TileInfo -> ℕ
 // Get the size in the tileInfo
@@ -254,7 +339,7 @@ function sizeFromTileInfo(tileInfo) {
 // Tile -> ℕ
 // Get the max elements in the tileInfo
 function maxElementsFromTileInfo(tileInfo) {
-  return tileInfo.max_elements
+  return tileInfo.maxElements
 }
 // Fishes -> ℤ+
 // Get the total fishes from Fishes
@@ -295,11 +380,11 @@ function boardTemplate(board) {
 // Template for a UsableSpace.
 function usableSpaceTemplate(usableSpace) {
   console.assert(isUsableSpace(usableSpace));
-  const occupied_by = usableSpace.occupied_by
-  if(isFalse(occupied_by)) {
+  const occupiedBy = usableSpace.occupiedBy
+  if(isFalse(occupiedBy)) {
     // ...
-  } else if(isTile(occupied_by)) {
-    tileTemplate(occupied_by);
+  } else if(isTile(occupiedBy)) {
+    tileTemplate(occupiedBy);
   }
 }
 // UnusableSpace -> ...
@@ -312,21 +397,21 @@ function unusableSpaceTemplate(unusableSpace) {
 // Template for a Tile.
 function tileTemplate(tile) {
   console.assert(isTile(tile));
-  const tile_info = tile.tile_info;
-  const occupied_by = tile.occupied_by;
+  const tileInfo = tile.tileInfo;
+  const occupiedBy = tile.occupiedBy;
 
   // ...
-  tileTemplate(tile_info);
+  tileTemplate(tileInfo);
   // ...
-  if(isFalse(occupied_by)) {
+  if(isFalse(occupiedBy)) {
 
-  } else if(isFishes(occupied_by)) {
+  } else if(isFishes(occupiedBy)) {
     // ...
-    fishesTemplate(occupied_by)
+    fishesTemplate(occupiedBy)
     // ...
-  } else if(isPenguin(occupied_by)) {
+  } else if(isPenguin(occupiedBy)) {
     // ...
-    penguinTemplate(occupied_by)
+    penguinTemplate(occupiedBy)
     // ...
   }
 }
@@ -335,11 +420,11 @@ function tileTemplate(tile) {
 function tileInfoTemplate(tileInfo) {
   console.assert(isTileInfo(tileInfo));
   const size = tileInfo.size;
-  const max_elements = tileInfo.max_elements;
+  const maxElements = tileInfo.maxElements;
   // ...
   size
   // ...
-  max_elements
+  maxElements
   // ...
 }
 // Fishes -> ...
