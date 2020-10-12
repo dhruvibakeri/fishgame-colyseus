@@ -1,6 +1,17 @@
 // Data Definition
 // ---------------
 // 
+// GameState = { 
+//   gameStage: GameStage,
+//   board: Board | false,
+//   next_move: UUID | false,
+//   players: Players
+// }
+// 
+// Players = [UUID, PlayerInfo][]
+// PlayerInfo = { color: PenguinColor, score: ℕ }
+// GameStage = "joining" | "placing" | "playing" | "done"
+// 
 // Board = (UsableSpace | UnusableSpace)[][]
 // 
 // UsableSpace = { kind: "usableSpace", occupiedBy: Tile | false}
@@ -47,12 +58,59 @@
 // ----------
 //
 // Any -> Boolean
+// is `a` a GameState
+function isGameState(a) {
+  
+}
+// Any -> Boolean
+// is `a` a Players?
+function isPlayers(a) {
+  if(Array.isArray(a)) {
+    let allValid = true
+    for(let i = 0; i < a.length; i++) {
+      let elem = a[i];
+      if(Array.isArray(elem) && elem.length === 2) {
+        if(!isUUID(elem[0]) || !isPlayerInfo(elem[1])) {
+          allValid = false;
+        }
+      } else {
+        return false;
+      }
+    }
+    return allValid;
+  } else {
+    return false;
+  }
+}
+// 
+// Any -> Boolean
+// is `a` a PlayerInfo?
+function isPlayerInfo(a) {
+  return isObj(a) &&
+         Object.keys(a).length === 2 &&
+         a.hasOwnProperty("color") &&
+         a.hasOwnProperty("score") &&
+         a.isPenguinColor(a.color) &&
+         isNum(a.score) &&
+         isNumInt(a.score) &&
+         a.score >= 0
+}
+// Any -> Boolean
+// is `a` a GameStage? 
+function isGameStage(a) {
+  return typeof isStr(a) && (a === "joining" || a === "placing" || a === "playing" || a === "done");
+}
+// Any -> Boolean
 // is `a` a Board?
 function isBoard(a) {
   if(Array.isArray(a)) {
     let allSpaces = true
     for(let rowIdx = 0; rowIdx < a.length; rowIdx++) {
       let currentRow = a[rowIdx];
+      // TODO: the inner row should also be an array
+      // TODO: make sure there is at least one row
+      // TODO: make sure there are even cols
+      // TODO: make sure all cols are of the same lenght
       for(let colIdx = 0; colIdx < currentRow.length; colIdx++) {
         let currentSpace = currentRow[colIdx];
         if(!isUsableSpace(currentSpace) && !isUnusableSpace(currentSpace)) {
@@ -65,7 +123,6 @@ function isBoard(a) {
     return false;
   }
 }
-//
 // Any -> Boolean
 // is `a` an UsableSpace?
 function isUsableSpace(a) {
@@ -135,6 +192,7 @@ function isPenguin(a) {
     isPenguinColor(a.color);
 }
 // Any -> Boolean
+// is `a` a PenguinColor?
 function isPenguinColor(a) {
   return typeof isStr(a) && (a === "red" || a === "brown" || a === "black" || a === "white");
 }
