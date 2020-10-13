@@ -29,9 +29,7 @@ function createState(UUID, gameState) {
         [UUID, makePlayerInfo(getUnusedColor(gameState), 0)]]));
 
 
-
-    return [res, getPenguinColorFromUUID(UUID, gameState)];
-
+    return [res, getPenguinColorFromUUID(UUID, playersFromGameState(res))];
 
 }
 
@@ -41,7 +39,7 @@ function createState(UUID, gameState) {
 
 function placeAPenguin(UUID, posn, gs) {
 
-    const res = makeGameState(makeGameState("placing"),
+    const res = makeGameState(makeGameStage("placing"),
         makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
             ["penguin", [
                 [[posn[0], posn[1]], getPenguinColorFromUUID(UUID, playersFromGameState(gs))]
@@ -52,9 +50,12 @@ function placeAPenguin(UUID, posn, gs) {
 }
 
 
+
 // UUID Players -> PenguinColor
 // gets the penguin color attached to the given UUID
 function getPenguinColorFromUUID(UUID, players) {
+
+
     let player = getPenguinFromID(UUID, players)
 
     return penguinColorFromPlayer(player[1])
@@ -65,9 +66,14 @@ function getPenguinColorFromUUID(UUID, players) {
 // gets the player data attached to the given UUID
 function getPenguinFromID(UUID, players) {
 
+    let player = []
 
-    let player = players.filter(f => { UUID === f[0] })
-
+    for (let i = 0 ; i < players.length; i++) {
+        if(players[i][0] == UUID) {
+            player = players[i]
+        }
+    }
+    
     return player;
 
 
@@ -78,7 +84,6 @@ function getPenguinFromID(UUID, players) {
 
 function makeMove(UUID, fromPosn, toPosn, gs) {
 
-    let reachablePoints = getReachable(boardFromGameState(gs), fromPosn)
 
 
     if (canMove(fromPosn, toPosn, gs)) {
