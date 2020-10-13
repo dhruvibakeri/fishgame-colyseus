@@ -4,7 +4,7 @@
 // GameState = { 
 //   gameStage: GameStage,
 //   board: Board | false,
-//   next_move: UUID | false,
+//   nextMove: UUID | false,
 //   players: Players
 // }
 // 
@@ -60,8 +60,35 @@
 // Any -> Boolean
 // is `a` a GameState
 function isGameState(a) {
-  
+
+
+  return isObj(a) &&
+         Object.keys(a).length === 4 &&
+         a.hasOwnProperty("gameStage") &&
+         a.hasOwnProperty("board") &&
+         a.hasOwnProperty("nextMove") &&
+         a.hasOwnProperty("players") &&
+         isGameStage(a.gameStage) &&
+         isGameBoard(a.board) &&
+         isNextMove(a.nextMove) &&
+         isPlayers(a.players)
+
+         
+
 }
+
+// Any -> Boolean
+// is `a` a board
+function isGameBoard(a) {
+  return isBoard(a) ||  isFalse(a);
+}
+
+// Any -> Boolean
+// is `a` a nextMove
+function isNextMove(a) {
+  return isUUID(a) ||  isFalse(a);
+}
+
 // Any -> Boolean
 // is `a` a Players?
 function isPlayers(a) {
@@ -82,6 +109,10 @@ function isPlayers(a) {
     return false;
   }
 }
+
+function isUUID(a) {
+  return isNum(a) && isNumInt(a);
+}
 // 
 // Any -> Boolean
 // is `a` a PlayerInfo?
@@ -90,7 +121,7 @@ function isPlayerInfo(a) {
          Object.keys(a).length === 2 &&
          a.hasOwnProperty("color") &&
          a.hasOwnProperty("score") &&
-         a.isPenguinColor(a.color) &&
+         isPenguinColor(a.color) &&
          isNum(a.score) &&
          isNumInt(a.score) &&
          a.score >= 0
@@ -220,7 +251,7 @@ function isPenguinColor(a) {
  * @param {PositiveInteger > 1} hexCol The rows in the board.
  * @param {PositiveInteger > 0} hexRow The columns of the board.
  */
-function dimensionToBoard(size, hexRow, hexCol) {
+/*function dimensionToBoard(size, hexRow, hexCol) {
   let {rectCol, rectRow} = hexToRect(hexRow, hexCol);
   let board = new Array(rectRow);
   for (let curRow = 0; curRow < rectRow; curRow++) {
@@ -237,7 +268,7 @@ function dimensionToBoard(size, hexRow, hexCol) {
     board[curRow] = thisRow
   }
   return board;
-}
+}*/
 
 /**
  * Converts row and columns for the hexagonal grid to row and columns
@@ -258,6 +289,140 @@ function isOdd(n) {
   return n % 2 === 1;
 }
 
+// gameStage board nextMove players -> gameState
+// make a gameState
+function makeGameState(gameStage, board, nextMove, players) {
+  const res = {gameStage : gameStage, board : board, nextMove : nextMove, players : players};
+
+  if(isGameState(res)) {
+    return res;
+  } else {
+    console.error("can't make gameState");
+  }
+
+}
+
+// String -> gameStage
+// makes a gameStage
+function makeGameStage(gameStage) {
+  const res = gameStage;
+
+  if(isGameStage(res)) {
+    return res;
+  }
+ else {
+  console.error("can't make gameStage");
+ }
+}
+
+
+
+// objSpecs = ["fish" | "hole" | "penguin", [posn][]][]
+
+function makeBoardWithSpecs(board, addFish, addPenguin, addHole, objSpecs) {
+
+
+  objSpecs.forEach(o => { 
+    console.log("o",o)
+    if(o[0] === "fish") {
+        o[1].forEach(f => { 
+          addFish(board, f[0][0], f[0][1], f[1])
+        });
+      }
+
+      else if(o[0] === "penguin") {
+
+        o[1].forEach(p => { 
+          console.log("works")
+          console.log("p", p)
+          addPenguin(board, p[0][0], p[0][1], p[1])
+        });
+      }
+
+      else if(o[0] === "hole") {
+        o[1].forEach(h => { 
+          addHole(board, h[0], h[1])
+        });
+    }
+  });
+
+
+  const res = board;
+
+  if(isBoard(res)) {
+    return board;
+  }
+
+  else {
+    console.error("can't make board");
+  }
+}
+
+
+
+
+// UUID | False -> nextMove
+// makes a nextMove
+function makeNextMove(playerUUID) {
+  const res = playerUUID;
+
+  if (isNextMove(res)) {
+    return res;
+  }
+  else {
+    console.error("can't make nextMove");
+  }
+}
+
+
+// [UUID, PlayerInfo][] -> Players
+// make a `Players`
+function makePlayers(players) {
+  const res = players;
+
+  if(isPlayers(res)) {
+    return res;
+  
+  }
+  else {
+    console.error("can't make Players");
+  }
+}
+
+// Players = [UUID, PlayerInfo][]
+// PlayerInfo = { color: PenguinColor, score: ℕ }
+
+// Integer -> UUID
+// makes a `UUID`
+function makeUUID(UUID) {
+  const res = UUID;
+
+  if(isUUID(res)) {
+    return res;
+  }
+  else {
+    console.error("can't make UUID");
+  }
+}
+
+// String Integer -> PlayerInfo
+// makes a `PlayerInfo `
+function makePlayerInfo(color, score) {
+  const res = {color : makePenguinColor(color), score : score};
+
+  if(isPlayerInfo(res)) {
+    return res;
+  }
+  else {
+    console.error("can't make PlayerInfo");
+  }
+
+}
+
+
+
+
+
 // String -> PenguinColor
 // Make a PenguinColor.
 function makePenguinColor(color) {
@@ -274,7 +439,7 @@ function makePenguinColor(color) {
 // PenguinColor -> Penguin
 // Makes a Penguin from a PenguinColor.
 function makePenguin(penguinColor) {
-  const res = {kind:"penguin", color: penguin_color};
+  const res = {kind:"penguin", color: penguinColor};
   if(isPenguin(res)) {
     return res;
   } else { 
@@ -379,6 +544,11 @@ function totalColsInBoard(board) {
 function getSpaceFromBoard(board, row, col) {
   return board[row][col];
 }
+
+function spaceIsOccupiedBy(space) {
+  return space.occupiedBy;
+}
+
 // Tile -> TileInfo
 // Get the tile info from a Tile.
 function tileInfoFromTile(tile) {
@@ -397,7 +567,7 @@ function sizeFromTileInfo(tileInfo) {
 // Tile -> ℕ
 // Get the max elements in the tileInfo
 function maxElementsFromTileInfo(tileInfo) {
-  return tileInfo.maxElements
+  return tileInfo.maxElements;
 }
 // Fishes -> ℤ+
 // Get the total fishes from Fishes
@@ -408,6 +578,42 @@ function totalFishesFromFishes(fishes) {
 // Get the color of a Penguin.
 function penguinColorFromPenguin(penguin) {
   return penguin.color
+}
+
+// gameState -> gameStage
+// get the stage of the game state
+function gameStageFromGameState(gameState) {
+  return gameState.gameStage;
+}
+
+// gameState -> board
+// get the board of the game state
+function boardFromGameState(gameState) {
+  return gameState.board;
+}
+
+// gameState -> nextMove
+// get the nextMove of the game state
+function nextMoveFromGameState(gameState) {
+  return gameState.nextMove;
+}
+
+// gameState -> players
+// get the players of the gameState
+function playersFromGameState(gameState) {
+  return gameState.players;
+}
+
+// playerInfo -> PenguinColor
+// gets the assigned color of the player
+function penguinColorFromPlayer(playerInfo) {
+  return playerInfo.color;
+}
+
+// playerInfo -> score
+// gets the score of the player
+function scoreFromPlayer(playerInfo) {
+  return playerInfo.score;
 }
 // 
 // Templates
