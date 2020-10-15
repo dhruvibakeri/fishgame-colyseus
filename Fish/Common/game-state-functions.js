@@ -1,32 +1,20 @@
-/*createState : UUID GameState -> [GameState, PlayerColor]
-Adds an unused color as the oldest player to the gs
-creating a state for a certain number of players;
 
-placePenguin : UUID Posn GameState -> GameState 
-Note: If the output gs is the same as the input gs, then kick the player with the UUID out.
-place an avatar on behalf of a player;
-
-makeMove : UUID fromPosn toPosn GameState -> GameState
-move an existing avatar from one spot to another on behalf of the player;
-
-canMove : UUID fromPosn toPosn GameState -> Boolean
-determine whether any player can move an avatar; and
-
-renderState : GameState -> void
-rendering the state graphically.*/
-
+// [GameState][]
+// Contains all the gameStates 
+let all_game_states = []
 
 //UUID GameState -> [GameState, PlayerColor]
 // Adds an unused color as the oldest player to the gs
 
 function createState(UUID, gameState) {
 
-
     const res = makeGameState(gameStageFromGameState(gameState),
         boardFromGameState(gameState),
         nextMoveFromGameState(gameState),
         makePlayers([...playersFromGameState(gameState),
         [UUID, makePlayerInfo(getUnusedColor(gameState), 0)]]));
+
+    all_game_states.push(res)
 
 
     return [res, getPenguinColorFromUUID(UUID, playersFromGameState(res))];
@@ -39,6 +27,8 @@ function createState(UUID, gameState) {
 
 function placeAPenguin(UUID, posn, gs) {
 
+
+
     const res = makeGameState(makeGameStage("placing"),
         makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
             ["penguin", [
@@ -46,7 +36,11 @@ function placeAPenguin(UUID, posn, gs) {
             ]]]),
         nextMoveFromGameState(gs), playersFromGameState(gs))
 
+    all_game_states.push(res)
+
+
     return res;
+
 }
 
 
@@ -62,18 +56,19 @@ function getPenguinColorFromUUID(UUID, players) {
 }
 
 
+
 // UUID Players -> [UUID, PlayerInfo]
 // gets the player data attached to the given UUID
 function getPenguinFromID(UUID, players) {
 
     let player = []
 
-    for (let i = 0 ; i < players.length; i++) {
-        if(players[i][0] == UUID) {
+    for (let i = 0; i < players.length; i++) {
+        if (players[i][0] == UUID) {
             player = players[i]
         }
     }
-    
+
     return player;
 
 
@@ -85,14 +80,20 @@ function getPenguinFromID(UUID, players) {
 function makeMove(UUID, fromPosn, toPosn, gs) {
 
 
-
     if (canMove(fromPosn, toPosn, gs)) {
         const res = makeGameState("playing", makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
             ["penguin", [
                 [[toPosn.row, toPosn.col], getPenguinColorFromUUID(UUID, playersFromGameState(gs))]
-            ]]]),
-            false,
+            ]],
+            ["hole", [
+                [fromPosn.row, fromPosn.col]
+            ]]
+        ]),
+            getNextPlayer(UUID, gs),
+
             playersFromGameState(gs))
+
+        all_game_states.push(res)
 
         return res;
     }
@@ -106,8 +107,132 @@ function makeMove(UUID, fromPosn, toPosn, gs) {
 function canMove(fromPosn, toPosn, gs) {
 
     let reachablePoints = getReachable(boardFromGameState(gs), fromPosn)
-    return reachablePoints.includes(toPosn)
+    const reachableStrings = reachablePoints.map(JSON.stringify)
+    return reachableStrings.includes(JSON.stringify(toPosn))
 }
+
+// UUID GameState -> NextMove
+// gets the NextMove of the gameState
+function getNextPlayer(currentPlayer, gs) {
+    if (isGameOn(gs)) {
+
+        return getNextUUID(currentPlayer, gs)
+
+    }
+    else {
+        return false;
+    }
+}
+
+// UUID GameState -> UUID
+// gets the id of the player whose turn is next
+function getNextUUID(currentPlayer, gs) {
+
+    players = playersFromGameState(gs)
+
+
+    for (let i = 0; i < players.length; i++) {
+
+        if (players[i][0] == currentPlayer) {
+
+            if (i < players.length - 1) {
+
+                if (penguinHasMoves(players[i + 1][0], gs)) {
+                    return players[i + 1][0];
+                }
+                else {
+                    return getNextUUID(players[i + 1][0], gs)
+                }
+            }
+        
+            else {
+
+                if (penguinHasMoves(players[0][0], gs)) {
+                    return players[0][0];
+                    
+                }
+                else {
+                    return getNextUUID(players[0][0], gs)
+                }
+                
+            }
+        }
+    }
+}
+
+// UUID GameState -> Boolean
+// checks if given user has moves left
+function penguinHasMoves(UUID, gs) {
+
+    const penguinPosns = getPenguinPositions(UUID, gs)
+
+    allReachablePoints = []
+
+    penguinPosns.forEach(p => {
+        allReachablePoints.push(getReachable(boardFromGameState(gs), p))
+    })
+
+
+    return allReachablePoints[0].length > 0
+
+}
+
+// UUID GameState -> [{ row: x, col: y }][]
+// gets the current positions of a given player's penguins
+function getPenguinPositions(UUID, gs) {
+
+    let posns = []
+
+    const color = getPenguinColorFromUUID(UUID, playersFromGameState(gs))
+
+    for (let i = 0; i < boardFromGameState(gs).length; i++) {
+        for (let j = 0; j < boardFromGameState(gs)[0].length; j++) {
+            if (isUsableSpace(boardFromGameState(gs)[i][j]) && isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(boardFromGameState(gs)[i][j])))) {
+                if (penguinColorFromPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(boardFromGameState(gs)[i][j]))) === color) {
+                    posns.push({ row: i, col: j })
+                }
+            }
+        }
+    }
+
+    return posns;
+}
+
+// GameState -> Boolean
+// checks if given gameState has valid moves left
+function isGameOn(gs) {
+
+    const penguinPosns = getAllPenguinPositions(gs)
+
+    allReachablePoints = []
+
+    penguinPosns.forEach(p => {
+        allReachablePoints.push(getReachable(boardFromGameState(gs), p))
+    })
+
+    return allReachablePoints[0].length > 1
+
+}
+
+// GameState -> [{ row: x, col: y }][]
+// gets positions for all the players' penguins'
+function getAllPenguinPositions(gs) {
+
+    let posns = []
+
+    for (let i = 0; i < boardFromGameState(gs).length; i++) {
+        for (let j = 0; j < boardFromGameState(gs)[0].length; j++) {
+            if (isUsableSpace(boardFromGameState(gs)[i][j]) && isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(boardFromGameState(gs)[i][j])))) {
+
+                posns.push({ row: i, col: j })
+
+            }
+        }
+    }
+
+    return posns;
+}
+
 
 
 
@@ -128,26 +253,7 @@ function getUnusedColor(gameState) {
     return makePenguinColor(res);
 }
 
-// GameState -> void
-// rendering the state graphically
 
-function renderState(gs) {
-    setCanvasConfig();
-    const dimensions = RectToHex(totalColsInBoard(boardFromGameState(gs)), totalRowsInBoard(boardFromGameState(gs)), boardFromGameState(gs))
-    const [dRows, dCols] = [dimensions.row, dimensions.col]
-    const [canvasWidth, canvasHeight] = [...backgDimensions(dRows, dCols, DEFAULT_SIZE)]
-    setCanvasDimension(canvasWidth, canvasHeight);
-    allHexes(boardFromGameState(gs));
-
-}
-
-// rendering
-renderState(makeGameState("playing", dimensionToBoard(4, 3), false, []))
-
-// converts rect dimensions to hex dimensions
-function RectToHex(col, row, board) {
-    return { col: col / 2, row: isUnusableSpace(board[board.length - 1][1]) ? (row * 2) - 1 : row * 2 };
-}
 
 
 
