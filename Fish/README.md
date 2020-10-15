@@ -25,7 +25,11 @@ The **`Common`** directory contains the code, tests, libraries, documentation.
   - `game_state.md`: The game state specification.
   - `hex-math.md`: Mathematics related to our hexagon tesselation.
 - Code
-  - [`fish.js`](./Common/fish.js): Main code.
+  - [`board-generation.js`](./Common/board-generation.js): Code for initial board generation.
+  - [`board-reachable-paths.js`](./Common/board-reachable-paths.js): Code for fetching reachable points from a board position.
+  - [`board-specs.js`](./Common/board-specs.js): Code for specifying board configurations.
+  - [`hex-view-generation.js`](./Common/hex-view-generation.js): Code for generating view for hexagon tiles according to board specs.
+  - [`game-state-examples.js`](./Common/game-state-examples.js): All states of one full game shown through examples.
   - [`game-state-functions.js`](./Common/game-state-functions.js): The functions related to game state.
   - [`game-state-interface.js`](./Common/game-state-interface.js): The game state interface.
   - [`game-state-interface-tests.js`](./Common/game-state-interface-tests.js): The game state interface tests
