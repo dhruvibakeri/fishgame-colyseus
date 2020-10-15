@@ -48,5 +48,22 @@ renderState(game_over)
 
 console.log(all_game_states)
 
+/*
+ALL GAME STATES FOR A FULL GAME(played above) : 
+0: {gameStage: "joining", board: false, nextMove: false, players: Array(1)}
+1: {gameStage: "joining", board: false, nextMove: false, players: Array(2)}
+2: {gameStage: "joining", board: false, nextMove: false, players: Array(3)}
+3: {gameStage: "joining", board: false, nextMove: false, players: Array(4)}
+4: {gameStage: "placing", board: Array(2), nextMove: false, players: Array(4)}
+5: {gameStage: "placing", board: Array(2), nextMove: false, players: Array(4)}
+6: {gameStage: "placing", board: Array(2), nextMove: false, players: Array(4)}
+7: {gameStage: "placing", board: Array(2), nextMove: false, players: Array(4)}
+8: {gameStage: "playing", board: Array(2), nextMove: 2345, players: Array(4)}
+9: {gameStage: "playing", board: Array(2), nextMove: 3456, players: Array(4)}
+10: {gameStage: "playing", board: Array(2), nextMove: 1234, players: Array(4)}
+11: {gameStage: "playing", board: Array(2), nextMove: false, players: Array(4)}
+12: {gameStage: "done", board: Array(2), nextMove: false, players: Array(4)}
+*/
+
 
 
