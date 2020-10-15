@@ -1,0 +1,40 @@
+<html>
+
+<head>
+  <title>Mocha</title>
+  <!-- CSS TO STYLE TEST RESULTS -->
+  <link rel="stylesheet"
+        href="mocha.css" />
+  <!-- TESTING LIBRARY -->
+  <script src="mocha.js"></script>
+  <!-- ASSERTION LIBRARY -->
+  <script src="chai.js"></script>
+</head>
+
+<body>
+  <!-- TEST SETUP -->
+  <script>
+    mocha.setup('bdd');
+  </script>
+  <!-- CODE TO TEST -->
+  <script src="game-state-interface.js"></script>
+  <script src="board-generation.js"></script>
+  <script src="hex-view-generation.js"></script>
+  <script src="board-specs.js"></script>
+  <script src="board-reachable-paths.js"></script>
+  <script src="game-state-functions.js"></script>
+  <script src="render.js"></script>
+  <script src="game-state-examples.js"></script>
+  <!-- TEST SUITE -->
+  <script src="game-state-function-tests.js"></script>
+  <!-- RUNNING TESTS -->
+  <script>
+    window.onload = () => {
+      mocha.run();
+    };
+  </script>
+  <!-- DISPLAYING TESTS -->
+  <div id="mocha"></div>
+</body>
+
+</html>
