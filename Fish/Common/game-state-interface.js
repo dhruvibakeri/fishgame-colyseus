@@ -2,7 +2,7 @@
 // ---------------
 // 
 // GameState = { 
-//   gameStage: GameStage,
+//   gameStage: GameStage, 
 //   board: Board | false,
 //   nextMove: UUID | false,
 //   players: Players
@@ -54,8 +54,7 @@
 // 
 // - PenguinColor: are the possible colors that penugins can hold. 
 //
-// Predicates
-// ----------
+// --------------------------------------- Predicates -------------------------------------------------------------
 //
 // Any -> Boolean
 // is `a` a GameState
@@ -227,58 +226,36 @@ function isPenguin(a) {
 function isPenguinColor(a) {
   return typeof isStr(a) && (a === "red" || a === "brown" || a === "black" || a === "white");
 }
-// 
-// Constructors
-// ------------
-//
-/**
- * Even rows:
- * 
- *  1   1   1          1  1  1  1  1  1  
- *    1   1   1    =>  1  1  1  1  1  1 
- *  1   1   1   
- *    1   1   1  
- * 
- * Odd rows:
- * 
- *   1   1   1          1  1  1  1  1  1  
- *     1   1   1    =>  1  0  1  0  1  0 
- *   1   1   1   
- * 
- * Turns the specification of a hexagonal grid into a 2d-array representation.
- * 
- * @param {Natural} size The size of a single tile
- * @param {PositiveInteger > 1} hexCol The rows in the board.
- * @param {PositiveInteger > 0} hexRow The columns of the board.
- */
-/*function dimensionToBoard(size, hexRow, hexCol) {
-  let {rectCol, rectRow} = hexToRect(hexRow, hexCol);
-  let board = new Array(rectRow);
-  for (let curRow = 0; curRow < rectRow; curRow++) {
-    let thisRow = new Array(rectCol);
-    for (let curCol = 0; curCol < rectCol; curCol++) {
-        // last row's odd column elements on boards with odd height should be blank
-        const isUnusableSpace =  isOdd(hexRow) &&  curRow === rectRow - 1 &&  isOdd(curCol);
-        if(isUnusableSpace) {
-          thisRow[curCol] = makeUnusableSpace()
-        } else {
-          thisRow[curCol] = makeUsableSpace(false);
-        }
-    }
-    board[curRow] = thisRow
-  }
-  return board;
-}*/
 
-/**
- * Converts row and columns for the hexagonal grid to row and columns
- * for our 2-dimensional array representation.
- * @param {PositiveInteger > 1} col The cols in the board
- * @param {PositiveInteger > 0} row The rows in the board
- */
-function hexToRect(col, row) {
-  return { col: col * 2, row: row % 2 === 0 ? row / 2 : (row + 1) / 2 };
+// --------------------------------------- Predicate Helpers -------------------------------------------------------------
+// 
+// Number -> Boolean
+// is the number `n` an integer?
+function isNumInt(n) {
+  return n % 1 === 0
 }
+// Any -> Boolean
+// Does `a` have the type string?
+function isStr(a) {
+  return typeof a === "string";
+}
+// Any -> Boolean
+// is `a` false?
+function isFalse(a) {
+  return typeof a === "boolean" && a === false;
+}
+// Any -> Boolean
+// does `a` have the type number?
+function isNum(a) {
+  return typeof a === "number";
+}
+// Any -> Boolean
+// does `a` have the type object (and is not null)?
+function isObj(a) {
+  return typeof a === "object" && a !== null;
+}
+
+// --------------------------------------- Constructors -------------------------------------------------------------
 
 /**
  * Is the number's parity odd?
@@ -315,42 +292,51 @@ function makeGameStage(gameStage) {
  }
 }
 
+function duplicateBoard(board) {
+
+  var newArray = board.map(function(b) {
+    return b.slice();
+});
+
+  return newArray
+
+}
+
 
 
 // objSpecs = ["fish" | "hole" | "penguin", [posn][]][]
 
 function makeBoardWithSpecs(board, addFish, addPenguin, addHole, objSpecs) {
 
+  let newBoard = duplicateBoard(board)
+
 
   objSpecs.forEach(o => { 
-    console.log("o",o)
     if(o[0] === "fish") {
         o[1].forEach(f => { 
-          addFish(board, f[0][0], f[0][1], f[1])
+          addFish(newBoard, f[0][0], f[0][1], f[1])
         });
       }
 
       else if(o[0] === "penguin") {
 
         o[1].forEach(p => { 
-          console.log("works")
-          console.log("p", p)
-          addPenguin(board, p[0][0], p[0][1], p[1])
+          addPenguin(newBoard, p[0][0], p[0][1], p[1])
         });
       }
 
       else if(o[0] === "hole") {
         o[1].forEach(h => { 
-          addHole(board, h[0], h[1])
+          addHole(newBoard, h[0], h[1])
         });
     }
   });
 
 
-  const res = board;
+  const res = newBoard;
 
   if(isBoard(res)) {
-    return board;
+    return newBoard;
   }
 
   else {
@@ -496,38 +482,8 @@ function makeUnusableSpace() {
     console.error("can't make UnusableSpace");
   }
 }
-//
-// Predicate Helpers
-// -----------------
-// 
-// Number -> Boolean
-// is the number `n` an integer?
-function isNumInt(n) {
-  return n % 1 === 0
-}
-// Any -> Boolean
-// Does `a` have the type string?
-function isStr(a) {
-  return typeof a === "string";
-}
-// Any -> Boolean
-// is `a` false?
-function isFalse(a) {
-  return typeof a === "boolean" && a === false;
-}
-// Any -> Boolean
-// does `a` have the type number?
-function isNum(a) {
-  return typeof a === "number";
-}
-// Any -> Boolean
-// does `a` have the type object (and is not null)?
-function isObj(a) {
-  return typeof a === "object" && a !== null;
-}
-//
-// Selectors
-// ---------
+
+// --------------------------------------- Selectors -----------------------------------------------------------------
 // 
 // Board -> Number
 // Total rows in a Board.
@@ -616,8 +572,7 @@ function scoreFromPlayer(playerInfo) {
   return playerInfo.score;
 }
 // 
-// Templates
-// ---------
+//----------------------------------------------------Templates---------------------------------------------------------
 //
 // Board -> ...
 // Template for a Board.
