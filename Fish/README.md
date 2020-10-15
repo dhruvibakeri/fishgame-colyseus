@@ -25,12 +25,12 @@ The **`Common`** directory contains the code, tests, libraries, documentation.
   - `game_state.md`: The game state specification.
   - `hex-math.md`: Mathematics related to our hexagon tesselation.
 - Code
-  - `fish.js`: Main code.
-  - `game-state-functions.js`: The functions related to game state.
-  - `game-state-interface.js`: The game state interface.
-  - `game-state-interface-tests.js`: The game state interface tests
-  - `index.html`: Used to start and render the game.
-  - `reset.css`: A css reset.
-  - `style.css`: Styling the game board.
-  - `test-runner.html`:  Running and displaying the mocha tests.
-  - `tests.js`: Game tests.
+  - [`fish.js`](./Common/fish.js): Main code.
+  - [`game-state-functions.js`](./Common/game-state-functions.js): The functions related to game state.
+  - [`game-state-interface.js`](./Common/game-state-interface.js): The game state interface.
+  - [`game-state-interface-tests.js`](./Common/game-state-interface-tests.js): The game state interface tests
+  - [`index.html`](./Common/index.html): Used to start and render the game.
+  - [`reset.css`](./Common/reset.css): A css reset.
+  - [`style.css`](./Common/style.css): Styling the game board.
+  - [`test-runner.html`](./Common/test-runner.html):  Running and displaying the mocha tests.
+  - [`tests.js`](./Common/tests.js): Game tests.
