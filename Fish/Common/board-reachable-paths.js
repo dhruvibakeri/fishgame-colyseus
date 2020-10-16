@@ -2,7 +2,7 @@
 //
 // Board BoardPosn -> BoardPosn[]
 // gets board positions of all valid moves
-function getReachable(board, boardPosn) {
+function getReachable (board, boardPosn) {
     let paths = getPaths(board, boardPosn)
     return [ 
         ...paths.north,

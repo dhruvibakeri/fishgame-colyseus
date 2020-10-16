@@ -129,7 +129,7 @@ function isOdd(n) {
  * @param {Natural} n The number whose parity is to be determined.
  * @returns Whether the number is even.
  */
-function isEven(n) {
+ function isEven(n) {
     return n % 2 === 0;
 }
 
@@ -142,3 +142,4 @@ function isEven(n) {
 function hexToRect(col, row) {
     return { col: col * 2, row: row % 2 === 0 ? row / 2 : (row + 1) / 2 };
 }
+

@@ -1,5 +1,4 @@
-const readline = require('readline');
-
+//  -> 
 // Compiles all the lines from
 // STDIN and sends to `xjson`
 function main() {
@@ -14,8 +13,8 @@ function main() {
   });
 }
 
+// String[] -> Number
+// put the lines together, parse, and compute the reachable states
 function parseJSON(lines) {
-  return JSON.parse(lines.join("\n"))
+  return getTotalReachableFromBoardPosn(JSON.parse(lines.join("\n")));
 }
-
-main();

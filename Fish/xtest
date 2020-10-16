@@ -3,11 +3,11 @@
 case "$(uname -s)" in
 
    Darwin)
-      node ./Common/xtest/index.js
+      node ./Common/compiled/compiled.js
      ;;
 
    Linux)
-     /opt/rh/rh-nodejs10/root/usr/bin/node ./Common/xtest/index.js
+     /opt/rh/rh-nodejs10/root/usr/bin/node ./Common/compiled/compiled.js
      ;;
 
    *)
