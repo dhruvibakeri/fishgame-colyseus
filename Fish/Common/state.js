@@ -226,7 +226,7 @@ function isPenguin(a) {
 function isPenguinColor(a) {
   return typeof isStr(a) && (a === "red" || a === "brown" || a === "black" || a === "white");
 }
-
+//
 // --------------------------------------- Predicate Helpers -------------------------------------------------------------
 // 
 // Number -> Boolean
