@@ -39,8 +39,7 @@ The **`Common`** directory contains the code, tests, libraries, documentation.
   - [`test-runner.html`](./Common/test-runner.html):  Running and displaying the mocha tests.
   - [`tests.js`](./Common/tests.js): Game tests.
 
-
 ## Tests
 
-- `xtest` can be run as a script. 
-- `google-chrome ./Common/test-runner.html` can be run to open tests in the browser
+- `xtest` can be run as a script.
+- `google-chrome ./Common/test-runner.html` can be run to open tests in the browser.
