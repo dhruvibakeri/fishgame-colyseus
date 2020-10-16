@@ -137,10 +137,11 @@ function isBoard(a) {
     let allSpaces = true
     for(let rowIdx = 0; rowIdx < a.length; rowIdx++) {
       let currentRow = a[rowIdx];
-      // TODO: the inner row should also be an array
-      // TODO: make sure there is at least one row
-      // TODO: make sure there are even cols
-      // TODO: make sure all cols are of the same lenght
+      // The following run-time checks could be added but will lead to a performance hit:
+      // the inner row should also be an array
+      // make sure there is at least one row
+      // make sure there are even cols
+      // make sure all cols are of the same lenght
       for(let colIdx = 0; colIdx < currentRow.length; colIdx++) {
         let currentSpace = currentRow[colIdx];
         if(!isUsableSpace(currentSpace) && !isUnusableSpace(currentSpace)) {
