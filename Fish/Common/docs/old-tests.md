@@ -1,3 +1,8 @@
+# These are some of the old tests
+
+We can put these back into the test suite once we change the representation of data to the new versions.
+
+```js
 var assert = chai.assert
 
 describe("get the background dimensions depending on the board dimension", () => {
@@ -375,13 +380,13 @@ describe("create a hexagon with given configs", () => {
 describe("get tiles that are reachable from given boardPosn", () => {
 
     let board = [
-        [1,1,1,1], 
+        [1,1,1,1],
         [1,1,1,1],
         [1,1,1,1]
     ]
 
     it("paths reachable from [2,1]", () => {
-        assert.deepEqual(getReachable(board, {col:2, row:1}), 
+        assert.deepEqual(getReachable(board, {col:2, row:1}),
         [
             {col:2,row:0},
             {col:2,row:2},
@@ -392,7 +397,7 @@ describe("get tiles that are reachable from given boardPosn", () => {
         ])
     })
     it("paths reachable from [0,0]", () => {
-        assert.deepEqual(getReachable(board, {col:0, row:0}), 
+        assert.deepEqual(getReachable(board, {col:0, row:0}),
         [
             {col:0,row:1},
             {col:0,row:2},
@@ -405,54 +410,41 @@ describe("get tiles that are reachable from given boardPosn", () => {
 
 
 describe("test getting neighbors in all directions for even and odd columns", () => {
-    it("test getNeighborNorth", () => { 
-        assert.deepEqual(getNeighborNorth({col: 2, row: 1}), {col:2,row:0}) 
-      })
-      
-      it("test getNeighborSouth", () => { 
-        assert.deepEqual(getNeighborSouth({col: 2, row: 1}), {col:2,row:2}) 
-      })
-      
-      it("test getNeighborNorthWest", () => { 
-        assert.deepEqual(getNeighborNorthWest({col: 2, row: 1}), {col:1,row:0}) 
-      })
-      
-      it("test getNeighborNorthEast", () => { 
-        assert.deepEqual(getNeighborNorthEast({col: 2, row: 1}), {col:3,row:0}) 
-      })
-      
-      it("test getNeighborSouthWest", () => { 
-        assert.deepEqual(getNeighborSouthWest({col: 2, row: 1}), {col:1,row:2}) 
-      })
-      
-      it("test getNeighborSouthEast", () => { 
-        assert.deepEqual(getNeighborSouthEast({col: 2, row: 1}), {col:3,row:2}) 
-      })
-      
-      it("test getNeighborNorth", () => { 
-        assert.deepEqual(getNeighborNorth({col: 1, row: 1}), {col:1,row:0}) 
-      })
-      
-      it("test getNeighborSouth", () => { 
-        assert.deepEqual(getNeighborSouth({col: 1, row: 1}), {col:1,row:2}) 
-      })
-      
-      it("test getNeighborNorthWest", () => { 
-        assert.deepEqual(getNeighborNorthWest({col: 1, row: 1}), {col:0,row:0}) 
-      })
-      
-      it("test getNeighborNorthEast", () => { 
-        assert.deepEqual(getNeighborNorthEast({col: 1, row: 1}), {col:2,row:0}) 
-      })
-      
-      it("test getNeighborSouthWest", () => { 
-        assert.deepEqual(getNeighborSouthWest({col: 1, row: 1}), {col:0,row:2}) 
-      })
-      
-      it("test getNeighborSouthEast", () => { 
-        assert.deepEqual(getNeighborSouthEast({col: 1, row: 1}), {col:2,row:2}) 
-      })
+  it("test getNeighborNorth", () => {
+    assert.deepEqual(getNeighborNorth({col: 2, row: 1}), {col:2,row:0});
+  })
+  it("test getNeighborSouth", () => {
+    assert.deepEqual(getNeighborSouth({col: 2, row: 1}), {col:2,row:2});
+  })
+  it("test getNeighborNorthWest", () => {
+    assert.deepEqual(getNeighborNorthWest({col: 2, row: 1}), {col:1,row:0});
+  })
+  it("test getNeighborNorthEast", () => {
+    assert.deepEqual(getNeighborNorthEast({col: 2, row: 1}), {col:3,row:0});
+  })
+  it("test getNeighborSouthWest", () => {
+    assert.deepEqual(getNeighborSouthWest({col: 2, row: 1}), {col:1,row:2});
+  })
+  it("test getNeighborSouthEast", () => {
+    assert.deepEqual(getNeighborSouthEast({col: 2, row: 1}), {col:3,row:2});
+  })
+  it("test getNeighborNorth", () => {
+    assert.deepEqual(getNeighborNorth({col: 1, row: 1}), {col:1,row:0});
+  })
+  it("test getNeighborSouth", () => {
+    assert.deepEqual(getNeighborSouth({col: 1, row: 1}), {col:1,row:2});
+  })
+  it("test getNeighborNorthWest", () => {
+    assert.deepEqual(getNeighborNorthWest({col: 1, row: 1}), {col:0,row:0});
+  })
+  it("test getNeighborNorthEast", () => {
+    assert.deepEqual(getNeighborNorthEast({col: 1, row: 1}), {col:2,row:0});
+  })
+  it("test getNeighborSouthWest", () => {
+    assert.deepEqual(getNeighborSouthWest({col: 1, row: 1}), {col:0,row:2});
+  })
+  it("test getNeighborSouthEast", () => {
+    assert.deepEqual(getNeighborSouthEast({col: 1, row: 1}), {col:2,row:2});
+  })
 })
-
-
-
+```
