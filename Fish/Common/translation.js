@@ -1,3 +1,7 @@
+// Translation layer for converting the board
+// representation (in Board-Posn) to our board
+// representation. 
+
 var assert = chai.assert
 
 // Board is our version of the board (as defined in the game state)
@@ -74,7 +78,7 @@ const boardExample2 = [[1, 4, 2, 0, 3, 5], [1, "unusableSpace", 1, "unusableSpac
 
 function inputBoardToBoard(inputBoard) {
   const totalRows = inputBoard.length;
-  if(totalRows % 2 === 0) {
+  if(isEven(totalRows)) {
     return evenInputBoardToBoard(inputBoard);
   } else {
     return oddInputBoardToBoard(inputBoard);
@@ -105,7 +109,7 @@ function evenInputBoardToBoard(inputBoard) {
   for(let i = 0; i < inputBoard.length / 2; i = i + 2) {
     let thisRow = inputBoard[i];
     let nextRow = inputBoard[i + 1];
-    let interleavedRow = interleave(thisRow, nextRow);
+    let interleavedRow = interleaveRows(thisRow, nextRow);
     resBoard.push(interleavedRow);
   } 
   return resBoard;
@@ -125,18 +129,38 @@ function oddInputBoardToBoard(inputBoard) {
   for(let i = 0; i < (inputBoard.length - 1) / 2; i = i + 2) {
     let thisRow = inputBoard[i];
     let nextRow = inputBoard[i + 1];
-    let interleavedRow = interleave(thisRow, nextRow);
+    let interleavedRow = interleaveRows(thisRow, nextRow);
     resBoard.push(interleavedRow);
   } 
   let lastRow = inputBoard[inputBoard.length - 1]
-  resBoard.push(interleave(lastRow, new Array(lastRow.length).fill("unusableSpace")))
+  resBoard.push(interleaveRows(lastRow, new Array(lastRow.length).fill("unusableSpace")))
   return resBoard;
 }
 
 // [Array-of X] [Array-of X] -> [Array-of X]
-// Interleaves l1 and l2. Assumption: 
-// l1.length === l2.length
-function interleave(l1, l2) {
+// Interleaves l1 and l2
+// ASSUMPTION: l1.length === l2.length
+
+// Examples for interleave:
+// [], [] -> []
+// [1, 2], [3, 4] -> [1, 3, 2, 4]
+// [1, 2, 3], [4, 0, 5] -> [1, 4, 2, 0, 3, 5]
+
+// Tests for interleave
+describe("interleave tests", () => {
+  it("on empty arrays", () => {
+      assert.deepEqual(interleaveRows([], []), [])
+  })
+  it("on [1, 2], [3, 4]", () => {
+      assert.deepEqual(interleaveRows([1, 2], [3, 4]), [1, 3, 2, 4])
+  })
+  it("on [1, 2, 3], [4, 0, 5]", () => {
+      assert.deepEqual(interleaveRows([1, 2, 3], [4, 0, 5]), [1, 4, 2, 0, 3, 5])
+  })
+})
+
+
+function interleaveRows(l1, l2) {
   console.assert(l1.length === l2.length);
   let interLeaved = [];
   for(let i = 0; i < l1.length; i++) {
@@ -145,18 +169,3 @@ function interleave(l1, l2) {
   }
   return interLeaved;
 }
-// Examples for interleave:
-// [], [] -> []
-// [1, 2], [3, 4] -> [1, 3, 2, 4]
-// [1, 2, 3], [4, 0, 5] -> [1, 4, 2, 0, 3, 5]
-describe("Tests for interleave", () => {
-  it("on empty arrays", () => {
-      assert.deepEqual(interleave([], []), [])
-  })
-  it("on [1, 2], [3, 4]", () => {
-      assert.deepEqual(interleave([1, 2], [3, 4]), [1, 3, 2, 4])
-  })
-  it("on [1, 2, 3], [4, 0, 5]", () => {
-      assert.deepEqual(interleave([1, 2, 3], [4, 0, 5]), [1, 4, 2, 0, 3, 5])
-  })
-})
