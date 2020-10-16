@@ -1,7 +1,5 @@
 // - - - - - - - - - - Neighbors and Paths - - - - - - - - - -
-
-
-
+//
 // Board BoardPosn -> BoardPosn[]
 // gets board positions of all valid moves
 function getReachable(board, boardPosn) {
@@ -42,41 +40,29 @@ function getPaths(board, boardCoord) {
 function getPathInDirection(board, posn, getNeighborInDirection) {
     let res = []
     let next = getNeighborInDirection(posn);
-
     // TERMINATION ARGUMENT: 
     // getNeighborInDirection: Number Number -> BoardPosn
     // will eventually hit the edge of the board or
     // water or another player (which are unreachable).
     while (!isNeighborUnreachable(board, next)) {
         res.push(next);
-       
         next = getNeighborInDirection(next);
-        
     }
-
     return res;
 }
-
-
 // Board BoardPosn -> Boolean
 // Checks if a neighbouring tile is not a valid move
 function isNeighborUnreachable(board, posn) {
     const r = board[posn.row]
-
     const hasRow = posn.row < board.length && posn.row > -1
     const hasCol = posn.col  < board[0].length && posn.col  > -1
-
-
-    return !hasRow ||
-            !hasCol ||
+    return !hasRow || !hasCol ||
         isUnusableSpace(r[posn.col])  ||
         isFalse(spaceIsOccupiedBy(r[posn.col])) ||
         isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(r[posn.col]))) ||
         r[posn.col] === undefined;
 
 }
-
-
 // Number Number -> BoardPosn
 // get the neighbor in the North direction
 function getNeighborNorth({ row, col}) {
@@ -90,51 +76,34 @@ function getNeighborSouth({ row, col}) {
 // Number Number -> BoardPosn
 // get the neighbor in the NorthWest direction
 function getNeighborNorthWest({ row, col}) {
-
-    if(col % 2 == 0) {
-        return { row: row - 1, col: col - 1 }
-    }
-    else {
-        return { row: row, col: col - 1 }
-    }
-    
+    return isEven(col) 
+    ? { row: row - 1, col: col - 1 }
+    : { row: row, col: col - 1 }
 }
 // Number Number -> BoardPosn
 // get the neighbor in the NorthEast direction
 function getNeighborNorthEast({ row, col}) {
-    if(col % 2 == 0) {
-        return { row: row - 1, col: col + 1 }
-    }
-    else {
-        return { row: row, col: col + 1 }
-    }
+    return isEven(col)
+    ? { row: row - 1, col: col + 1 }
+    : { row: row, col: col + 1 }
 }
 // Number Number -> BoardPosn
 // get the neighbor in the SouthWest direction
 function getNeighborSouthWest({ row, col }) {
-    if(col % 2 == 0) {
-        return { row: row , col: col - 1 }
-    }
-    else {
-        return { row: row + 1, col: col - 1 }
-    }
+    return isEven(col)
+    ? { row: row , col: col - 1 }
+    : { row: row + 1, col: col - 1 }
 }
 // Number Number -> BoardPosn
 // get the neighbor in the SouthEast direction
 function getNeighborSouthEast({ row, col}) {
-    if(col % 2 == 0) {
-        return { row: row, col: col + 1 }
-    }
-    else {
-        return { row: row + 1, col: col + 1 }
-    }
+    return isEven(col)
+    ? { row: row, col: col + 1 }
+    : { row: row + 1, col: col + 1 };
 }
-
-
 // remove a tile from the board
 // ASSUMPTION: boardPosn in a valid tile
 function removeTile(board, boardPosn) {
     board[boardPosn] = -1;
     return board;
 }
-
