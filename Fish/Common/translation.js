@@ -1,18 +1,20 @@
 // Translation layer for converting the board
 // representation (in Board-Posn) to our board
 // representation. 
-
-var assert = chai.assert
-
+//
+// . . . . . . . . . . . . . . . . . . . . . . 
+//
 // Board is our version of the board (as defined in the game state)
-
+//
 // InputBoard is the version of board coordinates used as input to the tests
-
+//
 // IntermediateBoard is a version of board that matches our coordinate system
 //   but its elements are either numbers representing the number of fishes on
 //   a tile (0 for hole), or "unusableSpace" for space on the board that's 
 //   unusable.
-
+// 
+// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+//
 // Solution Sketch
 // ---------------
 //
@@ -26,19 +28,31 @@ var assert = chai.assert
 // 
 // Translate IntermediateBoard to Board
 //    Map all the numeric values to actual BoardSpaces and Tiles, and Penguins. 
-
-
+//
+// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+//
 // InputBoard and Board Examples
 // 
-const inputBoardExample1 = [[1,2,3], [4,0,5]]
-const inputBoardExample2 = [[1, 2, 3], [4, 0, 5], [1, 1, 0]];
-const boardExample1 = [[1, 4, 2, 0, 3, 5]];
-const boardExample2 = [[1, 4, 2, 0, 3, 5], [1, "unusableSpace", 1, "unusableSpace", 0, "unusableSpace"]]
-
-
-// - - - Translation Layer from InputBoard to Board - - -
-
-
+const inputBoardExample1 = [
+  [1,2,3],
+  [4,0,5]
+]
+const inputBoardExample2 = [
+  [1, 2, 3],
+  [4, 0, 5],
+  [1, 1, 0]
+];
+const boardExample1 = [
+  [1, 4, 2, 0, 3, 5]
+];
+const boardExample2 = [
+  [1, 4, 2, 0, 3, 5], 
+  [1, "unusableSpace", 1, "unusableSpace", 0, "unusableSpace"]
+]
+//
+//
+// - - - - - - - From InputBoard to Board - - - - - - 
+//
 // Examples
 // --------
 // 
@@ -74,37 +88,40 @@ const boardExample2 = [[1, 4, 2, 0, 3, 5], [1, "unusableSpace", 1, "unusableSpac
 // When the total number of rows are odd:
 //   Add a hole on all even positions on the last row. Do the similar 
 //   shifting (as above) on the resultant even-board.
+//
+// . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
 
+// InputBoard -> IntermediateBoard
+// Translate the input board to intermediate board. 
 
-function inputBoardToBoard(inputBoard) {
+describe("inputBoardToIntermediateBoard tests", () => {
+  it("even # of rows", () => {
+    assert.deepEqual(inputBoardToIntermediateBoard(inputBoardExample1), boardExample1);
+  })
+  it("odd # of rows", () => {
+    assert.deepEqual(inputBoardToIntermediateBoard(inputBoardExample2),  boardExample2);
+  })
+})
+
+function inputBoardToIntermediateBoard(inputBoard) {
   const totalRows = inputBoard.length;
   if(isEven(totalRows)) {
-    return evenInputBoardToBoard(inputBoard);
+    return evenInputBoardToIntermediateBoard(inputBoard);
   } else {
-    return oddInputBoardToBoard(inputBoard);
+    return oddInputBoardToIntermediateBoard(inputBoard);
   }
 }
 
-
-describe("inputBoardToBoard tests", () => {
-  it("even # of rows", () => {
-    assert.deepEqual(inputBoardToBoard(inputBoardExample1), boardExample1);
-  })
-  it("odd # of rows", () => {
-    assert.deepEqual(inputBoardToBoard(inputBoardExample2),  boardExample2);
-  })
-})
-
-// InputBoard -> Board
-// convert an InputBoard with even rows to a Board
+// InputBoard -> IntermediateBoard
+// convert an InputBoard with even rows to a IntermediateBoard
 
 describe("tests for even board helper", () => {
   it("on [[1,2,3] [4,0,5]]", () => {
-    assert.deepEqual(evenInputBoardToBoard(inputBoardExample1), boardExample1);
+    assert.deepEqual(evenInputBoardToIntermediateBoard(inputBoardExample1), boardExample1);
   })
 })
 
-function evenInputBoardToBoard(inputBoard) {
+function evenInputBoardToIntermediateBoard(inputBoard) {
   let resBoard = [];
   for(let i = 0; i < inputBoard.length / 2; i = i + 2) {
     let thisRow = inputBoard[i];
@@ -115,16 +132,16 @@ function evenInputBoardToBoard(inputBoard) {
   return resBoard;
 }
 
-// InputBoard -> Board
-// convert an InputBoard with odd rows to a Board
+// InputBoard -> IntermediateBoard
+// convert an InputBoard with odd rows to a IntermediateBoard
 
 describe("tests for odd board helper", () => {
   it("on [[1, 2, 3], [4, 0, 5], [1, 1, 0]]", () => {
-    assert.deepEqual(oddInputBoardToBoard(inputBoardExample2),  boardExample2);
+    assert.deepEqual(oddInputBoardToIntermediateBoard(inputBoardExample2),  boardExample2);
   })
 })
 
-function oddInputBoardToBoard(inputBoard) {
+function oddInputBoardToIntermediateBoard(inputBoard) {
   let resBoard = [];
   for(let i = 0; i < (inputBoard.length - 1) / 2; i = i + 2) {
     let thisRow = inputBoard[i];
@@ -159,7 +176,6 @@ describe("interleave tests", () => {
   })
 })
 
-
 function interleaveRows(l1, l2) {
   console.assert(l1.length === l2.length);
   let interLeaved = [];
@@ -169,3 +185,94 @@ function interleaveRows(l1, l2) {
   }
   return interLeaved;
 }
+// 
+// Mapping IntermediateBoard to Board
+//
+
+// IntermediateBoard -> Board 
+// converts an intermediate board to a board 
+function intermediateBoardToBoard(intermediateBoard) {
+  let mappedBoard = [];
+  for(let rowIdx = 0; rowIdx < intermediateBoard.length; rowIdx++) {
+    let mappedRow = [];
+    let currentRow = intermediateBoard[rowIdx];
+    for(let colIdx = 0; colIdx < currentRow.length; colIdx++) {
+      let currentElement = currentRow[colIdx];
+      mappedRow.push(mapIntermediateElement(currentElement));
+    }
+    mappedBoard.push(mappedRow);
+  }
+  return mappedBoard
+}
+
+const TILE_SIZE_TEMP = 45;
+const MAX_ELEMENTS_TEMP = 5;
+
+// Natural | "unusableSpace" -> UsableSpace | UnusableSpace 
+// maps an element of an IntermediateBoard to an element of Board
+function mapIntermediateElement(boardElement) {
+  if(boardElement === "unusableSpace") {
+    return makeUnusableSpace();
+  } else {
+    const tileInfo = makeTileInfo(TILE_SIZE_TEMP, MAX_ELEMENTS_TEMP)
+    if(boardElement === 0) {
+      const tile = makeGameTile(tileInfo, false);
+      return makeUsableSpace(tile)
+    } else {
+      const tile = makeGameTile(tileInfo, makeFishes(boardElement));
+      return makeUsableSpace(tile);
+    } 
+  }
+}
+
+// Board-Posn Data Definition from 
+//   https://www.ccs.neu.edu/home/matthias/4500-f20/3.html
+// 
+// Board-Posn is
+// { "position" : Position,
+//   "board" : Board}
+//
+// Board is a JSON array of JSON arrays where each element is
+// either 0 or a number between 1 and 5.
+// The size of the board may not exceed a total of 25 tiles.
+// INTERPRETATION A 0 denotes a hole in the board configuration. All other
+// numbers specify the number of fish displayed on the tile.
+//
+// Position is a JSON array that contains two natural numbers:
+// [board-row,board-column].
+// INTERPRETATION The position uses the computer graphics coordinate system
+// meaning the Y axis points downwards. The position refers to a tile with at least one fish on it.
+//
+
+const exampleBoardPosn1 = {
+  position: [0, 0],
+  board: [[1,2,3],[4,0,5]]
+}
+
+const exampleBoardPosn2 = {
+  position: [0, 0],
+  board: [[1,2,3],[4,0,5],[1,1,0]]
+}
+
+function inputBoardToBoard(inputBoard) {
+  let intermediateBoard = inputBoardToIntermediateBoard(inputBoard);
+  return intermediateBoardToBoard(intermediateBoard);
+}
+
+// Board-Posn -> Natural
+// Get the total number of reachable positions from boardPosn
+function getTotalReachableFromBoardPosn(boardPosn) {
+  let board = inputBoardToBoard(boardPosn.board)
+  const posn = { row: boardPosn.position[0], col: boardPosn.position[1]};
+  return getReachable(board, posn).length;
+}
+
+describe("test the total reachable tiles form Board-Posn", () => {
+  it("for example 1", () => {
+    assert.deepEqual(getTotalReachableFromBoardPosn(exampleBoardPosn1), 1)
+  })
+  it("for example 2", () => {
+    assert.deepEqual(getTotalReachableFromBoardPosn(exampleBoardPosn2), 3)
+  })
+})
+
