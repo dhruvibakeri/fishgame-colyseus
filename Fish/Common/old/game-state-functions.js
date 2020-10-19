@@ -23,7 +23,7 @@ function createState(UUID, gameState) {
 
 
 // UUID Posn GameState -> GameState
-// place a penguin on a valid tile
+// place a penguin on a valid tile 
 
 function placeAPenguin(UUID, posn, gs) {
 
@@ -33,6 +33,46 @@ function placeAPenguin(UUID, posn, gs) {
         makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
             ["penguin", [
                 [[posn[0], posn[1]], getPenguinColorFromUUID(UUID, playersFromGameState(gs))]
+            ]]]),
+        nextMoveFromGameState(gs), playersFromGameState(gs))
+
+    all_game_states.push(res)
+
+
+    return res;
+
+}
+
+//  Posn GameState -> GameState
+// make a hole on a valid tile 
+
+function makeAHole(posn, gs) {
+
+
+
+    const res = makeGameState(gameStageFromGameState(gs),
+        makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
+            ["hole", [
+                [posn[0],posn[1]]
+            ]]]),
+        nextMoveFromGameState(gs), playersFromGameState(gs))
+
+    all_game_states.push(res)
+
+
+    return res;
+
+}
+
+//  Number Posn GameState -> GameState
+// place N fish on a valid tile 
+
+function placeNFish(n, posn, gs) {
+
+    const res = makeGameState(gameStageFromGameState(gs),
+        makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
+            ["fish", [
+                [[posn[0], posn[1]], n]
             ]]]),
         nextMoveFromGameState(gs), playersFromGameState(gs))
 
@@ -124,8 +164,15 @@ function getNextPlayer(currentPlayer, gs) {
     }
 }
 
+function getPlayerPosn(UUID, gs) {
+
+    return getPenguinPositions(UUID, gs)
+
+}
+
 // UUID GameState -> UUID
 // gets the id of the player whose turn is next
+// ASSUMPTION: game is not over
 function getNextUUID(currentPlayer, gs) {
 
     players = playersFromGameState(gs)
@@ -210,7 +257,7 @@ function isGameOn(gs) {
         allReachablePoints.push(getReachable(boardFromGameState(gs), p))
     })
 
-    return allReachablePoints[0].length > 1
+    return allReachablePoints.length > 1 || allReachablePoints[0].length > 1
 
 }
 
