@@ -10,7 +10,7 @@ Install webpack, and its cli:
 
 `$ npm install webpack webpack-cli --save-dev`
 
-Added an `index.html` and `src/index.js`, the index.html has a lodash loaded from cdn, and the index.js uses that lodash to edit the html.
+Added an `index.html` and `frontend/index.js`, the index.html has a lodash loaded from cdn, and the index.js uses that lodash to edit the html.
 
 The "main" field in package.json is changed to "private" to prevent accidental publishing of the repo.
 
