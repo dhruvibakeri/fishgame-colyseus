@@ -25,6 +25,12 @@ function makeHole(board, row, col) {
     return board;
 }
 
+// Board Number Number -> boolean
+// checks if a hole can be made in given positon
+function canMakeHole(board, row, col) {
+    return (isUsableSpace(getSpaceFromBoard(board, row, col))) 
+}
+
 // Board Number Number, Number -> Board
 // places n amount of fish on board[x][y]
 function noOfFish(board, row, col, n) {
@@ -40,6 +46,21 @@ function noOfFish(board, row, col, n) {
     return board;
 }
 
+// Board Number Number, Number -> boolean
+// checks if given no. of fish can be placed at given posn
+function canPlaceFish(board, row, col, n) {
+
+
+    let val = getSpaceFromBoard(board, row, col)
+
+    return (isUsableSpace(val) && isTile(spaceIsOccupiedBy(val)) && isFishes(tileIsOccupiedBy(spaceIsOccupiedBy(val)))
+        && n <= maxElementsFromTileInfo(tileInfoFromTile(spaceIsOccupiedBy(val)))) 
+
+      
+}
+
+
+
 // Board Number Number, String -> Board
 // places penguin of given color on board[x][y]
 function placePenguin(board, row, col, color) {
@@ -53,6 +74,19 @@ function placePenguin(board, row, col, color) {
     }
     return board;
 }
+
+// Board Number Number -> boolean
+// can a penguin be placed at given posn
+function canPlacePenguin(board, row, col) {
+
+    let val = getSpaceFromBoard(board, row, col)
+
+     return (isUsableSpace(val) && isTile(spaceIsOccupiedBy(val)) && !isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(val))) ) 
+
+        
+}
+
+
 
 //ASSUMPTIONS: 
 // -> Total positions - hposns is >= fishes
