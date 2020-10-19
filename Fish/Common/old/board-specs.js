@@ -28,7 +28,7 @@ function makeHole(board, row, col) {
 // Board Number Number -> boolean
 // checks if a hole can be made in given positon
 function canMakeHole(board, row, col) {
-    return (isUsableSpace(getSpaceFromBoard(board, row, col))) 
+    return (isUsableSpace(getSpaceFromBoard(board, row, col))) && !isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(getSpaceFromBoard(board, row, col)))) 
 }
 
 // Board Number Number, Number -> Board
