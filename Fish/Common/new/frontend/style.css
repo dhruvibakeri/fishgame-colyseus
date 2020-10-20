@@ -8,5 +8,6 @@
 .hello {
     color: red;
     font-family: 'MyFont';
-    background: url('./assets/icon.png');
+    /* Webpack icon background               */
+    /* background: url('./assets/icon.png'); */
 }
