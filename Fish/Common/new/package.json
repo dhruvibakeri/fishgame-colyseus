@@ -4,10 +4,16 @@
   "description": "Setting up webpack.",
   "private": true,
   "scripts": {
-    "build:frontend": "webpack",
     "build:backend": "tsc -p tsconfig.backend.json",
-    "start:watch": "webpack serve",
-    "start:app": "nodemon --watch backend -e ts --exec \"ts-node backend/index.ts\""
+    "build:frontend": "webpack",
+    "build:all": "npm run build:backend && npm run build:frontend",
+    "watch:backend": "nodemon --watch backend -e ts --exec \"ts-node backend/index.ts\" -- --watch=backend-only",
+    "watch:frontend": "webpack serve",
+    "watch:all": "nodemon --watch backend -e ts --exec \"ts-node backend/index.ts\" -- --watch=backend+frontend",
+    "clean:build:dist": "rimraf ./dist ./build",
+    "clean": "npm run lean:build:dist && rimraf ./app",
+    "copyto:app": "ncp dist/ app/dist/ && ncp build/ ./app/build/",
+    "bundle": "npm run clean && mkdirp ./app && npm run build:all && npm run copyto:app && npm run clean:build:dist"
   },
   "repository": {
     "type": "git",
@@ -31,7 +37,10 @@
     "file-loader": "^6.1.1",
     "html-webpack-plugin": "^4.5.0",
     "json5": "^2.1.3",
+    "mkdirp": "^1.0.4",
+    "ncp": "^2.0.0",
     "nodemon": "^2.0.6",
+    "rimraf": "^3.0.2",
     "style-loader": "^2.0.0",
     "toml": "^3.0.0",
     "ts-loader": "^8.0.6",
@@ -40,6 +49,7 @@
     "webpack": "^5.1.3",
     "webpack-cli": "^4.1.0",
     "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^3.11.0",
     "xml-loader": "^1.2.1",
     "yamljs": "^0.3.0"
   },
