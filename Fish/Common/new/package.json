@@ -13,7 +13,7 @@
     "test:backend": "ts-mocha -p tsconfig.backend.json backend/**/*.spec.ts",
     "watch:test:backend":"ts-mocha -p tsconfig.backend.json backend/**/*.spec.ts -w --watch-files backend/**/*.spec.ts",
     "clean:build:dist": "rimraf ./dist ./build",
-    "clean": "npm run lean:build:dist && rimraf ./app",
+    "clean": "npm run clean:build:dist && rimraf ./app",
     "copyto:app": "ncp dist/ app/dist/ && ncp build/ ./app/build/",
     "bundle": "npm run clean && mkdirp ./app && npm run build:all && npm run copyto:app && npm run clean:build:dist"
   },
