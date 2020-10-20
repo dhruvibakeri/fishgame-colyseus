@@ -11,7 +11,7 @@ module.exports = {
   mode: 'development',
   entry: {
     app: './frontend/index.ts',
-    print: './frontend/print.js',
+    importData: './frontend/importData.js',
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ],
@@ -23,7 +23,8 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      title: 'Output Management',
+      title: `Hey! That's My Fish`,
+      favicon: "./frontend/assets/favicon.ico",
     }),
   ],
   output: {
