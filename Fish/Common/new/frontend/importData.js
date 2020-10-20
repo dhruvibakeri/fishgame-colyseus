@@ -9,7 +9,27 @@ import toml from './assets/data.toml';
 import yaml from './assets/data.yaml';
 import json from './assets/data.json5';
 
-export default Icon;
+
+import Banner from './assets/banner.jpg';
+
+import Fish from './assets/fish.png';
+
+import Black from './assets/black.png';
+import Brown from './assets/brown.png';
+import Red from './assets/red.png';
+import White from './assets/white.png';
+
+const ImportedData = {
+  icon: Icon,
+  banner: Banner,
+  fish: Fish,
+  black: Black,
+  brown: Brown,
+  red: Red,
+  white: White 
+};
+
+export default ImportedData;
 
 export function logData(logOrNot) {
   if (logOrNot) {
