@@ -8,5 +8,5 @@
 .hello {
     color: red;
     font-family: 'MyFont';
-    background: url('./icon.png');
+    background: url('./assets/icon.png');
 }

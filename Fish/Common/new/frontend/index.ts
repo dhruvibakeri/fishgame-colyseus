@@ -1,11 +1,11 @@
 import * as _ from 'lodash';
 import './style.css';
-import Icon from './icon.png';
-import Data from './data.xml';
-import Notes from './data.csv';
-import toml from './data.toml';
-import yaml from './data.yaml';
-import json from './data.json5';
+import Icon from './assets/icon.png';
+import Data from './assets/data.xml';
+import Notes from './assets/data.csv';
+import toml from './assets/data.toml';
+import yaml from './assets/data.yaml';
+import json from './assets/data.json5';
 
 import printMe from './print.js';
 
