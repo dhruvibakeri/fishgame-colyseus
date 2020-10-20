@@ -8,7 +8,9 @@ const PORT: number = 3000;
 const webpackConfig = require('../webpack.config.js');
 const webpackCompiler = webpack(webpackConfig);
 
-function runWebpackMiddleware() {
+export const WATCH_ALL_FLAG = `--watch=backend+frontend`;
+
+function runWebpackMiddleware(): void {
   // Tell express to use the webpack-dev-middleware and use the
   // webpack.config.js configuration file as a base.
   app.use(webpackDevMiddleware(webpackCompiler, {
@@ -16,9 +18,9 @@ function runWebpackMiddleware() {
   }));
 }
 
-function main() {
+function main(): void {
   let args = process.argv;
-  if (args.length === 3 && args[2] === "--watch=backend+frontend") {
+  if (args.length === 3 && args[2] === WATCH_ALL_FLAG) {
     runWebpackMiddleware();
   }
   // Serve the files on `PORT`
@@ -28,5 +30,3 @@ function main() {
 }
 
 main();
-
-
