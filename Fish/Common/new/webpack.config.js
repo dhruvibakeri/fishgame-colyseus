@@ -10,8 +10,11 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = {
   mode: 'development',
   entry: {
-    app: './frontend/index.js',
+    app: './frontend/index.ts',
     print: './frontend/print.js',
+  },
+  resolve: {
+    extensions: [ '.tsx', '.ts', '.js' ],
   },
   devtool: 'inline-source-map',
   devServer: {
@@ -30,6 +33,14 @@ module.exports = {
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        use: [{
+          loader: 'ts-loader',
+          options: { configFile : 'tsconfig.frontend.json' }
+        }],
+        exclude: /node_modules/,
+      },
       {
         test: /\.css$/,
         use: [
