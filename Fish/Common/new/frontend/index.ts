@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 import './style.css';
 import Icon from './icon.png';
 import Data from './data.xml';
@@ -10,7 +10,7 @@ import json from './data.json5';
 import printMe from './print.js';
 
 function component() {
-  const element = document.createElement('div');
+  const element: HTMLDivElement = document.createElement('div');
   const btn = document.createElement('button');
 
   // Lodash, now `import`ed 
@@ -24,10 +24,10 @@ function component() {
   // Add the image to our existing div.
   const myIcon = new Image();
   myIcon.src = Icon;
-  
+
   element.appendChild(myIcon);
   element.appendChild(btn);
-  
+
   console.log(Data);
   console.log(Notes);
 
