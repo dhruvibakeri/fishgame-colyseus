@@ -25,6 +25,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: `Hey! That's My Fish`,
       favicon: "./frontend/assets/favicon.ico",
+      template: "./frontend/index.ejs"
     }),
   ],
   output: {
