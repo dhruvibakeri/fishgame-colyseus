@@ -1,47 +1,48 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import './style.css';
-import Icon from './assets/icon.png';
-import Data from './assets/data.xml';
-import Notes from './assets/data.csv';
-import toml from './assets/data.toml';
-import yaml from './assets/data.yaml';
-import json from './assets/data.json5';
 
-import printMe from './print.js';
+import Icon, { logData } from './importData'
+import { currentTime } from './importData.js';
 
-function component() {
-  const element: HTMLDivElement = document.createElement('div');
-  const btn = document.createElement('button');
 
-  // Lodash, now `import`ed 
-  element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+function main() {
+  document.body.appendChild(createDiv(false));
+}
 
+main();
+
+function createDiv(fancy): HTMLDivElement {
+  if (fancy) {
+    const divElement: HTMLDivElement = document.createElement('div');
+    addIcon(addButton(addString(divElement)))
+    logData(true)
+    return divElement
+  } else {
+    return document.createElement('div');
+  }
+}
+
+function addString(divElement: HTMLDivElement): HTMLDivElement {
+  // Lodash `import`ed 
+  divElement.innerHTML = _.join(['Hello,', 'world!'], ' ');
+  // Add styling
+  divElement.classList.add('hello');
+
+  return divElement;
+}
+
+function addButton(divElement: HTMLDivElement): HTMLDivElement {
+  const btn: HTMLButtonElement = document.createElement('button');
   btn.innerHTML = 'Click me and check the console!';
-  btn.onclick = printMe;
+  btn.onclick = currentTime;
+  divElement.appendChild(btn);
+  return divElement;
+}
 
-  element.classList.add('hello');
-
+function addIcon(divElement: HTMLDivElement): HTMLDivElement {
   // Add the image to our existing div.
   const myIcon = new Image();
   myIcon.src = Icon;
-
-  element.appendChild(myIcon);
-  element.appendChild(btn);
-
-  console.log(Data);
-  console.log(Notes);
-
-  console.log(toml.title); // output `TOML Example`
-  console.log(toml.owner.name); // output `Tom Preston-Werner`
-
-  console.log(yaml.title); // output `YAML Example`
-  console.log(yaml.owner.name); // output `Tom Preston-Werner`
-
-  console.log(json.title); // output `JSON5 Example`
-  console.log(json.owner.name); // output `Tom Preston-Werner`
-
-
-  return element;
+  divElement.appendChild(myIcon);
+  return divElement;
 }
-
-document.body.appendChild(component());
