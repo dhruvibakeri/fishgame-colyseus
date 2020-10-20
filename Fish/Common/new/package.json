@@ -20,7 +20,10 @@
     "url": "https://github.com/atharvashukla/webpack.git"
   },
   "keywords": [],
-  "author": "Atharva Shukla",
+  "contributors": [
+    { "name" : "Atharva Shukla", "email" : "shukla.at@northeastern.edu", "url" : "https://atharvashukla.com/" },
+    { "name" : "Dhruvi Bakeri", "email" : "bakeri.d@northeastern.edu", "url" : "https://pages.github.ccs.neu.edu/djb2610/personalwebsite.github.io/" }
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/atharvashukla/webpack/issues"
