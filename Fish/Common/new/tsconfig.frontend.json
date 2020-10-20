@@ -71,6 +71,7 @@
   "exclude": [
     "./backend",
     "./dist/",
+    "./build/",
     "./webpack.config.js"
   ]
 }
