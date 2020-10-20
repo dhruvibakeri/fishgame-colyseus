@@ -11,7 +11,9 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": false
   },
   "exclude": [ "./backend", "./dist/", "./build/", "./webpack.config.js" ]
 }
