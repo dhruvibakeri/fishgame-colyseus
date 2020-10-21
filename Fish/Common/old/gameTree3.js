@@ -4,7 +4,7 @@
 
 //------------------------------------------------------------------------------------------------------------------
 
-// GameState GameTree[] => (GameState , [ None -> GameTree[]])[]
+// GameState GameTree[] => (GameState , [ -> GameTree[]])[]
 // creates a gameTreeStream
 function gameTreeStream(state, subTrees) {
     const res = [state, () => subTrees]
@@ -47,7 +47,6 @@ function getChildren(gameTree) {
 function addParent(gameState, subTrees) {
     return [gameState, () => subTrees];
 }
-
 
 // GameState -> GameTree[]
 // gets all reachable states from the given GameState
