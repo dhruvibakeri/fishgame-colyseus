@@ -3,11 +3,11 @@
 case "$(uname -s)" in
 
    Darwin)
-      node ../Fish/Common/old/compiled/compiledM4.js
+      node ../Fish/Common/compiled/compiledM4.js
      ;;
 
    Linux)
-     /opt/rh/rh-nodejs10/root/usr/bin/node ../Fish/Common/old/compiled/compiledM4.js
+     /opt/rh/rh-nodejs10/root/usr/bin/node ../Fish/Common/compiled/compiledM4.js
      ;;
 
    *)
