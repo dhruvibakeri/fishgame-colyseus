@@ -180,11 +180,11 @@ function convertInputPosnToOurPosn(r,c) {
 
 // converts our posn representation to output posn
 function convertOurPosnToResultPosn(r,c) {
-  if(r % 2 == 0) {
-  return {row:(r * 2) + 1, col: (c - 1)/2 }
+  if(c % 2 == 0) {
+  return {row:(r * 2) , col: c/2 }
   }
   else {
-    return {row: r * 2 , col: c/2}
+    return {row: (r * 2) + 1 , col: (c - 1)/2}
   }
 }
 
