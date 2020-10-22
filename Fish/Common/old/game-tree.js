@@ -54,7 +54,7 @@ function addParent(gameState, subTrees) {
     return [gameState, () => subTrees];
 }
 
-// GameState
+// GameState -> GameTree
 // create initial GameTree
 function createGameTree(gameState) {
     return [gameState, () => {return getValidSubStates(gameState)}]
