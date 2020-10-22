@@ -1,19 +1,33 @@
 import _ from 'lodash';
 import './style.css';
-
 import ImportedData, { logData } from './importData'
 import { currentTime } from './importData.js';
 import { fabric } from "fabric";
+import { Client } from "colyseus.js";
 
 const BANNER_WIDTH = 600;
 const BANNER_HEIGHT = 185;
 
-function main() {
-  document.body.appendChild(createDiv(false));
-  addBannerAndCanvas();
-}
 
-main();
+document.addEventListener('DOMContentLoaded', async () => {
+  const client = new Client('ws://localhost:3000');
+  try {
+    const room = await client.joinOrCreate("tetrolyseus").then(room => {
+      document.addEventListener('keydown', (ev: KeyboardEvent) => {
+        console.log("key was down, seding keydown message")
+        room.send("keydown", {});
+      });
+
+      room.onStateChange((newState) => {
+        console.log("game state changed, render again")
+      });
+
+    });
+  } catch {
+    console.error("BAD")
+  }
+})
+
 
 function addBannerAndCanvas() {
 
@@ -80,3 +94,10 @@ function addIcon(divElement: HTMLDivElement): HTMLDivElement {
   divElement.appendChild(myIcon);
   return divElement;
 }
+
+function main() {
+  document.body.appendChild(createDiv(false));
+  addBannerAndCanvas();
+}
+
+// main()

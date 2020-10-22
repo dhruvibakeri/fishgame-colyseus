@@ -1,9 +1,17 @@
+const http = require('http');
 const express = require('express');
+const cors = require('cors');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
+import { Server } from "colyseus";
+import { monitor } from "@colyseus/monitor";
+import { FishRoom } from "./FishRoom";
 
 const app = express();
 const PORT: number = 3000;
+
+app.use(cors());
+app.use(express.json())
 
 const webpackConfig = require('../webpack.config.js');
 const webpackCompiler = webpack(webpackConfig);
@@ -17,6 +25,16 @@ function runWebpackMiddleware(): void {
     publicPath: webpackConfig.output.publicPath,
   }));
 }
+
+const server = http.createServer(app);
+const gameServer = new Server({
+  server,
+});
+
+
+gameServer.define('fish', FishRoom);
+app.use("/colyseus", monitor());
+gameServer.listen(PORT);
 
 function main(): void {
   let args = process.argv;
