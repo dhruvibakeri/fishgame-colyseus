@@ -2,14 +2,20 @@
 
 // GameTree = GameState | [GameState, () => GameTree[]]
 
+//--------------------------------------INTERPRETATION-------------------------------------------------------------
+// Our GameTree is one of:
+// - GameState
+// - [GameState, () => GameTree[]]
+// It would be just a GameState, when the game is over and there are no further valid trees that could be made.
+// In the case it is a [GameState, () => GameTree[]], the GameState would be the current state, based off which the
+// subsequent GameTrees would be created. 
+// For the initial GameTree, the GameState would be a state where all penguins have been placed and no more can
+// be added. 
+// The second element in a GameTree is a list of lambdas that would return the sub-GameTrees when asked to. 
+// For the child-GameTrees, the GameState is one of the possible states that are directly reachable from
+// the parent state. 
 //------------------------------------------------------------------------------------------------------------------
 
-// GameState GameTree[] => (GameState , [ -> GameTree[]])[]
-// creates a gameTreeStream
-function gameTreeStream(state, subTrees) {
-    const res = [state, () => subTrees]
-    return res;
-}
 
 // Any -> Boolean
 // checks if given element is a Gametree
