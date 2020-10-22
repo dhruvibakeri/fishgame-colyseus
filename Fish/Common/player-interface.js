@@ -56,6 +56,7 @@
 // player’s penguin. If It sends at the wrong time, player is kicked out.
 //BoardPosn -> Promise<GameState>
 function place(posnToPlace) {
+  // STUB
   return;
 }
 
@@ -63,6 +64,7 @@ function place(posnToPlace) {
 // player’s penguin. If It sends at the wrong time, player is kicked out.
 // BoardPosn -> Promise<GameState>
 function move(posnToPlace) {
+  // STUB
   return;
 }
 
@@ -71,6 +73,7 @@ function move(posnToPlace) {
 // GameState -> Move[]
 // Gets all possible valid moves for the Player's penguins according to the given gameState
 function getValidPenguinMoves(gameState) {
+  // STUB
   return [];
 }
 
@@ -78,19 +81,22 @@ function getValidPenguinMoves(gameState) {
 // GameState -> BoardPosn[]
 // Gets all possible valid placements for the Player's penguins according to the given gameState
 function getValidPenguinPlacements(gameState) {
+  // STUB
   return [];
 }
 
 // Move GameState -> boolean
 // checks whether the given move is valid according to the given gameState
-function isValidPenguinMoves(move, gameState) {
+function isValidPenguinMove(move, gameState) {
+  // STUB
   return false;
 }
 
 // GameState -> boolean
 // Posn GameState -> boolean
 // checks whether the given placement is valid according to the given gameState
-function isValidPenguinPlacements(gameState) {
+function isValidPenguinPlacement(gameState) {
+  // STUB
   return false;
 }
 
@@ -105,5 +111,6 @@ function isMyTurn(gameState, player)  {
 // GameState -> GameTree
 // player can create a GameTree from any given GameState
 function createGameTree(gameState) {
-    return;
+    // STUB
+    return gameState;
 }
