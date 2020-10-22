@@ -49,9 +49,15 @@ function getChildren(gameTree) {
 }
 
 // GameState GameTree[] -> GameTree
-// creates a GameTree
+// adds the given parent to the given subTrees
 function addParent(gameState, subTrees) {
     return [gameState, () => subTrees];
+}
+
+// GameState
+// create initial GameTree
+function createGameTree(gameState) {
+    return [gameState, () => {return getValidSubStates(gameState)}]
 }
 
 // GameState -> GameTree[]
