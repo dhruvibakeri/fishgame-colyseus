@@ -10,15 +10,15 @@ let readline = require("readline");
 function main() {
   let lines = []
   let readLine = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
+    input: process.stdin,
+    output: process.stdout
   });
   readLine.on('line', l => lines.push(l));
 
   readLine.on('close', () => {
-      console.log(
-        getOurMovedState(checkJSONValidity(parseJSON(lines)))
-      );
+    console.log(
+      JSON.stringify(getOurMovedState(checkJSONValidity(parseJSON(lines))))
+    );
   });
 }
 
@@ -30,12 +30,12 @@ function parseJSON(lines) {
 
 // Check validity of the json object.
 function checkJSONValidity(json) {
-  if(typeof json === "object" && json !== null) {
-    if(Object.keys(json).length === 2) {
-      if(json.hasOwnProperty("players") && json.hasOwnProperty("board")) {
-          let players = validatePlayers(json.players);
-          let board = validateBoard(json.board);
-          return {"players": players, "board":board};
+  if (typeof json === "object" && json !== null) {
+    if (Object.keys(json).length === 2) {
+      if (json.hasOwnProperty("players") && json.hasOwnProperty("board")) {
+        let players = validatePlayers(json.players);
+        let board = validateBoard(json.board);
+        return { "players": players, "board": board };
       } else {
         throw Error("Keys should be \"players\" and \"board\"")
       }
@@ -51,14 +51,14 @@ function checkJSONValidity(json) {
 // throw appropriate error if posn is not a pair of positive integers, 
 // If it is, return the posn. 
 function validatePlayers(players) {
-  if(Array.isArray(players)) {
-    if(players.length > 4) {
-        
+  if (Array.isArray(players)) {
+    if (players.length > 4) {
+
       throw Error("The no of players should be less than 4")
     } else {
       return players;
     }
-  } 
+  }
 }
 
 
@@ -102,9 +102,9 @@ function validateBoard(board) {
 
 function duplicateBoard(board) {
 
-  var newArray = board.map(function(b) {
+  var newArray = board.map(function (b) {
     return b.slice();
-});
+  });
 
   return newArray
 
@@ -118,11 +118,11 @@ function getOurMovedState(state) {
   firstPlayerPosns = firstPlayer.places
   firstPenguinPos = firstPlayer.places[0]
   const boardForRef = duplicateBoard(state.board)
-  
 
-  ourState = inputGameStateToIntermediateGameState(state,boardForRef)
 
-  
+  ourState = inputGameStateToIntermediateGameState(state, boardForRef)
+
+
 
   playerId = playersFromGameState(ourState)[0][0]
 
@@ -139,24 +139,24 @@ function getOurMovedState(state) {
     // inputState -> ourState
     // then makeMove
     // then ourState -> desiredState
-  ogPlayers = players
-  
-  og_firstPlayerPosns = firstPlayer.places
+    ogPlayers = players
 
-  new_score = state.board[ogPlayers[0].places[0][0]][ogPlayers[0].places[0][1]]
+    og_firstPlayerPosns = firstPlayer.places
 
-  movedState  = getMovedState(playerId, ourState, convertedPoint, reachablePoints[0])
+    new_score = state.board[ogPlayers[0].places[0][0]][ogPlayers[0].places[0][1]]
 
-  resultMovedPosn = convertOurPosnToResultPosn(reachablePoints[0].row, reachablePoints[0].col)
+    movedState = getMovedState(playerId, ourState, convertedPoint, reachablePoints[0])
 
-  resultFirstPenguinPosns = [[resultMovedPosn.row, resultMovedPosn.col], ...(og_firstPlayerPosns).slice(1)]  
+    resultMovedPosn = convertOurPosnToResultPosn(reachablePoints[0].row, reachablePoints[0].col)
 
-  ogPlayers[0].places = resultFirstPenguinPosns
-  ogPlayers[0].score = ogPlayers[0].score + new_score
+    resultFirstPenguinPosns = [[resultMovedPosn.row, resultMovedPosn.col], ...(og_firstPlayerPosns).slice(1)]
 
-  finalBoard = convertResultBoard(ourBoardToResultBoard(boardFromGameState(movedState)))
+    ogPlayers[0].places = resultFirstPenguinPosns
+    ogPlayers[0].score = ogPlayers[0].score + new_score
 
-  return {"players" : ogPlayers, "board" : addNumbersToPenguin(state.board, finalBoard) }
+    finalBoard = convertResultBoard(ourBoardToResultBoard(boardFromGameState(movedState)))
+
+    return { "players": ogPlayers, "board": addNumbersToPenguin(state.board, finalBoard) }
   }
 
 
@@ -169,22 +169,22 @@ function getMovedState(id, state, fromPoint, toPoint) {
 }
 
 // converts input posn to our posn representation
-function convertInputPosnToOurPosn(r,c) {
-  if(r % 2 == 0) {
-  return {row:r/2, col: c + c }
+function convertInputPosnToOurPosn(r, c) {
+  if (r % 2 == 0) {
+    return { row: r / 2, col: c + c }
   }
   else {
-    return {row: (r - 1)/2, col: c + c + 1}
+    return { row: (r - 1) / 2, col: c + c + 1 }
   }
 }
 
 // converts our posn representation to output posn
-function convertOurPosnToResultPosn(r,c) {
-  if(c % 2 == 0) {
-  return {row:(r * 2) , col: c/2 }
+function convertOurPosnToResultPosn(r, c) {
+  if (c % 2 == 0) {
+    return { row: (r * 2), col: c / 2 }
   }
   else {
-    return {row: (r * 2) + 1 , col: (c - 1)/2}
+    return { row: (r * 2) + 1, col: (c - 1) / 2 }
   }
 }
 
@@ -195,22 +195,22 @@ function inputPlayersToOurPlayers(players) {
   let uuid = 1;
   let ourPlayers = []
 
-  for(let i = 0; i < players.length; i++) {
-      let ourPlayer = [uuid, {color: players[i].color, score: players[i].score}]
-      ourPlayers.push(ourPlayer)
-      uuid = uuid + 1
+  for (let i = 0; i < players.length; i++) {
+    let ourPlayer = [uuid, { color: players[i].color, score: players[i].score }]
+    ourPlayers.push(ourPlayer)
+    uuid = uuid + 1
   }
-  
+
   return ourPlayers;
 }
 
 // converts numbers representation to appropriate tile representation
 function convertNumToTiles(num) {
   if (num == 0) {
-    return {kind: "usableSpace", occupiedBy: false}
+    return { kind: "usableSpace", occupiedBy: false }
   }
-  else if(num > 0 && num < 6){
-  return  { kind: "usableSpace", occupiedBy: { tileInfo: { size: 55, maxElements: 5 }, occupiedBy: { kind: "fishes", totalFishes: num } }}
+  else if (num > 0 && num < 6) {
+    return { kind: "usableSpace", occupiedBy: { tileInfo: { size: 55, maxElements: 5 }, occupiedBy: { kind: "fishes", totalFishes: num } } }
   }
   else {
     return num
@@ -219,10 +219,10 @@ function convertNumToTiles(num) {
 
 // converts tile representation to appropriate number representation
 function convertTilesToNum(tile) {
-  if(tile.occupiedBy == false) {
+  if (tile.occupiedBy == false) {
     return 0;
   }
-  else if(tile.occupiedBy.occupiedBy.kind == "fishes"){
+  else if (tile.occupiedBy.occupiedBy.kind == "fishes") {
     return tile.occupiedBy.occupiedBy.totalFishes
   }
   else {
@@ -234,15 +234,15 @@ function convertTilesToNum(tile) {
 // creates a valid tile from given player data
 function convertPlayerToTiles(player) {
 
-  return  { kind: "usableSpace", occupiedBy: { tileInfo: { size: 55, maxElements: 5 }, occupiedBy: { kind: "penguin", color: player.color } }}
-  
+  return { kind: "usableSpace", occupiedBy: { tileInfo: { size: 55, maxElements: 5 }, occupiedBy: { kind: "penguin", color: player.color } } }
+
 }
 
 // adds valid penguin tile to board
 function addPlayerToBoard(board, players) {
 
-  for(let i = 0; i < players.length; i++) {
-    for(let j = 0; j < players[i].places.length; j++) {
+  for (let i = 0; i < players.length; i++) {
+    for (let j = 0; j < players[i].places.length; j++) {
       let p_posn = players[i].places[j]
       board[p_posn[0]][p_posn[1]] = convertPlayerToTiles(players[i])
     }
@@ -257,8 +257,8 @@ function convertEntireBoard(board, players) {
 
 
 
-  for(let i = 0; i < board.length; i++) {
-    for(let j = 0; j < board[i].length; j++) {
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
       board[i][j] = convertNumToTiles(board[i][j])
     }
   }
@@ -271,8 +271,8 @@ function convertEntireBoard(board, players) {
 function convertResultBoard(board) {
 
 
-  for(let i = 0; i < board.length; i++) {
-    for(let j = 0; j < board[i].length; j++) {
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
       board[i][j] = convertTilesToNum(board[i][j])
     }
   }
@@ -282,9 +282,9 @@ function convertResultBoard(board) {
 
 // replaces penguin tile with the score it would get once it moves
 function addNumbersToPenguin(previousBoard, resultBoard) {
-  for(let i = 0; i < resultBoard.length; i++) {
-    for(let j = 0; j < resultBoard[0].length; j++) {
-      if(resultBoard[i][j] == "penguin") {
+  for (let i = 0; i < resultBoard.length; i++) {
+    for (let j = 0; j < resultBoard[0].length; j++) {
+      if (resultBoard[i][j] == "penguin") {
         resultBoard[i][j] = previousBoard[i][j]
       }
     }
@@ -297,7 +297,7 @@ function addNumbersToPenguin(previousBoard, resultBoard) {
 function inputGameStateToIntermediateGameState(state, board) {
   let players = state.players
   let ourBoard = inputBoardToIntermediateBoard(convertEntireBoard(board, players))
-  let ourGameState = {  gameStage: "playing",  board: ourBoard ,nextMove: 1 , players: inputPlayersToOurPlayers(players) }
+  let ourGameState = { gameStage: "playing", board: ourBoard, nextMove: 1, players: inputPlayersToOurPlayers(players) }
 
   return ourGameState
 
@@ -343,8 +343,8 @@ function inputGameStateToIntermediateGameState(state, board) {
 // InputBoard and Board Examples
 // 
 const inputBoardExample1 = [
-  [1,2,3],
-  [4,0,5]
+  [1, 2, 3],
+  [4, 0, 5]
 ]
 const inputBoardExample2 = [
   [1, 2, 3],
@@ -355,7 +355,7 @@ const boardExample1 = [
   [1, 4, 2, 0, 3, 5]
 ];
 const boardExample2 = [
-  [1, 4, 2, 0, 3, 5], 
+  [1, 4, 2, 0, 3, 5],
   [1, "unusableSpace", 1, "unusableSpace", 0, "unusableSpace"]
 ]
 //
@@ -405,7 +405,7 @@ const boardExample2 = [
 function ourBoardToResultBoard(ourBoard) {
   const totalRows = ourBoard.length;
 
-  if(ourBoard[totalRows - 1][1].kind == 'unusableSpace') {
+  if (ourBoard[totalRows - 1][1].kind == 'unusableSpace') {
     return oddOurBoardToResultBoard(ourBoard);
   } else {
     return evenOurBoardToResultBoard(ourBoard);
@@ -419,11 +419,11 @@ function evenOurBoardToResultBoard(board) {
 
   let finalBoard = []
 
-  for(let i = 0; i < totalRows; i++) {
+  for (let i = 0; i < totalRows; i++) {
     let evenRow = []
     let oddRow = []
     for (let j = 0; j < totalCols; j++) {
-      if(j % 2 == 0) {
+      if (j % 2 == 0) {
         evenRow.push(board[i][j])
       }
       else {
@@ -444,20 +444,20 @@ function oddOurBoardToResultBoard(board) {
 
   let finalBoard = []
 
-  for(let i = 0; i < totalRows; i++) {
+  for (let i = 0; i < totalRows; i++) {
     let evenRow = []
     let oddRow = []
     for (let j = 0; j < totalCols; j++) {
-      if(j % 2 == 0) {
+      if (j % 2 == 0) {
         evenRow.push(board[i][j])
       }
-      else if(i < totalRows - 1){
+      else if (i < totalRows - 1) {
         oddRow.push(board[i][j])
       }
     }
     finalBoard.push(evenRow)
-    if(i < totalRows - 1){
-    finalBoard.push(oddRow)
+    if (i < totalRows - 1) {
+      finalBoard.push(oddRow)
     }
   }
 
@@ -470,7 +470,7 @@ function oddOurBoardToResultBoard(board) {
 // Translate the input board to intermediate board. 
 function inputBoardToIntermediateBoard(inputBoard) {
   const totalRows = inputBoard.length;
-  if(isEven(totalRows)) {
+  if (isEven(totalRows)) {
     return evenInputBoardToIntermediateBoard(inputBoard);
   } else {
     return oddInputBoardToIntermediateBoard(inputBoard);
@@ -481,17 +481,17 @@ function inputBoardToIntermediateBoard(inputBoard) {
 // convert an InputBoard with even rows to a IntermediateBoard
 function evenInputBoardToIntermediateBoard(inputBoard) {
   let resBoard = [];
-  for(let i = 0; i < inputBoard.length / 2; i++) {
-    
+  for (let i = 0; i < inputBoard.length / 2; i++) {
+
     let j = i
-    if(j != 0) {
+    if (j != 0) {
       j = j * 2
     }
     let thisRow = inputBoard[j];
     let nextRow = inputBoard[j + 1];
     let interleavedRow = interleaveRows(thisRow, nextRow);
     resBoard.push(interleavedRow);
-  } 
+  }
   return resBoard;
 }
 
@@ -499,18 +499,18 @@ function evenInputBoardToIntermediateBoard(inputBoard) {
 // convert an InputBoard with odd rows to a IntermediateBoard
 function oddInputBoardToIntermediateBoard(inputBoard) {
   let resBoard = [];
-  for(let i = 0; i < (inputBoard.length - 1) / 2; i++) {
+  for (let i = 0; i < (inputBoard.length - 1) / 2; i++) {
     let j = i
-    if(j != 0) {
+    if (j != 0) {
       j = j * 2
     }
     let thisRow = inputBoard[j];
     let nextRow = inputBoard[j + 1];
     let interleavedRow = interleaveRows(thisRow, nextRow);
     resBoard.push(interleavedRow);
-  } 
+  }
   let lastRow = inputBoard[inputBoard.length - 1]
-  resBoard.push(interleaveRows(lastRow, new Array(lastRow.length).fill({kind: 'unusableSpace'})))
+  resBoard.push(interleaveRows(lastRow, new Array(lastRow.length).fill({ kind: 'unusableSpace' })))
   return resBoard;
 }
 
@@ -525,7 +525,7 @@ function oddInputBoardToIntermediateBoard(inputBoard) {
 function interleaveRows(l1, l2) {
   console.assert(l1.length === l2.length);
   let interLeaved = [];
-  for(let i = 0; i < l1.length; i++) {
+  for (let i = 0; i < l1.length; i++) {
     interLeaved.push(l1[i]);
     interLeaved.push(l2[i]);
   }
@@ -539,10 +539,10 @@ function interleaveRows(l1, l2) {
 // converts an intermediate board to a board 
 function intermediateBoardToBoard(intermediateBoard) {
   let mappedBoard = [];
-  for(let rowIdx = 0; rowIdx < intermediateBoard.length; rowIdx++) {
+  for (let rowIdx = 0; rowIdx < intermediateBoard.length; rowIdx++) {
     let mappedRow = [];
     let currentRow = intermediateBoard[rowIdx];
-    for(let colIdx = 0; colIdx < currentRow.length; colIdx++) {
+    for (let colIdx = 0; colIdx < currentRow.length; colIdx++) {
       let currentElement = currentRow[colIdx];
       mappedRow.push(mapIntermediateElement(currentElement));
     }
@@ -556,17 +556,17 @@ function intermediateBoardToBoard(intermediateBoard) {
 // Natural | "unusableSpace" -> UsableSpace | UnusableSpace 
 // maps an element of an IntermediateBoard to an element of Board
 function mapIntermediateElement(boardElement) {
-  if(boardElement === "unusableSpace") {
+  if (boardElement === "unusableSpace") {
     return makeUnusableSpace();
   } else {
     const tileInfo = makeTileInfo(TILE_SIZE_TEMP, MAX_ELEMENTS_TEMP)
-    if(boardElement === 0) {
+    if (boardElement === 0) {
       const tile = makeGameTile(tileInfo, false);
       return makeUsableSpace(tile)
     } else {
       const tile = makeGameTile(tileInfo, makeFishes(boardElement));
       return makeUsableSpace(tile);
-    } 
+    }
   }
 }
 
@@ -591,12 +591,12 @@ function mapIntermediateElement(boardElement) {
 
 const exampleBoardPosn1 = {
   position: [0, 0],
-  board: [[1,2,3],[4,0,5]]
+  board: [[1, 2, 3], [4, 0, 5]]
 }
 
 const exampleBoardPosn2 = {
   position: [0, 0],
-  board: [[1,2,3],[4,0,5],[1,1,0]]
+  board: [[1, 2, 3], [4, 0, 5], [1, 1, 0]]
 }
 
 function inputBoardToBoard(inputBoard) {
@@ -608,7 +608,7 @@ function inputBoardToBoard(inputBoard) {
 // Get the total number of reachable positions from boardPosn
 function getTotalReachableFromBoardPosn(boardPosn) {
   let board = inputBoardToBoard(boardPosn.board)
-  const posn = { row: boardPosn.position[0], col: boardPosn.position[1]};
+  const posn = { row: boardPosn.position[0], col: boardPosn.position[1] };
   return getReachable(board, posn).length;
 }
 
@@ -676,41 +676,41 @@ function isGameState(a) {
 
 
   return isObj(a) &&
-         Object.keys(a).length === 4 &&
-         a.hasOwnProperty("gameStage") &&
-         a.hasOwnProperty("board") &&
-         a.hasOwnProperty("nextMove") &&
-         a.hasOwnProperty("players") &&
-         isGameStage(a.gameStage) &&
-         isGameBoard(a.board) &&
-         isNextMove(a.nextMove) &&
-         isPlayers(a.players)
+    Object.keys(a).length === 4 &&
+    a.hasOwnProperty("gameStage") &&
+    a.hasOwnProperty("board") &&
+    a.hasOwnProperty("nextMove") &&
+    a.hasOwnProperty("players") &&
+    isGameStage(a.gameStage) &&
+    isGameBoard(a.board) &&
+    isNextMove(a.nextMove) &&
+    isPlayers(a.players)
 
-         
+
 
 }
 
 // Any -> Boolean
 // is `a` a board
 function isGameBoard(a) {
-  return isBoard(a) ||  isFalse(a);
+  return isBoard(a) || isFalse(a);
 }
 
 // Any -> Boolean
 // is `a` a nextMove
 function isNextMove(a) {
-  return isUUID(a) ||  isFalse(a);
+  return isUUID(a) || isFalse(a);
 }
 
 // Any -> Boolean
 // is `a` a Players?
 function isPlayers(a) {
-  if(Array.isArray(a)) {
+  if (Array.isArray(a)) {
     let allValid = true
-    for(let i = 0; i < a.length; i++) {
+    for (let i = 0; i < a.length; i++) {
       let elem = a[i];
-      if(Array.isArray(elem) && elem.length === 2) {
-        if(!isUUID(elem[0]) || !isPlayerInfo(elem[1])) {
+      if (Array.isArray(elem) && elem.length === 2) {
+        if (!isUUID(elem[0]) || !isPlayerInfo(elem[1])) {
           allValid = false;
         }
       } else {
@@ -731,13 +731,13 @@ function isUUID(a) {
 // is `a` a PlayerInfo?
 function isPlayerInfo(a) {
   return isObj(a) &&
-         Object.keys(a).length === 2 &&
-         a.hasOwnProperty("color") &&
-         a.hasOwnProperty("score") &&
-         isPenguinColor(a.color) &&
-         isNum(a.score) &&
-         isNumInt(a.score) &&
-         a.score >= 0
+    Object.keys(a).length === 2 &&
+    a.hasOwnProperty("color") &&
+    a.hasOwnProperty("score") &&
+    isPenguinColor(a.color) &&
+    isNum(a.score) &&
+    isNumInt(a.score) &&
+    a.score >= 0
 }
 // Any -> Boolean
 // is `a` a GameStage? 
@@ -747,17 +747,17 @@ function isGameStage(a) {
 // Any -> Boolean
 // is `a` a Board?
 function isBoard(a) {
-  if(Array.isArray(a)) {
+  if (Array.isArray(a)) {
     let allSpaces = true
-    for(let rowIdx = 0; rowIdx < a.length; rowIdx++) {
+    for (let rowIdx = 0; rowIdx < a.length; rowIdx++) {
       let currentRow = a[rowIdx];
       // TODO: the inner row should also be an array
       // TODO: make sure there is at least one row
       // TODO: make sure there are even cols
       // TODO: make sure all cols are of the same lenght
-      for(let colIdx = 0; colIdx < currentRow.length; colIdx++) {
+      for (let colIdx = 0; colIdx < currentRow.length; colIdx++) {
         let currentSpace = currentRow[colIdx];
-        if(!isUsableSpace(currentSpace) && !isUnusableSpace(currentSpace)) {
+        if (!isUsableSpace(currentSpace) && !isUnusableSpace(currentSpace)) {
           allSpaces = false;
         }
       }
@@ -771,58 +771,58 @@ function isBoard(a) {
 // is `a` an UsableSpace?
 function isUsableSpace(a) {
   return isObj(a) &&
-         Object.keys(a).length === 2 &&
-         a.hasOwnProperty("kind") &&
-         a.hasOwnProperty("occupiedBy") &&
-         isStr(a.kind) &&
-         a.kind === "usableSpace" &&
-         (isFalse(a.occupiedBy) || isTile(a.occupiedBy));
+    Object.keys(a).length === 2 &&
+    a.hasOwnProperty("kind") &&
+    a.hasOwnProperty("occupiedBy") &&
+    isStr(a.kind) &&
+    a.kind === "usableSpace" &&
+    (isFalse(a.occupiedBy) || isTile(a.occupiedBy));
 }
 // Any -> Boolean
 // is `a` a n UnusableSpace?
 function isUnusableSpace(a) {
-  return  isObj(a) &&
-          Object.keys(a).length === 1 &&
-          a.hasOwnProperty("kind") &&
-          isStr(a.kind) &&
-          a.kind === "unusableSpace";
+  return isObj(a) &&
+    Object.keys(a).length === 1 &&
+    a.hasOwnProperty("kind") &&
+    isStr(a.kind) &&
+    a.kind === "unusableSpace";
 }
 // Any -> Boolean
 // is `a` a GameTile?
 function isTile(a) {
   return isObj(a) &&
-         Object.keys(a).length === 2 &&
-         a.hasOwnProperty("tileInfo") &&
-         a.hasOwnProperty("occupiedBy") &&
-         isTileInfo(a.tileInfo) &&
-         (isFalse(a.occupiedBy) || isFishes(a.occupiedBy) || isPenguin(a.occupiedBy))
+    Object.keys(a).length === 2 &&
+    a.hasOwnProperty("tileInfo") &&
+    a.hasOwnProperty("occupiedBy") &&
+    isTileInfo(a.tileInfo) &&
+    (isFalse(a.occupiedBy) || isFishes(a.occupiedBy) || isPenguin(a.occupiedBy))
 }
 // Any -> Boolean
 // is `a` a TileInfo?
 function isTileInfo(a) {
   return isObj(a) &&
-         Object.keys(a).length === 2 &&
-         a.hasOwnProperty("size") &&
-         a.hasOwnProperty("maxElements") &&
-         isNum(a.size) &&
-         isNumInt(a.size) &&
-         a.size >= 0 &&
-         isNum(a.maxElements) &&
-         isNumInt(a.maxElements) &&
-         a.maxElements >= 0
+    Object.keys(a).length === 2 &&
+    a.hasOwnProperty("size") &&
+    a.hasOwnProperty("maxElements") &&
+    isNum(a.size) &&
+    isNumInt(a.size) &&
+    a.size >= 0 &&
+    isNum(a.maxElements) &&
+    isNumInt(a.maxElements) &&
+    a.maxElements >= 0
 }
 // Any -> Boolean
 // is `a` a Fishes?
 function isFishes(a) {
   return isObj(a) &&
-         Object.keys(a).length === 2 &&
-         a.hasOwnProperty("kind") &&
-         a.hasOwnProperty("totalFishes") &&
-         isStr(a.kind) &&
-         a.kind === "fishes" &&
-         isNum(a.totalFishes) &&
-         isNumInt(a.totalFishes) &&
-         a.totalFishes > 0;
+    Object.keys(a).length === 2 &&
+    a.hasOwnProperty("kind") &&
+    a.hasOwnProperty("totalFishes") &&
+    isStr(a.kind) &&
+    a.kind === "fishes" &&
+    isNum(a.totalFishes) &&
+    isNumInt(a.totalFishes) &&
+    a.totalFishes > 0;
 }
 // Any -> Boolean
 // is `a` a Penguin?
@@ -883,9 +883,9 @@ function isOdd(n) {
 // gameStage board nextMove players -> gameState
 // make a gameState
 function makeGameState(gameStage, board, nextMove, players) {
-  const res = {gameStage : gameStage, board : board, nextMove : nextMove, players : players};
+  const res = { gameStage: gameStage, board: board, nextMove: nextMove, players: players };
 
-  if(isGameState(res)) {
+  if (isGameState(res)) {
     return res;
   } else {
     console.error("can't make gameState");
@@ -898,19 +898,19 @@ function makeGameState(gameStage, board, nextMove, players) {
 function makeGameStage(gameStage) {
   const res = gameStage;
 
-  if(isGameStage(res)) {
+  if (isGameStage(res)) {
     return res;
   }
- else {
-  console.error("can't make gameStage");
- }
+  else {
+    console.error("can't make gameStage");
+  }
 }
 
 function duplicateBoard(board) {
 
-  var newArray = board.map(function(b) {
+  var newArray = board.map(function (b) {
     return b.slice();
-});
+  });
 
   return newArray
 
@@ -925,31 +925,31 @@ function makeBoardWithSpecs(board, addFish, addPenguin, addHole, objSpecs) {
   let newBoard = duplicateBoard(board)
 
 
-  objSpecs.forEach(o => { 
-    if(o[0] === "fish") {
-        o[1].forEach(f => { 
-          addFish(newBoard, f[0][0], f[0][1], f[1])
-        });
-      }
+  objSpecs.forEach(o => {
+    if (o[0] === "fish") {
+      o[1].forEach(f => {
+        addFish(newBoard, f[0][0], f[0][1], f[1])
+      });
+    }
 
-      else if(o[0] === "penguin") {
+    else if (o[0] === "penguin") {
 
-        o[1].forEach(p => { 
-          addPenguin(newBoard, p[0][0], p[0][1], p[1])
-        });
-      }
+      o[1].forEach(p => {
+        addPenguin(newBoard, p[0][0], p[0][1], p[1])
+      });
+    }
 
-      else if(o[0] === "hole") {
-        o[1].forEach(h => { 
-          addHole(newBoard, h[0], h[1])
-        });
+    else if (o[0] === "hole") {
+      o[1].forEach(h => {
+        addHole(newBoard, h[0], h[1])
+      });
     }
   });
 
 
   const res = newBoard;
 
-  if(isBoard(res)) {
+  if (isBoard(res)) {
     return newBoard;
   }
 
@@ -980,9 +980,9 @@ function makeNextMove(playerUUID) {
 function makePlayers(players) {
   const res = players;
 
-  if(isPlayers(res)) {
+  if (isPlayers(res)) {
     return res;
-  
+
   }
   else {
     console.error("can't make Players");
@@ -997,7 +997,7 @@ function makePlayers(players) {
 function makeUUID(UUID) {
   const res = UUID;
 
-  if(isUUID(res)) {
+  if (isUUID(res)) {
     return res;
   }
   else {
@@ -1008,9 +1008,9 @@ function makeUUID(UUID) {
 // String Integer -> PlayerInfo
 // makes a `PlayerInfo `
 function makePlayerInfo(color, score) {
-  const res = {color : makePenguinColor(color), score : score};
+  const res = { color: makePenguinColor(color), score: score };
 
-  if(isPlayerInfo(res)) {
+  if (isPlayerInfo(res)) {
     return res;
   }
   else {
@@ -1027,9 +1027,9 @@ function makePlayerInfo(color, score) {
 // Make a PenguinColor.
 function makePenguinColor(color) {
   const res = color;
-  if(isPenguinColor(res)) {
+  if (isPenguinColor(res)) {
     return res;
-  } else { 
+  } else {
     console.error("can't make PenguinColor");
   }
 }
@@ -1039,60 +1039,60 @@ function makePenguinColor(color) {
 // PenguinColor -> Penguin
 // Makes a Penguin from a PenguinColor.
 function makePenguin(penguinColor) {
-  const res = {kind:"penguin", color: penguinColor};
-  if(isPenguin(res)) {
+  const res = { kind: "penguin", color: penguinColor };
+  if (isPenguin(res)) {
     return res;
-  } else { 
+  } else {
     console.error("can't make Penguin");
   }
 }
 // ℤ+ -> Fishes
 // Makes a Fishes from the total number of fishes.
-function makeFishes(totalFishes){
-  const res = {kind:"fishes",totalFishes:totalFishes};
-  if(isFishes(res)) {
+function makeFishes(totalFishes) {
+  const res = { kind: "fishes", totalFishes: totalFishes };
+  if (isFishes(res)) {
     return res;
-  } else { 
+  } else {
     console.error("can't make Fishes");
   }
 }
 // ℕ ℕ -> TileInfo
 // Makes a TileInfo from the its size an max elements it can have.
-function makeTileInfo (size, maxElements) {
+function makeTileInfo(size, maxElements) {
   const res = { size: size, maxElements: maxElements };
-  if(isTileInfo(res)) {
+  if (isTileInfo(res)) {
     return res;
-  } else { 
+  } else {
     console.error("can't make TileInfo");
   }
 }
 // TileInfo (Fishes | Penguin | false) -> Tile
 // Makes a Tile either has Fishes or Penguin or nothing (false).
-function makeGameTile (tileInfo, occupiedBy) {
-  const res = {tileInfo: tileInfo, occupiedBy: occupiedBy};
-  if(isTile(res)) {
+function makeGameTile(tileInfo, occupiedBy) {
+  const res = { tileInfo: tileInfo, occupiedBy: occupiedBy };
+  if (isTile(res)) {
     return res;
-  } else { 
+  } else {
     console.error("can't make GameTile");
   }
 }
 // Tile | false -> UsableSpace
 // Make a UsableSpace with either a Tile on it or nothing (false).
-function makeUsableSpace (occupiedBy) {
-  const res = { kind: "usableSpace", occupiedBy: occupiedBy};
-  if(isUsableSpace(res)) {
+function makeUsableSpace(occupiedBy) {
+  const res = { kind: "usableSpace", occupiedBy: occupiedBy };
+  if (isUsableSpace(res)) {
     return res;
-  } else { 
+  } else {
     console.error("can't make UsableSpace");
   }
 }
 // -> UnusableSpace
 // Make an UnusableSpace.
-function makeUnusableSpace () {
+function makeUnusableSpace() {
   const res = { kind: "unusableSpace" };
-  if(isUnusableSpace(res)) {
+  if (isUnusableSpace(res)) {
     return res;
-  } else { 
+  } else {
     console.error("can't make UnusableSpace");
   }
 }
@@ -1191,15 +1191,15 @@ function scoreFromPlayer(playerInfo) {
 // Board -> ...
 // Template for a Board.
 function boardTemplate(board) {
-  for(let row = 0; row < board.length; row++) {
+  for (let row = 0; row < board.length; row++) {
     let currentRow = board[row];
-    for(let col = 0; col = currentRow.length; col++) {
+    for (let col = 0; col = currentRow.length; col++) {
       let currentSpace = (board[row])[col];
-      if(isUnusableSpace(currentSpace)) {
+      if (isUnusableSpace(currentSpace)) {
         // ...
         usableSpaceTemplate(currentSpace)
         // ...
-      } else if(isUsableSpace(currentSpace)) { 
+      } else if (isUsableSpace(currentSpace)) {
         // ...
         unusableSpaceTemplate(currentSpace);
         // ...
@@ -1214,9 +1214,9 @@ function boardTemplate(board) {
 function usableSpaceTemplate(usableSpace) {
   console.assert(isUsableSpace(usableSpace));
   const occupiedBy = usableSpace.occupiedBy
-  if(isFalse(occupiedBy)) {
+  if (isFalse(occupiedBy)) {
     // ...
-  } else if(isTile(occupiedBy)) {
+  } else if (isTile(occupiedBy)) {
     tileTemplate(occupiedBy);
   }
 }
@@ -1236,13 +1236,13 @@ function tileTemplate(tile) {
   // ...
   tileTemplate(tileInfo);
   // ...
-  if(isFalse(occupiedBy)) {
+  if (isFalse(occupiedBy)) {
 
-  } else if(isFishes(occupiedBy)) {
+  } else if (isFishes(occupiedBy)) {
     // ...
     fishesTemplate(occupiedBy)
     // ...
-  } else if(isPenguin(occupiedBy)) {
+  } else if (isPenguin(occupiedBy)) {
     // ...
     penguinTemplate(occupiedBy)
     // ...
@@ -1282,19 +1282,19 @@ function penguinTemplate(penguin) {
 // Template for a PenguinColor.
 function penguinColorTemplate(penguinColor) {
   console.assert(isPenguinColor(penguinColor));
-  if(penguinColor === "red") {
+  if (penguinColor === "red") {
     // ...
     penguinColor
     // ...
-  } else if(penguinColor === "brown") {
+  } else if (penguinColor === "brown") {
     // ...
     penguinColor
     // ...
-  } else if(penguinColor === "black") {
+  } else if (penguinColor === "black") {
     // ...
     penguinColor
     // ...
-  } else if(penguinColor === "white") {
+  } else if (penguinColor === "white") {
     // ...
     penguinColor
     // ...
@@ -1323,16 +1323,16 @@ function canMove(fromPosn, toPosn, gs) {
 //
 // Board BoardPosn -> BoardPosn[]
 // gets board positions of all valid moves
-function getReachable (board, boardPosn) {
-  
+function getReachable(board, boardPosn) {
+
   let paths = getPaths(board, boardPosn)
-  return [ 
-      ...paths.north,
-      ...paths.northEast,
-      ...paths.southEast,
-      ...paths.south,
-      ...paths.southWest,
-      ...paths.northWest,
+  return [
+    ...paths.north,
+    ...paths.northEast,
+    ...paths.southEast,
+    ...paths.south,
+    ...paths.southWest,
+    ...paths.northWest,
   ]
 }
 
@@ -1346,12 +1346,12 @@ function getReachable (board, boardPosn) {
 // gets a `Path` object from `booardPosn` in `baord`.
 function getPaths(board, boardCoord) {
   return {
-      "north": getPathInDirection(board, boardCoord, getNeighborNorth),
-      "south": getPathInDirection(board, boardCoord, getNeighborSouth),
-      "northWest": getPathInDirection(board, boardCoord, getNeighborNorthWest),
-      "northEast": getPathInDirection(board, boardCoord, getNeighborNorthEast),
-      "southWest": getPathInDirection(board, boardCoord, getNeighborSouthWest),
-      "southEast": getPathInDirection(board, boardCoord, getNeighborSouthEast)
+    "north": getPathInDirection(board, boardCoord, getNeighborNorth),
+    "south": getPathInDirection(board, boardCoord, getNeighborSouth),
+    "northWest": getPathInDirection(board, boardCoord, getNeighborNorthWest),
+    "northEast": getPathInDirection(board, boardCoord, getNeighborNorthEast),
+    "southWest": getPathInDirection(board, boardCoord, getNeighborSouthWest),
+    "southEast": getPathInDirection(board, boardCoord, getNeighborSouthEast)
   }
 }
 
@@ -1367,7 +1367,7 @@ function getPathInDirection(board, posn, getNeighborInDirection) {
   // will eventually hit the edge of the board or
   // water or another player (which are unreachable).
   if (!isNeighborUnreachable(board, next)) {
-      res.push(next);
+    res.push(next);
   }
   return res;
 }
@@ -1376,51 +1376,51 @@ function getPathInDirection(board, posn, getNeighborInDirection) {
 function isNeighborUnreachable(board, posn) {
   const r = board[posn.row]
   const hasRow = posn.row < board.length && posn.row > -1
-  const hasCol = posn.col  < board[0].length && posn.col  > -1
+  const hasCol = posn.col < board[0].length && posn.col > -1
   return !hasRow || !hasCol ||
-      isUnusableSpace(r[posn.col])  ||
-      isFalse(spaceIsOccupiedBy(r[posn.col])) ||
-      isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(r[posn.col]))) ||
-      r[posn.col] === undefined;
+    isUnusableSpace(r[posn.col]) ||
+    isFalse(spaceIsOccupiedBy(r[posn.col])) ||
+    isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(r[posn.col]))) ||
+    r[posn.col] === undefined;
 
 }
 // Number Number -> BoardPosn
 // get the neighbor in the North direction
-function getNeighborNorth({ row, col}) {
+function getNeighborNorth({ row, col }) {
   return { row: row - 1, col: col }
 }
 // Number Number -> BoardPosn
 // get the neighbor in the South direction
-function getNeighborSouth({ row, col}) {
+function getNeighborSouth({ row, col }) {
   return { row: row + 1, col: col }
 }
 // Number Number -> BoardPosn
 // get the neighbor in the NorthWest direction
-function getNeighborNorthWest({ row, col}) {
-  return isEven(col) 
-  ? { row: row - 1, col: col - 1 }
-  : { row: row, col: col - 1 }
+function getNeighborNorthWest({ row, col }) {
+  return isEven(col)
+    ? { row: row - 1, col: col - 1 }
+    : { row: row, col: col - 1 }
 }
 // Number Number -> BoardPosn
 // get the neighbor in the NorthEast direction
-function getNeighborNorthEast({ row, col}) {
+function getNeighborNorthEast({ row, col }) {
   return isEven(col)
-  ? { row: row - 1, col: col + 1 }
-  : { row: row, col: col + 1 }
+    ? { row: row - 1, col: col + 1 }
+    : { row: row, col: col + 1 }
 }
 // Number Number -> BoardPosn
 // get the neighbor in the SouthWest direction
 function getNeighborSouthWest({ row, col }) {
   return isEven(col)
-  ? { row: row , col: col - 1 }
-  : { row: row + 1, col: col - 1 }
+    ? { row: row, col: col - 1 }
+    : { row: row + 1, col: col - 1 }
 }
 // Number Number -> BoardPosn
 // get the neighbor in the SouthEast direction
-function getNeighborSouthEast({ row, col}) {
+function getNeighborSouthEast({ row, col }) {
   return isEven(col)
-  ? { row: row, col: col + 1 }
-  : { row: row + 1, col: col + 1 };
+    ? { row: row, col: col + 1 }
+    : { row: row + 1, col: col + 1 };
 }
 // remove a tile from the board
 // ASSUMPTION: boardPosn in a valid tile
@@ -1444,17 +1444,17 @@ function makeAHole(posn, gs) {
 
 
 
-    const res = makeGameState(gameStageFromGameState(gs),
-        makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
-            ["hole", [
-                [posn[0],posn[1]]
-            ]]]),
-        nextMoveFromGameState(gs), playersFromGameState(gs))
-
-  
+  const res = makeGameState(gameStageFromGameState(gs),
+    makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
+      ["hole", [
+        [posn[0], posn[1]]
+      ]]]),
+    nextMoveFromGameState(gs), playersFromGameState(gs))
 
 
-    return res;
+
+
+  return res;
 
 }
 
@@ -1466,9 +1466,9 @@ function makeAHole(posn, gs) {
 function getPenguinColorFromUUID(UUID, players) {
 
 
-    let player = getPenguinFromID(UUID, players)
+  let player = getPenguinFromID(UUID, players)
 
-    return penguinColorFromPlayer(player[1])
+  return penguinColorFromPlayer(player[1])
 }
 
 
@@ -1477,15 +1477,15 @@ function getPenguinColorFromUUID(UUID, players) {
 // gets the player data attached to the given UUID
 function getPenguinFromID(UUID, players) {
 
-    let player = []
+  let player = []
 
-    for (let i = 0; i < players.length; i++) {
-        if (players[i][0] == UUID) {
-            player = players[i]
-        }
+  for (let i = 0; i < players.length; i++) {
+    if (players[i][0] == UUID) {
+      player = players[i]
     }
+  }
 
-    return player;
+  return player;
 
 
 }
@@ -1496,22 +1496,22 @@ function getPenguinFromID(UUID, players) {
 function makeMove(UUID, fromPosn, toPosn, gs) {
 
 
-    if (canMove(fromPosn, toPosn, gs)) {
-        const res = makeGameState("playing", makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
-            ["penguin", [
-                [[toPosn.row, toPosn.col], getPenguinColorFromUUID(UUID, playersFromGameState(gs))]
-            ]],
-            ["hole", [
-                [fromPosn.row, fromPosn.col]
-            ]]
-        ]),
-            getNextPlayer(UUID, gs),
+  if (canMove(fromPosn, toPosn, gs)) {
+    const res = makeGameState("playing", makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
+      ["penguin", [
+        [[toPosn.row, toPosn.col], getPenguinColorFromUUID(UUID, playersFromGameState(gs))]
+      ]],
+      ["hole", [
+        [fromPosn.row, fromPosn.col]
+      ]]
+    ]),
+      getNextPlayer(UUID, gs),
 
-            playersFromGameState(gs))
+      playersFromGameState(gs))
 
 
-        return res;
-    }
+    return res;
+  }
 
 }
 
@@ -1521,27 +1521,27 @@ function makeMove(UUID, fromPosn, toPosn, gs) {
 
 function canMove(fromPosn, toPosn, gs) {
 
-    let reachablePoints = getReachable(boardFromGameState(gs), fromPosn)
-    const reachableStrings = reachablePoints.map(JSON.stringify)
-    return reachableStrings.includes(JSON.stringify(toPosn))
+  let reachablePoints = getReachable(boardFromGameState(gs), fromPosn)
+  const reachableStrings = reachablePoints.map(JSON.stringify)
+  return reachableStrings.includes(JSON.stringify(toPosn))
 }
 
 // UUID GameState -> NextMove
 // gets the NextMove of the gameState
 function getNextPlayer(currentPlayer, gs) {
-    if (isGameOn(gs)) {
+  if (isGameOn(gs)) {
 
-        return getNextUUID(currentPlayer, gs)
+    return getNextUUID(currentPlayer, gs)
 
-    }
-    else {
-        return false;
-    }
+  }
+  else {
+    return false;
+  }
 }
 
 function getPlayerPosn(UUID, gs) {
 
-    return getPenguinPositions(UUID, gs)
+  return getPenguinPositions(UUID, gs)
 
 }
 
@@ -1550,52 +1550,52 @@ function getPlayerPosn(UUID, gs) {
 // ASSUMPTION: game is not over
 function getNextUUID(currentPlayer, gs) {
 
-    players = playersFromGameState(gs)
+  players = playersFromGameState(gs)
 
 
-    for (let i = 0; i < players.length; i++) {
+  for (let i = 0; i < players.length; i++) {
 
-        if (players[i][0] == currentPlayer) {
+    if (players[i][0] == currentPlayer) {
 
-            if (i < players.length - 1) {
+      if (i < players.length - 1) {
 
-                if (penguinHasMoves(players[i + 1][0], gs)) {
-                    return players[i + 1][0];
-                }
-                else {
-                    return getNextUUID(players[i + 1][0], gs)
-                }
-            }
-        
-            else {
-
-                if (penguinHasMoves(players[0][0], gs)) {
-                    return players[0][0];
-                    
-                }
-                else {
-                    return getNextUUID(players[0][0], gs)
-                }
-                
-            }
+        if (penguinHasMoves(players[i + 1][0], gs)) {
+          return players[i + 1][0];
         }
+        else {
+          return getNextUUID(players[i + 1][0], gs)
+        }
+      }
+
+      else {
+
+        if (penguinHasMoves(players[0][0], gs)) {
+          return players[0][0];
+
+        }
+        else {
+          return getNextUUID(players[0][0], gs)
+        }
+
+      }
     }
+  }
 }
 
 // UUID GameState -> Boolean
 // checks if given user has moves left
 function penguinHasMoves(UUID, gs) {
 
-    const penguinPosns = getPenguinPositions(UUID, gs)
+  const penguinPosns = getPenguinPositions(UUID, gs)
 
-    allReachablePoints = []
+  allReachablePoints = []
 
-    penguinPosns.forEach(p => {
-        allReachablePoints.push(getReachable(boardFromGameState(gs), p))
-    })
+  penguinPosns.forEach(p => {
+    allReachablePoints.push(getReachable(boardFromGameState(gs), p))
+  })
 
 
-    return allReachablePoints[0].length > 0
+  return allReachablePoints[0].length > 0
 
 }
 
@@ -1603,36 +1603,36 @@ function penguinHasMoves(UUID, gs) {
 // gets the current positions of a given player's penguins
 function getPenguinPositions(UUID, gs) {
 
-    let posns = []
+  let posns = []
 
-    const color = getPenguinColorFromUUID(UUID, playersFromGameState(gs))
+  const color = getPenguinColorFromUUID(UUID, playersFromGameState(gs))
 
-    for (let i = 0; i < boardFromGameState(gs).length; i++) {
-        for (let j = 0; j < boardFromGameState(gs)[0].length; j++) {
-            if (isUsableSpace(boardFromGameState(gs)[i][j]) && isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(boardFromGameState(gs)[i][j])))) {
-                if (penguinColorFromPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(boardFromGameState(gs)[i][j]))) === color) {
-                    posns.push({ row: i, col: j })
-                }
-            }
+  for (let i = 0; i < boardFromGameState(gs).length; i++) {
+    for (let j = 0; j < boardFromGameState(gs)[0].length; j++) {
+      if (isUsableSpace(boardFromGameState(gs)[i][j]) && isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(boardFromGameState(gs)[i][j])))) {
+        if (penguinColorFromPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(boardFromGameState(gs)[i][j]))) === color) {
+          posns.push({ row: i, col: j })
         }
+      }
     }
+  }
 
-    return posns;
+  return posns;
 }
 
 // GameState -> Boolean
 // checks if given gameState has valid moves left
 function isGameOn(gs) {
 
-    const penguinPosns = getAllPenguinPositions(gs)
+  const penguinPosns = getAllPenguinPositions(gs)
 
-    allReachablePoints = []
+  allReachablePoints = []
 
-    penguinPosns.forEach(p => {
-        allReachablePoints.push(getReachable(boardFromGameState(gs), p))
-    })
+  penguinPosns.forEach(p => {
+    allReachablePoints.push(getReachable(boardFromGameState(gs), p))
+  })
 
-    return allReachablePoints.length > 1 || allReachablePoints[0].length > 1
+  return allReachablePoints.length > 1 || allReachablePoints[0].length > 1
 
 }
 
@@ -1640,19 +1640,19 @@ function isGameOn(gs) {
 // gets positions for all the players' penguins'
 function getAllPenguinPositions(gs) {
 
-    let posns = []
+  let posns = []
 
-    for (let i = 0; i < boardFromGameState(gs).length; i++) {
-        for (let j = 0; j < boardFromGameState(gs)[0].length; j++) {
-            if (isUsableSpace(boardFromGameState(gs)[i][j]) && isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(boardFromGameState(gs)[i][j])))) {
+  for (let i = 0; i < boardFromGameState(gs).length; i++) {
+    for (let j = 0; j < boardFromGameState(gs)[0].length; j++) {
+      if (isUsableSpace(boardFromGameState(gs)[i][j]) && isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(boardFromGameState(gs)[i][j])))) {
 
-                posns.push({ row: i, col: j })
+        posns.push({ row: i, col: j })
 
-            }
-        }
+      }
     }
+  }
 
-    return posns;
+  return posns;
 }
 
 
@@ -1662,24 +1662,24 @@ function getAllPenguinPositions(gs) {
 // returns a PenguinColor that has not yet been assigned to any player
 function getUnusedColor(gameState) {
 
-    let availableColors = ["red", "black", "brown", "white"]
+  let availableColors = ["red", "black", "brown", "white"]
 
-    for (let i = 0; i < playersFromGameState(gameState).length; i++) {
-        let ci = availableColors.indexOf(playersFromGameState(gameState)[i][1].color)
-        availableColors.splice(ci, 1)
-    }
+  for (let i = 0; i < playersFromGameState(gameState).length; i++) {
+    let ci = availableColors.indexOf(playersFromGameState(gameState)[i][1].color)
+    availableColors.splice(ci, 1)
+  }
 
-    const res = availableColors[Math.floor(Math.random(availableColors.length))]
+  const res = availableColors[Math.floor(Math.random(availableColors.length))]
 
 
-    return makePenguinColor(res);
+  return makePenguinColor(res);
 }
 
 // ----------------------------------- board specs -----------------------------------------------------------------
 
 // configures board specifications
 function getBoardSpecs(board) {
- 
+
 
   /*board = noOfFish(board, 1, 2, 5)
   board = noOfFish(board, 1, 1, 4)
@@ -1699,7 +1699,7 @@ function getBoardSpecs(board) {
 function makeHole(board, row, col) {
   if (isUsableSpace(getSpaceFromBoard(board, row, col))) {
 
-      board[row][col] = makeUsableSpace(false);
+    board[row][col] = makeUsableSpace(false);
   }
   return board;
 }
@@ -1707,7 +1707,7 @@ function makeHole(board, row, col) {
 // Board Number Number -> boolean
 // checks if a hole can be made in given positon
 function canMakeHole(board, row, col) {
-  return (isUsableSpace(getSpaceFromBoard(board, row, col))) && !isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(getSpaceFromBoard(board, row, col)))) 
+  return (isUsableSpace(getSpaceFromBoard(board, row, col))) && !isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(getSpaceFromBoard(board, row, col))))
 }
 
 // Board Number Number, Number -> Board
@@ -1718,9 +1718,9 @@ function noOfFish(board, row, col, n) {
   let val = getSpaceFromBoard(board, row, col)
 
   if (isUsableSpace(val) && isTile(spaceIsOccupiedBy(val)) && isFishes(tileIsOccupiedBy(spaceIsOccupiedBy(val)))
-      && n <= maxElementsFromTileInfo(tileInfoFromTile(spaceIsOccupiedBy(val)))) {
+    && n <= maxElementsFromTileInfo(tileInfoFromTile(spaceIsOccupiedBy(val)))) {
 
-      board[row][col] = makeUsableSpace(makeGameTile(makeTileInfo(DEFAULT_SIZE, 5), makeFishes(n)));
+    board[row][col] = makeUsableSpace(makeGameTile(makeTileInfo(DEFAULT_SIZE, 5), makeFishes(n)));
   }
   return board;
 }
@@ -1733,9 +1733,9 @@ function canPlaceFish(board, row, col, n) {
   let val = getSpaceFromBoard(board, row, col)
 
   return (isUsableSpace(val) && isTile(spaceIsOccupiedBy(val)) && isFishes(tileIsOccupiedBy(spaceIsOccupiedBy(val)))
-      && n <= maxElementsFromTileInfo(tileInfoFromTile(spaceIsOccupiedBy(val)))) 
+    && n <= maxElementsFromTileInfo(tileInfoFromTile(spaceIsOccupiedBy(val))))
 
-    
+
 }
 
 
@@ -1746,9 +1746,9 @@ function placePenguin(board, row, col, color) {
 
   let val = getSpaceFromBoard(board, row, col)
 
-  if (isUsableSpace(val) && isTile(spaceIsOccupiedBy(val)) && !isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(val))) ) {
+  if (isUsableSpace(val) && isTile(spaceIsOccupiedBy(val)) && !isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(val)))) {
 
-      board[row][col] = makeUsableSpace(makeGameTile(makeTileInfo(DEFAULT_SIZE, 1), makePenguin(color)));
+    board[row][col] = makeUsableSpace(makeGameTile(makeTileInfo(DEFAULT_SIZE, 1), makePenguin(color)));
 
   }
   return board;
@@ -1760,9 +1760,9 @@ function canPlacePenguin(board, row, col) {
 
   let val = getSpaceFromBoard(board, row, col)
 
-   return (isUsableSpace(val) && isTile(spaceIsOccupiedBy(val)) && !isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(val))) ) 
+  return (isUsableSpace(val) && isTile(spaceIsOccupiedBy(val)) && !isPenguin(tileIsOccupiedBy(spaceIsOccupiedBy(val))))
 
-      
+
 }
 
 
@@ -1776,8 +1776,8 @@ function addBoardHolesMinFish(board, fishes, hposns) {
 
   // changes value of tile to represent a hole
   for (let hposn = 0; hposn < hposns.length; hposn++) {
-      let [bcol, brow] = [hposns[hposn][1], hposns[hposn][0]]
-      makeHole(board, brow, bcol)
+    let [bcol, brow] = [hposns[hposn][1], hposns[hposn][0]]
+    makeHole(board, brow, bcol)
   }
 
   // add 1-fish tiles only if board
@@ -1785,23 +1785,23 @@ function addBoardHolesMinFish(board, fishes, hposns) {
 
   if (!hasMinFish(board, fishes)) {
 
-      // gets list of changeable points
-      changeablePoints = getChangablePoints(board)
+    // gets list of changeable points
+    changeablePoints = getChangablePoints(board)
 
-      // shuffles array containing changeable points
-      const shuffled = [...changeablePoints].sort(() => 0.5 - Math.random());
+    // shuffles array containing changeable points
+    const shuffled = [...changeablePoints].sort(() => 0.5 - Math.random());
 
-      // Get sub-array of first n elements after shuffled to meet requirements
-      // of min 1-fish tiles
-      let selected = shuffled.slice(0, fishes - countOneFishTiles(board));
+    // Get sub-array of first n elements after shuffled to meet requirements
+    // of min 1-fish tiles
+    let selected = shuffled.slice(0, fishes - countOneFishTiles(board));
 
-      for (let i = 0; i < selected.length; i++) {
+    for (let i = 0; i < selected.length; i++) {
 
-          srow = selected[i][0]
-          scol = selected[i][1]
+      srow = selected[i][0]
+      scol = selected[i][1]
 
-          board[srow][scol] = makeUsableSpace(makeGameTile(makeTileInfo(DEFAULT_SIZE, 5), makeFishes(1)));
-      }
+      board[srow][scol] = makeUsableSpace(makeGameTile(makeTileInfo(DEFAULT_SIZE, 5), makeFishes(1)));
+    }
   }
 
   return board;
@@ -1816,17 +1816,17 @@ function hasMinFish(board, fishes) {
 function countOneFishTiles(board) {
   fcount = 0;
   for (let i = 0; i < totalRowsInBoard(board); i++) {
-      for (let j = 0; j < totalColsInBoard(board); j++) {
-          val = getSpaceFromBoard(board, i, j)
-          if (isUsableSpace(val) && isTile(spaceIsOccupiedBy(val)) &&
-              isFishes(tileIsOccupiedBy(spaceIsOccupiedBy(val)))) {
+    for (let j = 0; j < totalColsInBoard(board); j++) {
+      val = getSpaceFromBoard(board, i, j)
+      if (isUsableSpace(val) && isTile(spaceIsOccupiedBy(val)) &&
+        isFishes(tileIsOccupiedBy(spaceIsOccupiedBy(val)))) {
 
-              if (totalFishesFromFishes(tileIsOccupiedBy(spaceIsOccupiedBy(val))) === 1) {
+        if (totalFishesFromFishes(tileIsOccupiedBy(spaceIsOccupiedBy(val))) === 1) {
 
-                  fcount = fcount + 1;
-              }
-          }
+          fcount = fcount + 1;
+        }
       }
+    }
   }
   return fcount;
 }
@@ -1836,12 +1836,12 @@ function countOneFishTiles(board) {
 function getChangablePoints(board) {
   let res = []
   for (let row = 0; row < totalRowsInBoard(board); row++) {
-      for (let col = 0; col < totalColsInBoard(board); col++) {
+    for (let col = 0; col < totalColsInBoard(board); col++) {
 
-          if (isChangeableState(getSpaceFromBoard(board, row, col))) {
-              res.push([row, col])
-          }
+      if (isChangeableState(getSpaceFromBoard(board, row, col))) {
+        res.push([row, col])
       }
+    }
   }
   return res;
 }
@@ -1853,7 +1853,7 @@ function getChangablePoints(board) {
 // (we do not have to change 1)
 function isChangeableState(p) {
   return isUsableSpace(p) && isTile(spaceIsOccupiedBy(p)) && isFishes(tileIsOccupiedBy(spaceIsOccupiedBy(p)))
-      && totalFishesFromFishes(tileIsOccupiedBy(spaceIsOccupiedBy(p))) > 1;
+    && totalFishesFromFishes(tileIsOccupiedBy(spaceIsOccupiedBy(p))) > 1;
 
 }
 
