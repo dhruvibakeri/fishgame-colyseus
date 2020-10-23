@@ -7,12 +7,20 @@
         content="width=device-width, initial-scale=1.0">
   <title>Hey, that's my Fish!</title>
   <link rel="stylesheet"
-        href="reset.css">
+        href="libs/reset.css">
   <link rel="shortcut icon"
         href="assets/favicon.ico"
         type="image/x-icon">
-  <link rel="stylesheet"
-        href="style.css">
+  <style>
+    body {
+      background-color: rgb(183, 212, 230)
+    }
+
+    canvas {
+      box-shadow: rgba(30, 45, 72, 0.5) 0 0 5px;
+      border: 1px solid rgb(4, 52, 75);
+    }
+  </style>
 </head>
 
 <body>
@@ -52,7 +60,7 @@
   <br>
 
 
-  <script src="fabric.min.js"></script>
+  <script src="libs/fabric.min.js"></script>
   <script src="state.js"></script>
   <script src="board.js"></script>
   <script src="hex-view-generation.js"></script>
@@ -63,7 +71,7 @@
   <script src="game-state-examples.js"></script>
   <script src="gameTree3.js"></script>
   <script src="gameTreeExamples.js"></script>
-  
+
 </body>
 
 </html>

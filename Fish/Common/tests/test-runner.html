@@ -1,0 +1,50 @@
+<html>
+
+<head>
+  <title>Mocha</title>
+  <!-- CSS TO STYLE TEST RESULTS -->
+  <link rel="stylesheet"
+        href="../libs/mocha.css" />
+  <!-- TESTING LIBRARY -->
+  <script src="../libs/mocha.js"></script>
+  <!-- ASSERTION LIBRARY -->
+  <script src="../libs/chai.js"></script>
+</head>
+
+<body>
+  <!-- TEST SETUP -->
+  <script>
+    mocha.setup('bdd');
+  </script>
+  <!-- CODE TO TEST -->
+  <script src="../fish.js"></script>
+  <script src="../state.js"></script>
+  <script src="../board.js"></script>
+  <script src="../hex-view-generation.js"></script>
+  <script src="../board-specs.js"></script>
+  <script src="../board-reachable-paths.js"></script>
+  <script src="../game-state-functions.js"></script>
+  <script src="../render.js"></script>
+  <script src="../game-state-examples.js"></script>
+  <script src="../translation.js"></script>
+  <script src="game-tree-tests.js"></script>
+  <script src="../game-tree.js"></script>
+  <!-- TEST SUITE -->
+
+  <!-- tests -->
+  <script src="game-state-interface-tests.js"></script>
+  <script src="game-state-function-tests.js"></script>
+  <script src="translation-tests.js"></script>
+
+
+  <!-- RUNNING TESTS -->
+  <script>
+    window.onload = () => {
+      mocha.run();
+    };
+  </script>
+  <!-- DISPLAYING TESTS -->
+  <div id="mocha"></div>
+</body>
+
+</html>

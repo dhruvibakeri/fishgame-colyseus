@@ -53,7 +53,7 @@ function makeAHole(posn, gs) {
     const res = makeGameState(gameStageFromGameState(gs),
         makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
             ["hole", [
-                [posn[0],posn[1]]
+                [posn[0], posn[1]]
             ]]]),
         nextMoveFromGameState(gs), playersFromGameState(gs))
 
@@ -114,24 +114,14 @@ function getPenguinFromID(UUID, players) {
 
 }
 
-// UUID fromPosn toPosn GameState -> GameState
+// UUID BoardPosn BoardPosn GameState -> GameState
 // move an existing avatar from one spot to another on behalf of the player;
-
 function makeMove(UUID, fromPosn, toPosn, gs) {
-
-
     if (canMove(fromPosn, toPosn, gs)) {
         const res = makeGameState("playing", makeBoardWithSpecs(boardFromGameState(gs), noOfFish, placePenguin, makeHole, [
-            ["penguin", [
-                [[toPosn.row, toPosn.col], getPenguinColorFromUUID(UUID, playersFromGameState(gs))]
-            ]],
-            ["hole", [
-                [fromPosn.row, fromPosn.col]
-            ]]
-        ]),
-            getNextPlayer(UUID, gs),
-
-            playersFromGameState(gs))
+            ["penguin", [[[toPosn.row, toPosn.col], getPenguinColorFromUUID(UUID, playersFromGameState(gs))]]],
+            ["hole", [[fromPosn.row, fromPosn.col]]]
+        ]), getNextPlayer(UUID, gs), playersFromGameState(gs))
 
         all_game_states.push(res)
 
@@ -191,17 +181,17 @@ function getNextUUID(currentPlayer, gs) {
                     return getNextUUID(players[i + 1][0], gs)
                 }
             }
-        
+
             else {
 
                 if (penguinHasMoves(players[0][0], gs)) {
                     return players[0][0];
-                    
+
                 }
                 else {
                     return getNextUUID(players[0][0], gs)
                 }
-                
+
             }
         }
     }
@@ -293,10 +283,7 @@ function getUnusedColor(gameState) {
         let ci = availableColors.indexOf(playersFromGameState(gameState)[i][1].color)
         availableColors.splice(ci, 1)
     }
-
     const res = availableColors[Math.floor(Math.random(availableColors.length))]
-
-
     return makePenguinColor(res);
 }
 

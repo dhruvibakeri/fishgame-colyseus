@@ -16,6 +16,16 @@
 // the parent state. 
 //------------------------------------------------------------------------------------------------------------------
 
+// An Action is one of PlayerAction | RefereeAction
+//     A PlayerAction is one of Move | PlacePenguin
+//         A Move is {kind: "move", player: UUID, posn: {from: Posn, to: Posn}}
+//         A PlacePenguin is {kind: "placePenguin", player: UUID, posn: Posn}
+//     A RefereeAction is one of MakeHole | PlaceFish
+//         A MakeHole is {kind: "makeHole", posn: Posn}
+//         A PlaceFish is a {kind: "placeFish", posn: Posn, totalFishes: 1-5 }
+// INTERPRETATION. Represents the actions a player/referee can take. A player can move/place penguin. A referee can
+// place a fish, make hole. [The PlayerActions are also executed by the Referee but are "requested" by the player]
+
 
 // Any -> Boolean
 // checks if given element is a Gametree
@@ -57,7 +67,7 @@ function addParent(gameState, subTrees) {
 // GameState -> GameTree
 // create initial GameTree
 function createGameTree(gameState) {
-    return [gameState, () => {return getValidSubStates(gameState)}]
+    return [gameState, () => { return getValidSubStates(gameState) }]
 }
 
 // GameState -> GameTree[]
@@ -95,26 +105,13 @@ function makeAllMovesForAPenguin(UUID, fromPosn, gs) {
 
 // GameState Action -> GameState | IllegalAction
 // applies action on a given GameState only if it is legal
-
-/*
-An Action is one of PlayerAction | RefereeAction
-    A PlayerAction is one of Move | PlacePenguin
-        A Move is {kind: "move", player: UUID, posn: {from: Posn, to: Posn}}
-        A PlacePenguin is {kind: "placePenguin", player: UUID, posn: Posn}
-    A RefereeAction is one of MakeHole | PlaceFish
-        A MakeHole is {kind: "makeHole", posn: Posn}
-        A PlaceFish is a {kind: "placeFish", posn: Posn, totalFishes: 1-5 }
-*/
-
 function applyAction(action, gs) {
-
-
     if (isValidAction(action, gs)) {
         return takeAction(action, gs);
     }
     else {
         return {
-            kind: "illegalAction", message: "The action ... is illegal because ..."
+            kind: "illegalAction"
         }
     }
 }
@@ -126,19 +123,16 @@ function isValidAction(action, gs) {
     let board = boardFromGameState(gs)
     switch (action.kind) {
         case "move":
-            return canMove({row: posn.from[0], col: posn.from[1] }, {row: posn.to[0], col: posn.to[1] }, gs)
-            break;
+            return canMove({ row: posn.from[0], col: posn.from[1] }, { row: posn.to[0], col: posn.to[1] }, gs)
         case "placePenguin":
             return canPlacePenguin(board, posn[0], posn[1])
-            break;
         case "makeHole":
             return canMakeHole(board, posn[0], posn[1])
-            break;
         case "placeFish":
             return canPlaceFish(board, posn[0], posn[1], action.totalFishes)
             break;
         default:
-        return false
+            return false
     }
 }
 
@@ -148,7 +142,7 @@ function takeAction(action, gs) {
     let posn = action.posn
     switch (action.kind) {
         case "move":
-            return makeMove(action.player, {row: posn.from[0], col: posn.from[1] }, {row: posn.to[0], col: posn.to[1] }, gs)
+            return makeMove(action.player, { row: posn.from[0], col: posn.from[1] }, { row: posn.to[0], col: posn.to[1] }, gs)
             break;
         case "placePenguin":
             return placeAPenguin(action.player, posn, gs)
@@ -160,15 +154,19 @@ function takeAction(action, gs) {
             return placeNFish(action.totalFishes, posn, gs)
             break;
         default:
-        return gs
+            return gs
     }
 }
+
+
+
+
 
 // applyToDirectlyReachable: GameState [GameState -> T] -> [GameState, T][]
 // applies given function to all directly reachable states
 
 function applyToDirectlyReachable(gs, func) {
-    let directlyReachableStates = getValidSubStates(gs) 
+    let directlyReachableStates = getValidSubStates(gs)
 
     let res = []
 

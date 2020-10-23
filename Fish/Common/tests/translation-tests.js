@@ -3,7 +3,7 @@ describe("inputBoardToIntermediateBoard tests", () => {
     assert.deepEqual(inputBoardToIntermediateBoard(inputBoardExample1), boardExample1);
   })
   it("odd # of rows", () => {
-    assert.deepEqual(inputBoardToIntermediateBoard(inputBoardExample2),  boardExample2);
+    assert.deepEqual(inputBoardToIntermediateBoard(inputBoardExample2), boardExample2);
   })
 })
 
@@ -15,19 +15,19 @@ describe("tests for even board helper", () => {
 
 describe("tests for odd board helper", () => {
   it("on [[1, 2, 3], [4, 0, 5], [1, 1, 0]]", () => {
-    assert.deepEqual(oddInputBoardToIntermediateBoard(inputBoardExample2),  boardExample2);
+    assert.deepEqual(oddInputBoardToIntermediateBoard(inputBoardExample2), boardExample2);
   })
 })
 
 describe("interleave tests", () => {
   it("on empty arrays", () => {
-      assert.deepEqual(interleaveRows([], []), [])
+    assert.deepEqual(interleaveRows([], []), [])
   })
   it("on [1, 2], [3, 4]", () => {
-      assert.deepEqual(interleaveRows([1, 2], [3, 4]), [1, 3, 2, 4])
+    assert.deepEqual(interleaveRows([1, 2], [3, 4]), [1, 3, 2, 4])
   })
   it("on [1, 2, 3], [4, 0, 5]", () => {
-      assert.deepEqual(interleaveRows([1, 2, 3], [4, 0, 5]), [1, 4, 2, 0, 3, 5])
+    assert.deepEqual(interleaveRows([1, 2, 3], [4, 0, 5]), [1, 4, 2, 0, 3, 5])
   })
 })
 
