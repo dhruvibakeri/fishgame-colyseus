@@ -5,7 +5,7 @@ TAs can find:
 
 - the interpretation of your data representation for `board`
 
-[src](https://github.ccs.neu.edu/CS4500-F20/rosebud/blob/5fff72222d5bcc24a591239d2df4af13b3715ef7/Fish/Common/state.js#L32)
+[src](https://github.ccs.neu.edu/CS4500-F20/rosebud/blob/5fff72222d5bcc24a591239d2df4af13b3715ef7/Fish/Common/state.js#L32-L35)
 
 - the interpretation of your data representation for `game state`
 
