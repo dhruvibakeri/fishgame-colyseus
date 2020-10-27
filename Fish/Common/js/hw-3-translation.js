@@ -34,8 +34,8 @@
 // InputBoard and Board Examples
 // 
 const inputBoardExample1 = [
-  [1,2,3],
-  [4,0,5]
+  [1, 2, 3],
+  [4, 0, 5]
 ]
 const inputBoardExample2 = [
   [1, 2, 3],
@@ -46,7 +46,7 @@ const boardExample1 = [
   [1, 4, 2, 0, 3, 5]
 ];
 const boardExample2 = [
-  [1, 4, 2, 0, 3, 5], 
+  [1, 4, 2, 0, 3, 5],
   [1, "unusableSpace", 1, "unusableSpace", 0, "unusableSpace"]
 ]
 //
@@ -95,7 +95,7 @@ const boardExample2 = [
 // Translate the input board to intermediate board. 
 function inputBoardToIntermediateBoard(inputBoard) {
   const totalRows = inputBoard.length;
-  if(isEven(totalRows)) {
+  if (isEven(totalRows)) {
     return evenInputBoardToIntermediateBoard(inputBoard);
   } else {
     return oddInputBoardToIntermediateBoard(inputBoard);
@@ -106,12 +106,12 @@ function inputBoardToIntermediateBoard(inputBoard) {
 // convert an InputBoard with even rows to a IntermediateBoard
 function evenInputBoardToIntermediateBoard(inputBoard) {
   let resBoard = [];
-  for(let i = 0; i < inputBoard.length / 2; i = i + 2) {
+  for (let i = 0; i < inputBoard.length / 2; i = i + 2) {
     let thisRow = inputBoard[i];
     let nextRow = inputBoard[i + 1];
     let interleavedRow = interleaveRows(thisRow, nextRow);
     resBoard.push(interleavedRow);
-  } 
+  }
   return resBoard;
 }
 
@@ -119,12 +119,12 @@ function evenInputBoardToIntermediateBoard(inputBoard) {
 // convert an InputBoard with odd rows to a IntermediateBoard
 function oddInputBoardToIntermediateBoard(inputBoard) {
   let resBoard = [];
-  for(let i = 0; i < (inputBoard.length - 1) / 2; i = i + 2) {
+  for (let i = 0; i < (inputBoard.length - 1) / 2; i = i + 2) {
     let thisRow = inputBoard[i];
     let nextRow = inputBoard[i + 1];
     let interleavedRow = interleaveRows(thisRow, nextRow);
     resBoard.push(interleavedRow);
-  } 
+  }
   let lastRow = inputBoard[inputBoard.length - 1]
   resBoard.push(interleaveRows(lastRow, new Array(lastRow.length).fill("unusableSpace")))
   return resBoard;
@@ -141,7 +141,7 @@ function oddInputBoardToIntermediateBoard(inputBoard) {
 function interleaveRows(l1, l2) {
   console.assert(l1.length === l2.length);
   let interLeaved = [];
-  for(let i = 0; i < l1.length; i++) {
+  for (let i = 0; i < l1.length; i++) {
     interLeaved.push(l1[i]);
     interLeaved.push(l2[i]);
   }
@@ -155,10 +155,10 @@ function interleaveRows(l1, l2) {
 // converts an intermediate board to a board 
 function intermediateBoardToBoard(intermediateBoard) {
   let mappedBoard = [];
-  for(let rowIdx = 0; rowIdx < intermediateBoard.length; rowIdx++) {
+  for (let rowIdx = 0; rowIdx < intermediateBoard.length; rowIdx++) {
     let mappedRow = [];
     let currentRow = intermediateBoard[rowIdx];
-    for(let colIdx = 0; colIdx < currentRow.length; colIdx++) {
+    for (let colIdx = 0; colIdx < currentRow.length; colIdx++) {
       let currentElement = currentRow[colIdx];
       mappedRow.push(mapIntermediateElement(currentElement));
     }
@@ -173,17 +173,17 @@ const MAX_ELEMENTS_TEMP = 5;
 // Natural | "unusableSpace" -> UsableSpace | UnusableSpace 
 // maps an element of an IntermediateBoard to an element of Board
 function mapIntermediateElement(boardElement) {
-  if(boardElement === "unusableSpace") {
+  if (boardElement === "unusableSpace") {
     return makeUnusableSpace();
   } else {
     const tileInfo = makeTileInfo(TILE_SIZE_TEMP, MAX_ELEMENTS_TEMP)
-    if(boardElement === 0) {
+    if (boardElement === 0) {
       const tile = makeGameTile(tileInfo, false);
       return makeUsableSpace(tile)
     } else {
       const tile = makeGameTile(tileInfo, makeFishes(boardElement));
       return makeUsableSpace(tile);
-    } 
+    }
   }
 }
 
@@ -208,12 +208,12 @@ function mapIntermediateElement(boardElement) {
 
 const exampleBoardPosn1 = {
   position: [0, 0],
-  board: [[1,2,3],[4,0,5]]
+  board: [[1, 2, 3], [4, 0, 5]]
 }
 
 const exampleBoardPosn2 = {
   position: [0, 0],
-  board: [[1,2,3],[4,0,5],[1,1,0]]
+  board: [[1, 2, 3], [4, 0, 5], [1, 1, 0]]
 }
 
 function inputBoardToBoard(inputBoard) {
@@ -225,6 +225,6 @@ function inputBoardToBoard(inputBoard) {
 // Get the total number of reachable positions from boardPosn
 function getTotalReachableFromBoardPosn(boardPosn) {
   let board = inputBoardToBoard(boardPosn.board)
-  const posn = { row: boardPosn.position[0], col: boardPosn.position[1]};
+  const posn = { row: boardPosn.position[0], col: boardPosn.position[1] };
   return getReachable(board, posn).length;
 }
