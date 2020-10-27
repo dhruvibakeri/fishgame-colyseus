@@ -16,13 +16,17 @@ The various players join the game. [This is the job of the _Tournament Manager_]
 
 The player checks on the current gameState if it is their turn to place. If it is, they can look for the possible placements on the game state and respond with a `"place"` message with their desired position. If the desired placement is invalid, the player is kicked out.
 
-When the referee knows that all the penguins of all the players have been placed, the referee transitions to the `Playing Stage`
+When the referee knows that all the penguins of all the players have been placed, the referee transitions to the `Playing Stage`.
+
+The player is kicked out if there is no response in _N_ seconds.
 
 ## Playing Stage
 
 The player checks on the current gameState if it is their turn to play. If it is, they can look for possible moves, validity of the moves, and respond with a `"move"` message with their  `Move` object that contains to and from positions.If the desired move is invalid, the player is kicked out.
 
 When the referee knows that none of the penguins of any player have moves left, the referee transitions to the `Done Stage` (when there are no moves left).
+
+The player is kicked out if there is no response in _N_ seconds.
 
 ## Synchronization of states
 
