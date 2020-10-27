@@ -58,6 +58,7 @@ function getChildren(gameTree) {
     }
 }
 
+
 // GameState GameTree[] -> GameTree
 // adds the given parent to the given subTrees
 function addParent(gameState, subTrees) {
@@ -67,18 +68,52 @@ function addParent(gameState, subTrees) {
 // GameState -> GameTree
 // create initial GameTree
 function createGameTree(gameState) {
+    // getValidSubStates returns a list of game trees. 
     return [gameState, () => { return getValidSubStates(gameState) }]
 }
+
+// GameState Action -> GameState | IllegalAction
+// applies action on a given GameState only if it is legal
+function applyAction(action, gs) {
+    if (isValidAction(action, gs)) {
+        return takeAction(action, gs);
+    }
+    else {
+        return {
+            kind: "illegalAction"
+        }
+    }
+}
+
+// applyToDirectlyReachable: GameState [GameState -> T] -> [GameState, T][]
+// applies given function to all directly reachable states
+function applyToDirectlyReachable(gs, func) {
+    let directlyReachableStates = getValidSubStates(gs)
+
+    let res = []
+
+    directlyReachableStates.forEach(s => {
+        let currentState = getStateFromTree(s)
+        res.push([currentState, func(currentState)])
+    })
+
+    return res;
+}
+
+
+
+
+
+// - - - - - - - - - - - - - - - - - - - - - - 
+// - - - - - - - I N T E R N A L  - - - - - - -
+// - - - - - - - - - - - - - - - - - - - - - - 
+
 
 // GameState -> GameTree[]
 // gets all reachable states from the given GameState
 function getValidSubStates(myGameState) {
     let res = []
-
-
     let allPenguinPos = getPenguinPositions(nextMoveFromGameState(myGameState), myGameState)
-
-    console.log(allPenguinPos)
 
     allPenguinPos.forEach(p => {
         res = [...res, ...makeAllMovesForAPenguin(nextMoveFromGameState(myGameState), p, myGameState)]
@@ -95,25 +130,12 @@ function makeAllMovesForAPenguin(UUID, fromPosn, gs) {
     let reachablePoints = getReachable(boardFromGameState(gs), fromPosn)
 
     reachablePoints.forEach(p => {
-        moveState = makeMove(UUID, fromPosn, p, gs)
+        let moveState = makeMove(UUID, fromPosn, p, gs)
         res.push([moveState, () => { return getValidSubStates(moveState) }])
 
     })
 
     return res;
-}
-
-// GameState Action -> GameState | IllegalAction
-// applies action on a given GameState only if it is legal
-function applyAction(action, gs) {
-    if (isValidAction(action, gs)) {
-        return takeAction(action, gs);
-    }
-    else {
-        return {
-            kind: "illegalAction"
-        }
-    }
 }
 
 // Action GameState -> boolean
@@ -157,30 +179,4 @@ function takeAction(action, gs) {
             return gs
     }
 }
-
-
-
-
-
-// applyToDirectlyReachable: GameState [GameState -> T] -> [GameState, T][]
-// applies given function to all directly reachable states
-
-function applyToDirectlyReachable(gs, func) {
-    let directlyReachableStates = getValidSubStates(gs)
-
-    let res = []
-
-    directlyReachableStates.forEach(s => {
-        let currentState = getStateFromTree(s)
-        res.push([currentState, func(currentState)])
-    })
-
-    return res;
-}
-
-
-
-
-
-
 

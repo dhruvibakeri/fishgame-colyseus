@@ -13,15 +13,15 @@ The various players join the game. [This is the job of the _Tournament Manager_]
 
 **Placing Stage**
 
-The player waits for `"pleasePlace"` message from the server. When they receive the message, they can look for the possible placements on the game state and respond with a `"place"` message with their desired position. 
+The player checks on the current gameState if it is their turn to place. If it is, they can look for the possible placements on the game state and respond with a `"place"` message with their desired position. 
 
-The Referee sends out `"pleasePlace"` messages to the various clients till all the penguins are placed. Then the referee transitions the `Playing Stage`
+When the referee knows that all the penguins of all the players have been placed, the referee transitions to the `Playing Stage`
 
 **Playing Stage**
 
-The player waits for the `"pleaseMove"` message from the server. When they receive the message, they can look for possible moves, validity of the moves, or fold over the tree and respond with a `"move"` message with their a `Move` object that contains to and from positions. 
+The player checks on the current gameState if it is their turn to play. If it is, they can look for possible moves, validity of the moves, and respond with a `"move"` message with their  `Move` object that contains to and from positions. 
 
-The Referee send out sends out `"pleaseMove"` messages to the various clients tioll all the penguins are placed. Then the referee transitions to the `Done Stage` (when there are no moves left). 
+When the referee knows that none of the penguins of any player have moves left, the referee transitions to the `Done Stage` (when there are no moves left). 
 
 **Synchronization of states**
 
@@ -41,13 +41,9 @@ When the game is over, we transition onto the done stage. At this point, the cli
   - `send("move", Move)`: Sends a message to the referee to make the `Move` from one posn to another on the board. 
   - `send("place", BoardPosn)`: Sends a message to the referee to place the penguin at a given posn on the board. 
 
-- `onMessage(type, message)`: This event is triggered when the server sends a message directly to the client, or via broadcast.
-  - `onMessage("pleaseMove", (GameState) => { ... })`: Asks the client to make a `"move"` send.
-  - `onMessage("pleasePlace", (GameState) => { ... })`: Asks the client to make a `"place"` send.
-
 **Server side**
 
-- `onMessage (type, (UUID, message) => { ... })`: used on the server side to respond to `send` messages. The callback processes the various types of messages, and possibly changes the state accordingly. 
+- `onMessage (type, (client ID, message) => { ... })`: used on the server side to respond to `send` messages. The callback processes the various types of messages, and possibly changes the state accordingly. 
 
 **Note**: the `type` is a string, and the `message` is the payload of any type. 
 
