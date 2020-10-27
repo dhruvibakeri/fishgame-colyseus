@@ -31,10 +31,12 @@
   - Implementation detail of the send adds in the unique ID of the client that's
     sending the message.
 
-    - send("move", Move): Sends a message to the referee to make the Move from one posn to another on the board.
-    - send("place", BoardPosn): Sends a message to the referee to place the penguin at a given posn on the board.
+    - send("move", Move): Sends a message to the referee to make the Move from
+      one posn to another on the board.
+    - send("place", BoardPosn): Sends a message to the referee to place the
+      penguin at a given posn on the board.
 */
-//---------------------------------------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
 
 // MAIN functions:
 
