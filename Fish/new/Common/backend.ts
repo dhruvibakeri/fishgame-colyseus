@@ -2,6 +2,7 @@ import { Room } from "colyseus";
 import { cStateToSchema } from "./src/cstate-to-schema";
 import { stateList } from "./src/run";
 import { StateSchema } from "./src/schema";
+import {all_places} from "./src/penguin-placement-strategy"
 
 
 
@@ -10,15 +11,29 @@ export class FishRoom extends Room<StateSchema> {
 
   onCreate(options) {
 
-    this.setState(getRandomState());
+    var i = 0
+    //this.setState(getRandomState());
+    this.setState(getPlacedState(i))
 
-    setInterval(() => {
+    /*setInterval(() => {
       let newState = getRandomState()
       this.state.board = newState.board;
       this.state.gamestage = newState.gamestage;
       this.state.players = newState.players;
       this.state.rowlen = newState.rowlen;
       console.log(`NEW STATE: ${JSON.stringify(this.state.toJSON())}`)
+    }, 500)*/
+
+    setInterval(() => {
+      i = i + 1
+      if(i < all_places.length) {
+      let newState = getPlacedState(i)
+      this.state.board = newState.board;
+      this.state.gamestage = newState.gamestage;
+      this.state.players = newState.players;
+      this.state.rowlen = newState.rowlen;
+      console.log(`NEW STATE: ${JSON.stringify(this.state.toJSON())}`)
+      }
     }, 500)
   }
 
@@ -44,3 +59,8 @@ function getRandomState(): StateSchema {
   var item = stateList[Math.floor(Math.random() * stateList.length)];
   return cStateToSchema(item)
 }
+
+function getPlacedState(i : number): StateSchema {
+  return cStateToSchema(all_places[i])
+}
+
