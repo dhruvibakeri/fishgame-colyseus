@@ -8,6 +8,9 @@ const DEFAULT_STATUS = "online"
 const TILE_INFO: TileInfo = { size: TILE_SIZE, maxElements: MAX_TILES }
 
 
+/**
+ * converts given CState to a GameState
+ */
 export function cStateToGameState(cState: CState): GameState {
   const cStage = GET__CStageFromCState(cState)
   const cBoard = GET__CBoardFromCState(cState)
@@ -16,6 +19,7 @@ export function cStateToGameState(cState: CState): GameState {
   return cStageToGameState(cStage, cBoard, cScores)
 }
 
+// creates a GameState depending on the given CStage
 function cStageToGameState(cStage: CStage, cBoard: CBoard, cScores: CScores): GameState {
   if (cStage === "playing") {
     return mkPlaying(cBoard, cScores);
@@ -28,12 +32,15 @@ function cStageToGameState(cStage: CStage, cBoard: CBoard, cScores: CScores): Ga
   }
 }
 
+// creates a GameStateJoining
 function mkJoining(cScores: CScores): GameStateJoining {
   return {
     gameStateKind: "joining",
     players: cScoresToPlayers(cScores)
   };
 }
+
+// creates a GameStatePlacing
 function mkPlacing(cBoard: CBoard, cScores: CScores): GameStatePlacing {
   return {
     gameStateKind: "placing",
@@ -42,6 +49,8 @@ function mkPlacing(cBoard: CBoard, cScores: CScores): GameStatePlacing {
     players: cScoresToPlayers(cScores)
   };
 }
+
+// creates a GameStatePlaying
 function mkPlaying(cBoard: CBoard, cScores: CScores): GameStatePlaying {
   return {
     gameStateKind: "playing",
@@ -50,6 +59,8 @@ function mkPlaying(cBoard: CBoard, cScores: CScores): GameStatePlaying {
     players: cScoresToPlayers(cScores)
   };
 }
+
+// creates a GameStateDone
 function mkDone(cBoard: CBoard, cScores: CScores): GameStateDone {
   return {
     gameStateKind: "done",
@@ -59,14 +70,17 @@ function mkDone(cBoard: CBoard, cScores: CScores): GameStateDone {
 }
 
 
+// gets the next Player from given CScores
 export function cScoresToNextToPlace(cScores: CScores): Player {
   return cScoreToPlayer(GET_currentScore(cScores))
 }
 
+// converts CScores to Players
 export function cScoresToPlayers(cScores: CScores): Players {
   return cScores.map(cScoreToPlayer);
 }
 
+// converts given CScore to Player
 export function cScoreToPlayer(cScore: CScore): Player {
   const cPenguin = GET__CPenguinFromCScore(cScore);
   const cScoreNum = GET__CScoreNumFromCScore(cScore);
@@ -77,10 +91,12 @@ export function cScoreToPlayer(cScore: CScore): Player {
   }
 }
 
+// converts given CBoard to Board
 export function cBoardToBoard(cBoard: CBoard): Board {
   return cBoard.map(row => row.map(col => cSpaceToSpace(col))) as Board
 }
 
+// converts given CSpace to Space
 export function cSpaceToSpace(cSpace: CSpace) {
   if (PRED_isCSpaceACFish(cSpace)) {
     return mkFish(cSpace);
@@ -93,6 +109,7 @@ export function cSpaceToSpace(cSpace: CSpace) {
   }
 }
 
+// creates a UsableSpace with a fish tile
 function mkFish(fishNum: CFish): UsableSpace {
   return {
     spaceKind: "usableSpace",
@@ -108,6 +125,7 @@ function mkFish(fishNum: CFish): UsableSpace {
 }
 
 
+// creates a usable space with a penguin tile
 function mkPenguin(penguinColor: CPenguin): UsableSpace {
   return {
     spaceKind: "usableSpace",
@@ -123,7 +141,8 @@ function mkPenguin(penguinColor: CPenguin): UsableSpace {
 }
 
 
-function mkHole(): UsableSpace {
+// creates a usable space with a hole
+unction mkHole(): UsableSpace {
   return {
     spaceKind: "usableSpace",
     onUsableSpace: {
@@ -132,6 +151,7 @@ function mkHole(): UsableSpace {
   }
 }
 
+// creates an unusable space
 function mkUnusable(): UnusableSpace {
   return {
     spaceKind: "unusableSpace"
