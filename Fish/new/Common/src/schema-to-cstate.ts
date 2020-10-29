@@ -2,6 +2,8 @@ import { CState, CBoard, CStage, CScores, CSpace } from "./cstate";
 import { StateSchema } from "./schema";
 
 export function schemaToCompact(schema: StateSchema): CState {
+
+  // creates 2D array from the flattened array
   function make2DArrFrom1DArr(oneD, rowLen) {
     let res: string[][] = [];
     while (oneD.length > 0) {
@@ -10,10 +12,12 @@ export function schemaToCompact(schema: StateSchema): CState {
     return res;
   }
 
+  // creates CBoard from 2D string array
   function boardFrom2DArr(arr2D: string[][]): CBoard {
     return arr2D.map(row => row.map(strToCSpace))
   }
 
+  // returns a CState
   return [
     schema.gamestage as CStage,
     boardFrom2DArr(make2DArrFrom1DArr(schema.board, schema.rowlen)) as CBoard,
@@ -21,6 +25,7 @@ export function schemaToCompact(schema: StateSchema): CState {
   ]
 }
 
+// converts given string to a CSpace
 function strToCSpace(col): CSpace {
   if (col === "0") {
     return 0
