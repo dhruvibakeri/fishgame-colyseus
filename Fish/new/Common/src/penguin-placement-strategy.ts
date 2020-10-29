@@ -72,5 +72,4 @@ export function duplicateCBoard(board : CBoard) : CBoard {
 
     placePenguinStrategy(placingstate)
 
-
    console.log(all_places)   
