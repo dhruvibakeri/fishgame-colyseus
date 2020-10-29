@@ -110,7 +110,7 @@ export const initplacingstate: CState = ["placing", initplacingboard, initplacin
 // | white |   0   |
 // | red   |   0   |
 
-export const place1: CPosn = [1, 0]
+export const place1: CPosn = [0, 1]
 
 export const placement1black: CBoard = [
   [1, "black", 2, 1, 5, 4, 2, 1, 3, 4, 1, 4],
@@ -162,7 +162,7 @@ export const placement1blackstate: CState = ["placing", placement1black, placeme
 // | red   |   0   |
 
 
-export const place2: CPosn = [5, 0]
+export const place2: CPosn = [0, 5]
 
 export const placement2brown: CBoard = [
   [1, "black", 2, 1, 5, "brown", 2, 1, 3, 4, 1, 4],
@@ -213,7 +213,7 @@ export const placement2brownstate: CState = ["placing", placement2brown, placeme
 // | white |   2   |
 // | red   |   0   |
 
-export const place3: CPosn = [4, 1]
+export const place3: CPosn = [1, 4]
 
 export const placement3white: CBoard = [
   [1, "black", 2, 1, 5, "brown", 2, 1, 3, 4, 1, 4],
@@ -264,7 +264,7 @@ export const placement3whitestate: CState = ["placing", placement3white, placeme
 // | white |   2   |
 // | red   |   4   |
 
-export const place4: CPosn = [11, 0]
+export const place4: CPosn = [0, 11]
 
 export const placement4red: CBoard = [
   [1, "black", 2, 1, 5, "brown", 2, 1, 3, 4, 1, "red"],
@@ -316,7 +316,7 @@ export const placement4redstate: CState = ["placing", placement4red, placement4r
 // | white |   2   |
 // | red   |   4   |
 
-export const place5: CPosn = [8, 0]
+export const place5: CPosn = [0, 8]
 
 export const placement5black: CBoard = [
   [1, "black", 2, 1, 5, "brown", 2, 1, "black", 4, 1, "red"],
@@ -369,7 +369,7 @@ export const placement5blackstate: CState = ["placing", placement5black, placeme
 // | red   |   4   |
 // 
 
-export const place6: CPosn = [8, 2]
+export const place6: CPosn = [2, 8]
 
 export const placement6brown: CBoard = [
   [1, "black", 2, 1, 5, "brown", 2, 1, "black", 4, 1, "red"],
@@ -422,7 +422,7 @@ export const placement6brownstate: CState = ["placing", placement6brown, placeme
 // | red   |   4   |
 // 
 
-export const place7: CPosn = [10, 1]
+export const place7: CPosn = [1, 10]
 
 export const placement7white: CBoard = [
   [1, "black", 2, 1, 5, "brown", 2, 1, "black", 4, 1, "red"],
@@ -475,7 +475,7 @@ export const placement7whitestate: CState = ["placing", placement7white, placeme
 // | white |   5   |
 // | red   |   7   |
 
-export const place8: CPosn = [6, 1]
+export const place8: CPosn = [1, 6]
 
 export const placement8red: CBoard = [
   [1, "black", 2, 1, 5, "brown", 2, 1, "black", 4, 1, "red"],
@@ -592,7 +592,7 @@ export const playinginitstate: CState = ["playing", playinginit, playinginitscor
 // | white |   5   |
 // | red   |   7   |
 
-export const move1: CMove = [[1, 0], [4, 2]]
+export const move1: CMove = [[0, 1], [2, 4]]
 
 export const move1black: CBoard = [
   [1, "hole", 2, 1, 5, "brown", 2, 1, "black", 4, 1, "red"],
@@ -645,7 +645,7 @@ export const move1blackstate: CState = ["playing", move1black, move1blackscore]
 // | red   |   7   |
 
 
-export const move2: CMove = [[8, 2], [7, 1]]
+export const move2: CMove = [[2, 8], [1, 7]]
 
 
 export const move2brown: CBoard = [
@@ -698,7 +698,7 @@ export const move2brownstate: CState = ["playing", move2brown, move2brownscore]
 // | white |  10   |
 // | red   |   7   |
 
-export const move3: CMove = [[4, 1], [6, 2]]
+export const move3: CMove = [[1, 4], [2, 6]]
 
 
 export const move3white: CBoard = [
@@ -751,7 +751,7 @@ export const move3whitestate: CState = ["playing", move3white, move3whitescore]
 // | white |  10   |
 // | red   |  10   |
 
-export const move4: CMove = [[6, 1], [5, 1]]
+export const move4: CMove = [[1, 6], [1, 5]]
 
 export const move4red: CBoard = [
   [1, "hole", 2, 1, 5, "brown", 2, 1, "black", 4, 1, "red"],
@@ -804,7 +804,7 @@ export const move4redstate: CState = ["playing", move4red, move4redscore]
 // | red   |  10   |
 
 
-export const move5: CMove = [[8, 0], [8, 1]]
+export const move5: CMove = [[0, 8], [1, 8]]
 
 export const move5black: CBoard = [
   [1, "hole", 2, 1, 5, "brown", 2, 1, "hole", 4, 1, "red"],
@@ -857,7 +857,7 @@ export const move5blackstate: CState = ["playing", move5black, move5blackscore]
 // | red   |  10   |
 // 
 
-export const move6: CMove = [[5, 0], [4, 0]]
+export const move6: CMove = [[0, 5], [0, 4]]
 
 export const move6brown: CBoard = [
   [1, "hole", 2, 1, "brown", "hole", 2, 1, "hole", 4, 1, "red"],
@@ -909,7 +909,7 @@ export const move6brownstate: CState = ["playing", move6brown, move6brownscore]
 // | white |  14   |
 // | red   |  10   |
 
-export const move7: CMove = [[10, 1], [10, 2]]
+export const move7: CMove = [[1, 10], [2, 10]]
 
 export const move7white: CBoard = [
   [1, "hole", 2, 1, "brown", "hole", 2, 1, "hole", 4, 1, "red"],
@@ -962,7 +962,7 @@ export const move7whitestate: CState = ["playing", move7white, move7whitescore]
 // | red   |  13   |
 // 
 
-export const move8: CMove = [[11, 0], [11, 1]]
+export const move8: CMove = [[0, 11], [1, 11]]
 
 export const move8red: CBoard = [
   [1, "hole", 2, 1, "brown", "hole", 2, 1, "hole", 4, 1, "hole"],
@@ -1014,7 +1014,7 @@ export const move8redstate: CState = ["playing", move8red, move8redscore]
 // | red   |  13   |
 
 
-export const move9: CMove = [[8, 1], [9, 0]]
+export const move9: CMove = [[1, 8], [0, 9]]
 
 export const move9black: CBoard = [
   [1, "hole", 2, 1, "brown", "hole", 2, 1, "hole", "black", 1, "hole"],
@@ -1066,7 +1066,7 @@ export const move9blackstate: CState = ["playing", move9black, move9blackscore]
 // | white |  14   |
 // | red   |  13   |
 
-export const move10: CMove = [[4, 0], [1, 1]]
+export const move10: CMove = [[0, 4], [1, 1]]
 
 export const move10brown: CBoard = [
   [1, "hole", 2, 1, "hole", "hole", 2, 1, "hole", "black", 1, "hole"],
@@ -1119,7 +1119,7 @@ export const move10brownstate: CState = ["playing", move10brown, move10brownscor
 // | white |  15   |
 // | red   |  13   |
 
-export const move11: CMove = [[10, 2], [9, 1]]
+export const move11: CMove = [[2, 10], [1, 9]]
 
 export const move11white: CBoard = [
   [1, "hole", 2, 1, "hole", "hole", 2, 1, "hole", "black", 1, "hole"],
@@ -1224,7 +1224,7 @@ export const move12redskipstate: CState = ["playing", move12redskip, move12redsk
 // | white |  15   |
 // | red   |  13   |
 
-export const move13: CMove = [[4, 2], [3, 1]]
+export const move13: CMove = [[2, 4], [1, 3]]
 
 export const move13black: CBoard = [
   [1, "hole", 2, 1, "hole", "hole", 2, 1, "hole", "black", 1, "hole"],
@@ -1278,7 +1278,7 @@ export const move13blackstate: CState = ["playing", move13black, move13blackscor
 // | red   |  13   |
 // 
 
-export const move14: CMove = [[1, 1], [0, 1]]
+export const move14: CMove = [[1, 1], [1, 0]]
 
 export const move14brown: CBoard = [
   [1, "hole", 2, 1, "hole", "hole", 2, 1, "hole", "black", 1, "hole"],
@@ -1437,7 +1437,7 @@ export const move16redskipstate: CState = ["playing", move16redskip, move16redsk
 // | white |  15   |
 // | red   |  13   |
 
-export const move17: CMove = [[3, 1], [2, 2]]
+export const move17: CMove = [[1, 3], [2, 2]]
 
 export const move17black: CBoard = [
   [1, "hole", 2, 1, "hole", "hole", 2, 1, "hole", "black", 1, "hole"],
@@ -1490,7 +1490,7 @@ export const move17blackstate: CState = ["playing", move17black, move17blackscor
 // | white |  15   |
 // | red   |  13   |
 
-export const move18: CMove = [[0, 1], [0, 2]]
+export const move18: CMove = [[1, 0], [2, 0]]
 
 export const move18brown: CBoard = [
   [1, "hole", 2, 1, "hole", "hole", 2, 1, "hole", "black", 1, "hole"],
@@ -1647,7 +1647,7 @@ export const move20redskipstate: CState = ["playing", move20redskip, move20redsk
 // | white |  15   |
 // | red   |  13   |
 
-export const move21: CMove = [[2, 2], [2, 1]]
+export const move21: CMove = [[2, 2], [1, 2]]
 
 export const move21black: CBoard = [
   [1, "hole", 2, 1, "hole", "hole", 2, 1, "hole", "black", 1, "hole"],
@@ -1701,7 +1701,7 @@ export const move21blackstate: CState = ["playing", move21black, move21blackscor
 // | red   |  13   |
 // 
 
-export const move22: CMove = [[7, 1], [7, 0]]
+export const move22: CMove = [[1, 7], [0, 7]]
 
 export const move22brown: CBoard = [
   [1, "hole", 2, 1, "hole", "hole", 2, "brown", "hole", "black", 1, "hole"],
@@ -1859,7 +1859,7 @@ export const move24redskipstate: CState = ["playing", move24redskip, move24redsk
 // | white |  15   |
 // | red   |  13   |
 
-export const move25: CMove = [[2, 1], [3, 0]]
+export const move25: CMove = [[1, 2], [0, 3]]
 
 export const move25black: CBoard = [
   [1, "hole", 2, "black", "hole", "hole", 2, "brown", "hole", "black", 1, "hole"],
@@ -1912,7 +1912,7 @@ export const move25blackstate: CState = ["playing", move25black, move25blackscor
 // | white |  15   |
 // | red   |  13   |
 
-export const move26: CMove = [[7, 0], [6, 0]]
+export const move26: CMove = [[0, 7], [0, 6]]
 
 export const move26brown: CBoard = [
   [1, "hole", 2, "black", "hole", "hole", "brown", "hole", "hole", "black", 1, "hole"],
@@ -2068,7 +2068,7 @@ export const move28redskipstate: CState = ["playing", move28redskip, move28redsk
 // | white |  15   |
 // | red   |  13   |
 
-export const move29: CMove = [[3, 0], [2, 0]]
+export const move29: CMove = [[0, 3], [0, 2]]
 
 export const move29blackskip: CBoard = [
   [1, "hole", "black", "hole", "hole", "hole", "brown", "hole", "hole", "black", 1, "hole"],
@@ -2278,7 +2278,7 @@ export const move32redskipstate: CState = ["playing", move32redskip, move32redsk
 // | white |  15   |
 // | red   |  13   |
 
-export const move33: CMove = [[9, 0], [10, 0]]
+export const move33: CMove = [[0, 9], [0, 10]]
 
 export const move33black: CBoard = [
   [1, "hole", "black", "hole", "hole", "hole", "brown", "hole", "hole", "hole", "black", "hole"],
