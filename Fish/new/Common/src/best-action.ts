@@ -100,7 +100,7 @@ function staticEvaluation(p: CPenguin, cState: CState): number {
 
 // The game is over when no penguin has any valid moves left. 
 // i.e. The reachable states for ALL penguins is an empty list.
-function isGameOver(cState: CState): boolean {
+export function isGameOver(cState: CState): boolean {
   let cBoard: CBoard = GET__CBoardFromCState(cState)
   let pPosns: BoardPosn[] = penguinPosns(cBoard);
   for (let i = 0; i < pPosns.length; i++) {
