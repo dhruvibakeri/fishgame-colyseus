@@ -1,7 +1,12 @@
 
 
 /**
- * CState is a the state of the game, board, and scores of all penguins. 
+ * CState is: [CStage, CBoard, CScores]
+ * CStage - stage of the game state
+ * CBoard - board of the game state
+ * CScores - list of players and their associated score
+ *  -- here, the order of the players in CScores determines the order
+ *     in which they take turns.
  */
 export type CState = [CStage, CBoard, CScores];
 
@@ -43,7 +48,7 @@ export function TEMPLATE_CState(cState: CState): void {
 
 
 /**
- * Array of CScores.
+ * CScores is an Array of CScores.
  */
 export type CScores = CScore[]
 
@@ -64,7 +69,9 @@ export function GET_currentPlayer(cScores: CScores): CPenguin {
 
 
 /**
- * A Penguin and their associated score.
+ * A CScore is [CPenguin, number]
+ * CPenguin - penguin color
+ * number - associated score
  */
 export type CScore = [CPenguin, number];
 
@@ -96,6 +103,10 @@ export function TEMPLATE_CScore(cScore: CScore) {
 
 /**
  * A CStage is the stage the game is currently in. 
+ * "playing" - stage where players are able to make moves and game is on
+ * "joining" - players are joining the game, the game has not started
+ * "placing" - players are placing their penguins
+ * "done" - game is over
  */
 export type CStage = "playing" | "joining" | "placing" | "done"
 
@@ -113,6 +124,7 @@ function TEMPLATE_CStage(cStage: CStage): void {
 
 /**
  * A compact Board is a 2d array of compact spaces. 
+ * It represents the board of the CState
  */
 export type CBoard = CSpace[][];
 
@@ -128,8 +140,12 @@ export function TEMPLATE_CBoard(cBoard: CBoard): void {
 
 
 /**
- * A hex can have somee fishes, a penguin or a hole. Or
- * It may be unusable. 
+ * A CSpace = CFish | CPenguin | CUnusable | CHole
+ * CFish - tile with fishes
+ * CPenguin - tile with a player's penguin
+ * CUnusable - unusable space (when board dimensions have odd no. of rows, 
+ *                            board spaces on the odd columns of the last row are unusable.  )
+ * CHole - represents a hole in the board
  */
 export type CSpace = CFish | CPenguin | CUnusable | CHole
 
@@ -217,6 +233,7 @@ export function TEMPLATE_CPosn(cPosn: CPosn) {
 
 /**
  * A Compact Move. 
+ * - contains [from-position, to-position]
  */
 export type CMove = [CPosn, CPosn] | "SKIP";
 
@@ -232,6 +249,7 @@ export function TEMPLATE_CMove(cMove: CMove) {
 
 
 
+// creates a CState where player whose turn it is,is at the given posn
 export function cPlace(cPosn: CPosn, cState: CState): CState {
   const [row,col] = cPosn;
   const cStage = GET__CStageFromCState(cState)
@@ -256,7 +274,8 @@ function placeOnBoard(cBoard: CBoard, cPosn: CPosn, space: CSpace): CBoard {
 
 
 /**
- * Update the first elem of scores with score, then rotate the cScores anti-clockwise. 
+ * Update the first elem of scores with score, then rotate the cScores anti-clockwise.
+ * This brings the player's whose turn is next at the top of the CScores list 
  */
 export function updateAndRotateScore(cScores: CScores, transFunc: (oldScore: number) => number): CScores {
   const [currentPlayerScore, ...restOfScores] = cScores;
@@ -277,7 +296,7 @@ export function duplicateCBoard(board : CBoard) : CBoard {
 
 
 /**
- * Moves according to CMove in cState.
+ * Moves the player whose turn it currently is to CMove in cState.
  */
 export function cMove(cState: CState, cMove: CMove): CState {
   const cStage = GET__CStageFromCState(cState)
@@ -295,6 +314,7 @@ export function cMove(cState: CState, cMove: CMove): CState {
   }
 }
 
+// gets the positions of all the penguins of the given player in the given CState
 export function getPenguinPositions(penguin : CPenguin, state : CState) : CPosn[] {
   const board : CBoard = GET__CBoardFromCState(state)
   let posns : CPosn[] = []
