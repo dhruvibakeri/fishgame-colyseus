@@ -142,7 +142,7 @@ function mkPenguin(penguinColor: CPenguin): UsableSpace {
 
 
 // creates a usable space with a hole
-unction mkHole(): UsableSpace {
+function mkHole(): UsableSpace {
   return {
     spaceKind: "usableSpace",
     onUsableSpace: {
