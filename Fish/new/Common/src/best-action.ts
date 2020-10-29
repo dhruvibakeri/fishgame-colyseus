@@ -23,7 +23,9 @@
  * -------------------------------------------------------------------------------
  */
 
-import { CPenguin, CScore, CScores, CState, GET__CPenguinFromCScore, GET__CScoreNumFromCScore, GET__CScoresFromCState } from "./cstate";
+import { BoardPosn } from "./board-to-hex-tiles";
+import { getReachable } from "./cboard-reachable";
+import { CBoard, CPenguin, CScore, CScores, CState, GET__CBoardFromCState, GET__CPenguinFromCScore, GET__CScoreNumFromCScore, GET__CScoresFromCState, PRED_isCSpaceACPenguin } from "./cstate";
 
 
 
@@ -53,7 +55,35 @@ import { CPenguin, CScore, CScores, CState, GET__CPenguinFromCScore, GET__CScore
 //     return minEval
 
 
+function minimax(
+  position: CState,
+  depth: number,
+  maximizingPlayer: CPenguin
+): number {
+  if (depth === 0 || isGameOver(position)) {
+    return staticEvaluation(maximizingPlayer, position);
+  }
+  if (maximizingPlayer) {
+    let maxEval = Number.NEGATIVE_INFINITY;
+    let children = [];
+    let nextPlayer = children[2][0];
+    children.forEach(child => {
+      let ev: number = minimax(child, depth - 1, nextPlayer);
+      maxEval = Math.max(maxEval, ev);
+    });
+    return maxEval;
+  } else {
+    let minEval = Number.POSITIVE_INFINITY;
 
+    let children = [];
+    let nextPlayer = children[2][0];
+    children.forEach(child => {
+      let ev: number = minimax(child, depth - 1, nextPlayer);
+      minEval = Math.min(minEval, ev);
+    });
+    return minEval;
+  }
+}
 
 // For a given state, returns the static evaluation of
 // a position for the player p. i.e. score of the player p. 
@@ -70,11 +100,30 @@ function staticEvaluation(p: CPenguin, cState: CState): number {
 
 // The game is over when no penguin has any valid moves left. 
 // i.e. The reachable states for ALL penguins is an empty list.
-function isGameOver(p: CPenguin) {
-
+function isGameOver(cState: CState): boolean {
+  let cBoard: CBoard = GET__CBoardFromCState(cState)
+  let pPosns: BoardPosn[] = penguinPosns(cBoard);
+  for (let i = 0; i < pPosns.length; i++) {
+    let posn = pPosns[i];
+    if (getReachable(cBoard, posn).length > 0) {
+      return false;
+    }
+  }
+  return true;
 }
 
-
+function penguinPosns(cBoard: CBoard): BoardPosn[] {
+  let pPosns: BoardPosn[] = []
+  for (let i = 0; i < cBoard.length; i++) {
+    for (let j = 0; j < cBoard[i].length; j++) {
+      let e = cBoard[i][j];
+      if (PRED_isCSpaceACPenguin(e)) {
+        pPosns.push({ row: i, col: j });
+      }
+    }
+  }
+  return pPosns;
+}
 
 
 
