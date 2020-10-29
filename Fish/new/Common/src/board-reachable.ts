@@ -42,8 +42,8 @@ export function getPaths(board : CBoard, boardCoord : CPosn) {
 // longest path in a direction that getNeighborInDirection
 // generates the neighbors for.
 export function getPathInDirection(board : CBoard, posn : CPosn, getNeighborInDirection : (posn) => CPosn) : CPosn[] {
-    let res = []
-    let next = getNeighborInDirection(posn);
+    let res : CPosn[] = []
+    let next : CPosn = getNeighborInDirection(posn);
     // TERMINATION ARGUMENT: 
     // getNeighborInDirection: Number Number -> BoardPosn
     // will eventually hit the edge of the board or
