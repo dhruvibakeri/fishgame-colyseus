@@ -9,7 +9,7 @@ let readline = require("readline");
 // Compiles all the lines from
 // STDIN and sends to `xjson`
 function main() {
-  let lines = []
+  let lines : string[] = []
   let readLine = readline.createInterface({
       input: process.stdin,
       output: process.stdout
@@ -23,9 +23,9 @@ function main() {
   });
 }
 
-// String[] -> Number
+
 // put the lines together, parse, and compute the reachable states
-function parseJSON(lines) {
+function parseJSON(lines : string[]) {
   return JSON.parse(lines.join("\n"));
 }
 
@@ -54,7 +54,7 @@ function getOutputResult(state : any, from: any, to : any) :CMove | false  {
 
 // converts given players to CScores
 function getOurPlayers(players : any) : CScore[]{
-    let ourPlayers = []
+    let ourPlayers : CScore[] = []
     for(let i = 0; i < players.length; i++) {
         ourPlayers.push([players[i].color, players[i].score])
     }
@@ -82,9 +82,9 @@ function getPossibleMoves( movedState : CState, pToPosn : CPosn) : any {
 
     let possibleStates : GameTree[] = getNextMoves(movedState)
 
-    let penguinFromPos = []
+    let penguinFromPos : CPosn[] = []
 
-    let movedBoard = GET__CBoardFromCState(movedState)
+    let movedBoard : CBoard = GET__CBoardFromCState(movedState)
 
     // adds penguins from positions in penguinFromPos in order that would be preferred if there
     // is a tie. We just pick the first posn in the list.
@@ -193,8 +193,8 @@ export function getPathsNeighbours(board : CBoard, boardCoord : CPosn) {
 // longest path in a direction that getNeighborInDirection
 // generates the neighbors for.
 export function getPathInDirection1(board : CBoard, posn : CPosn, getNeighborInDirection : (posn) => CPosn) : CPosn[] {
-    let res = []
-    let next = getNeighborInDirection(posn);
+    let res : CPosn[] = []
+    let next : CPosn = getNeighborInDirection(posn);
     // TERMINATION ARGUMENT: 
     // getNeighborInDirection: Number Number -> BoardPosn
     // will eventually hit the edge of the board or
@@ -253,7 +253,7 @@ function convertInputPosnToOurPosn(r : number,c : number) : CPosn {
 
   // gets a list of holes that need to be added to the input board
   function getHoles(maxLength : number, givenLength : number) : number[] {
-        let res = []
+        let res : number[] = []
         for(let i = 0; i < maxLength - givenLength; i++) {
             res.push(0)
         }
@@ -292,7 +292,7 @@ function inputBoardToIntermediateBoard(inputBoard : number[][]) : CBoard {
 // InputBoard -> IntermediateBoard
 // convert an InputBoard with even rows to a IntermediateBoard
 function evenInputBoardToIntermediateBoard(inputBoard : number[][]) : CBoard {
-  let resBoard = [];
+  let resBoard : CBoard = [];
   for(let i = 0; i < inputBoard.length / 2; i++) {
     
     let j = i
@@ -310,7 +310,7 @@ function evenInputBoardToIntermediateBoard(inputBoard : number[][]) : CBoard {
 // InputBoard -> IntermediateBoard
 // convert an InputBoard with odd rows to a IntermediateBoard
 function oddInputBoardToIntermediateBoard(inputBoard : number[][]) : CBoard{
-  let resBoard = [];
+  let resBoard : CBoard = [];
   for(let i = 0; i < (inputBoard.length - 1) / 2; i++) {
     let j = i
     if(j != 0) {
@@ -336,7 +336,7 @@ function oddInputBoardToIntermediateBoard(inputBoard : number[][]) : CBoard{
 // [1, 2, 3], [4, 0, 5] -> [1, 4, 2, 0, 3, 5]
 function interleaveRows(l1 : number[], l2 : number []) : CSpace[] {
   console.assert(l1.length === l2.length);
-  let interLeaved = [];
+  let interLeaved : CSpace[] = [];
   for(let i = 0; i < l1.length; i++) {
     interLeaved.push(makeCSpace(l1[i]));
     interLeaved.push(makeCSpace(l2[i]));
