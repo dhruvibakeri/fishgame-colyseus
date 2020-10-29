@@ -72,24 +72,6 @@ export function createGameTree(gameState : CState) : GameTree {
     return [gameState, () => { return getValidSubStates(gameState) }]
 }
 
-// applyToDirectlyReachable: GameState [GameState -> T] -> [GameState, T][]
-// applies given function to all directly reachable states
-export function applyToDirectlyReachable(gs : CState, func : any) {
-    let directlyReachableStates = getValidSubStates(gs)
-
-    let res = []
-
-    directlyReachableStates.forEach(s => {
-        let currentState = getStateFromTree(s)
-        res.push([currentState, func(currentState)])
-    })
-
-    return res;
-}
-
-
-
-
 
 // - - - - - - - - - - - - - - - - - - - - - - 
 // - - - - - - - I N T E R N A L  - - - - - - -
@@ -99,8 +81,8 @@ export function applyToDirectlyReachable(gs : CState, func : any) {
 // GameState -> GameTree[]
 // gets all reachable states from the given GameState
 export function getValidSubStates(myGameState : CState) : GameTree[] {
-    let res = []
-    let allPenguinPos = getPenguinPositions(GET_currentPlayer(GET__CScoresFromCState(myGameState)), myGameState)
+    let res : GameTree[] = []
+    let allPenguinPos : CPosn[] = getPenguinPositions(GET_currentPlayer(GET__CScoresFromCState(myGameState)), myGameState)
 
     allPenguinPos.forEach(p => {
         res = [...res, ...makeAllMovesForAPenguin(GET_currentPlayer(GET__CScoresFromCState(myGameState)), p, myGameState)]
@@ -112,9 +94,9 @@ export function getValidSubStates(myGameState : CState) : GameTree[] {
 // UUID Posn GameState -> GameTree[]
 // gets reachable states for a particular penguin of the given player according to the given GameState
 export function makeAllMovesForAPenguin(penguin : CPenguin, fromPosn : CPosn, gs : CState) : GameTree[] {
-    let res = []
+    let res : GameTree[] = []
 
-    let reachablePoints = getReachable(GET__CBoardFromCState(gs), fromPosn)
+    let reachablePoints : CPosn[] = getReachable(GET__CBoardFromCState(gs), fromPosn)
 
     reachablePoints.forEach(p => {
         let moveState = cMove(gs, [fromPosn, p])
