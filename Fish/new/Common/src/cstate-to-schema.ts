@@ -3,6 +3,9 @@ import { StateSchema, ScoreSchema } from "./schema";
 
 
 
+/**
+ * converts given CState to a StateSchema
+ */
 export function cStateToSchema(cState: CState): StateSchema {
   const cStage = GET__CStageFromCState(cState)
   const cBoard = GET__CBoardFromCState(cState)
@@ -17,6 +20,12 @@ export function cStateToSchema(cState: CState): StateSchema {
 }
 
 
+/**
+ * converts the given CBoard which is a 2D array,
+ * into a list of strings
+ * - this is because Colyseus cannot handle
+ * 2D arrays
+ */
 function flattenBoard(cBoard: CBoard): string[] {
   let res: string[] = [];
   for (let i = 0; i < cBoard.length; i++) {
