@@ -49,14 +49,23 @@ function isUnusable(inputRow: number, row: number, col: number, actualRows: numb
   return isOdd(inputRow) && row === actualRows - 1 && isOdd(col)
 }
 
+/**
+ * translates the no. of rows for bin board from given
+ * no. of rows of dim board
+ */
 function binBoardRows(boardHeight: number): number {
   return boardHeight % 2 === 0 ? boardHeight / 2 : (boardHeight + 1) / 2
 }
 
+/**
+ * translates the no. of cols for bin board from given
+ * no. of cols of dim board
+ */
 function binBoardCols(boardWidth: number): number {
   return boardWidth * 2
 }
 
+// fills array with given element
 export function array2DFill<T>(rows: number, cols: number, elem: T): T[][] {
   return Array(rows).fill(elem).map(() => Array(cols).fill(elem));
 }
