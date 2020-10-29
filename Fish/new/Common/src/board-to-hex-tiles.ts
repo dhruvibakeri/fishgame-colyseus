@@ -52,6 +52,9 @@ export function boardToHexTiles<T>(size: number, board: T[][], isUsable: (cell: 
 }
 
 
+/**
+ * creates a HexTile using the given specs
+ */
 function makeHexTile(size: number, xOffset: number, yOffset: number, row: number, col: number): HexTile {
   return {
     posn: { row: row, col: col },
@@ -75,6 +78,10 @@ function originHex(size: number): HexCorners {
 }
 
 
+/**
+ * offsets the hex corners accordingly so that the corners represent
+ * the accurate position on the board
+ */
 function offsetHex(hexCorners: HexCorners, xOffset: number, yOffset: number): HexCorners {
   return hexCorners.map((hexCorner: CanvasPosn) => {
     return { x: hexCorner.x + xOffset, y: hexCorner.y + yOffset }
