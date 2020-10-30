@@ -4,6 +4,7 @@
   "description": "",
   "private": true,
   "scripts": {
+    "build-backend": "tsc --project tsconfig.backend.json",
     "build": "webpack",
     "watch": "webpack serve",
     "test": "ts-mocha -p tsconfig.frontend.json src/**/*.spec.ts",
