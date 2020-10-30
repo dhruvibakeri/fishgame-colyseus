@@ -59,21 +59,21 @@ import { playinginitstate } from "./run";
 // Implements a modified version of minimax for >=2 players.
 
 
-let scores : number[] = []
+let scores: number[] = []
 
 // returns the best action for P to be made to receive max score in N turns,
 // considering players who are not P make moves to minimize P's score
-function getBestAction(position: GameTree, depth: number, maximizingPlayer: CPenguin, mainPlayer: CPenguin) : BoardPosn[] {
-    let maximizingActions = []
-    minimax(position,depth,maximizingPlayer,mainPlayer,maximizingActions)
-    return maximizingActions[0];
-  }
+function getBestAction(position: GameTree, depth: number, maximizingPlayer: CPenguin, mainPlayer: CPenguin): BoardPosn[] {
+  let maximizingActions = []
+  minimax(position, depth, maximizingPlayer, mainPlayer, maximizingActions)
+  return maximizingActions[0];
+}
 
 
 
-function minimax(position: GameTree, depth: number,maximizingPlayer: CPenguin, mainPlayer: CPenguin, maximizingActions : BoardPosn[][]): number {
+function minimax(position: GameTree, depth: number, maximizingPlayer: CPenguin, mainPlayer: CPenguin, maximizingActions: BoardPosn[][]): number {
 
-  let action : BoardPosn[] = []
+  let action: BoardPosn[] = []
 
   if (depth === 0 || PRED_isCState(position)) {
     return staticEvaluation(maximizingPlayer, getStateFromTree(position));
@@ -92,7 +92,7 @@ function minimax(position: GameTree, depth: number,maximizingPlayer: CPenguin, m
         GET__nextMove(getStateFromTree(childPosition)),
         maximizingActions
       );
-      if(ev > maxEval) {
+      if (ev > maxEval) {
         action = (getFromTo(getStateFromTree(position), getStateFromTree(childPosition), maximizingPlayer) as BoardPosn[])
       }
       maxEval = Math.max(maxEval, ev);
@@ -102,12 +102,12 @@ function minimax(position: GameTree, depth: number,maximizingPlayer: CPenguin, m
     scores.push(maxEval)
     return maxEval;
 
-    
+
   } else {
     let minEval = Number.POSITIVE_INFINITY;
     substates.forEach(childPosition => {
 
-  
+
       let ev: number = minimax(
         childPosition,
         depth,
@@ -181,43 +181,43 @@ function playerPenguinPosns(cBoard: CBoard, p: CPenguin): BoardPosn[] {
 }
 
 
-function getFromTo(prevState : CState, nextState : CState, p : CPenguin) : [BoardPosn,BoardPosn] | false {
-  const prevBoard : CBoard = GET__CBoardFromCState(prevState)
-  const nextBoard : CBoard = GET__CBoardFromCState(nextState)
+export function getFromTo(prevState: CState, nextState: CState, p: CPenguin): [BoardPosn, BoardPosn] | false {
+  const prevBoard: CBoard = GET__CBoardFromCState(prevState)
+  const nextBoard: CBoard = GET__CBoardFromCState(nextState)
 
-  const prevPenguinPosns : BoardPosn[] = playerPenguinPosns(prevBoard, p)
-  const nextPenguinPosns : BoardPosn[] = playerPenguinPosns(nextBoard, p)
-  
-  for(let i = 0; i < prevPenguinPosns.length; i++) {
-    if(JSON.stringify(prevPenguinPosns[i]) === JSON.stringify(nextPenguinPosns[i])) {
+  const prevPenguinPosns: BoardPosn[] = playerPenguinPosns(prevBoard, p)
+  const nextPenguinPosns: BoardPosn[] = playerPenguinPosns(nextBoard, p)
+
+  for (let i = 0; i < prevPenguinPosns.length; i++) {
+    if (JSON.stringify(prevPenguinPosns[i]) === JSON.stringify(nextPenguinPosns[i])) {
       prevPenguinPosns.splice(i, 1);
       nextPenguinPosns.splice(i, 1);
     }
     else {
-      for(let j = 0; j < nextPenguinPosns.length; j++) {
-        if(isValidMove(prevPenguinPosns[i], nextPenguinPosns[j], prevBoard)) {
+      for (let j = 0; j < nextPenguinPosns.length; j++) {
+        if (isValidMove(prevPenguinPosns[i], nextPenguinPosns[j], prevBoard)) {
           return [prevPenguinPosns[i], nextPenguinPosns[j]]
         }
       }
-    } 
+    }
   }
 
   return false;
-  
+
 }
 
 // checks if given move is a valid move
-function isValidMove(from : BoardPosn, to : BoardPosn, board : CBoard) : boolean {
+function isValidMove(from: BoardPosn, to: BoardPosn, board: CBoard): boolean {
   let reachablePoints = getReachable(board, from);
   return isInArray(reachablePoints, to);
 }
 
 // checks if given item is in given list
-function isInArray(list : any[], item : any) : boolean{
+function isInArray(list: any[], item: any): boolean {
   for (let i = 0; i < list.length; i++) {
-      if (JSON.stringify(item) === JSON.stringify(list[i])) {
-          return true;
-      }
+    if (JSON.stringify(item) === JSON.stringify(list[i])) {
+      return true;
+    }
   }
   return false;
 }
@@ -231,7 +231,7 @@ function isInArray(list : any[], item : any) : boolean{
 //   |  |  |   |
 //   7  8  9   10
 
-let stateAt0 : CState = [
+let stateAt0: CState = [
   "playing", [
     ["black", 1, 4, "red"],
     ["white", "unusable", 5, "unusable"]

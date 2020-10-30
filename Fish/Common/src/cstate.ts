@@ -335,3 +335,30 @@ export function getPenguinPositions(penguin: CPenguin, state: CState): CPosn[] {
   }
   return posns;
 }
+
+
+// gets the positions of all the penguins of the given player in the given CState
+export function getPenguinPositionsForGameBoard(penguin: CPenguin, state: CState): CPosn[] {
+  const board: CBoard = GET__CBoardFromCState(state)
+  let posns: CPosn[] = []
+
+  for (let i = 0; i < board.length; i++) {
+    // goes through all even colums (even rows in game board representation)
+    for (let j = 0; j < board[i].length; j = j + 2) {
+      if (PRED_isCSpaceACPenguin(board[i][j])) {
+        if (board[i][j] == penguin) {
+          posns.push([i, j])
+        }
+      }
+    }
+    // goes through all odd colums (odd rows in game board representation)
+    for (let k = 1; k < board[i].length; k = k + 2) {
+      if (PRED_isCSpaceACPenguin(board[i][k])) {
+        if (board[i][k] == penguin) {
+          posns.push([i, k])
+        }
+      }
+    }
+  }
+  return posns;
+}
