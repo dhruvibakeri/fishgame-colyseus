@@ -67,11 +67,15 @@ function getPaths(board: CBoard, boardPosn: BoardPosn) {
  * longest path in a direction that getNeighborInDirection
  * generates the neighbors for.
  */
-function getPathInDirection(board, posn, getNeighborInDirection) {
-  let res = []
-  let next = getNeighborInDirection(posn);
+function getPathInDirection(
+  board: CBoard,
+  posn: BoardPosn,
+  getNeighborInDirection: (p: BoardPosn) => BoardPosn
+) {
+  let res: BoardPosn[] = []
+  let next: BoardPosn = getNeighborInDirection(posn);
   // TERMINATION ARGUMENT: 
-  // getNeighborInDirection: Number Number -> BoardPosn
+  // getNeighborInDirection: BoardPosn -> BoardPosn
   // will eventually hit the edge of the board or
   // water or another player (which are unreachable).
   while (!isNeighborUnreachable(board, next)) {

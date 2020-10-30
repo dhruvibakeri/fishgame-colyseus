@@ -106,6 +106,9 @@ function staticEvaluation(p: CPenguin, cState: CState): number {
       return GET__CScoreNumFromCScore(currentScore);
     }
   }
+  throw console.error("penguin not in cState!");
+
+
 }
 
 // The game is over when no penguin has any valid moves left. 
