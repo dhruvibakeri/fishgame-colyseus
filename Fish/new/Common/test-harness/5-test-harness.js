@@ -103,9 +103,9 @@ function getPossibleMoves(movedState, pToPosn) {
     }
     // returns the to posn for the next penguin if it is a neighbouring position
     // from the first penguin
-    for (var l = 0; l < penguinPossibleMoves.length; l++) {
-        if (isInArray(neighbourPosns, penguinPossibleMoves[l])) {
-            return getCMove(penguinFromPos, penguinPossibleMoves[l], movedBoard);
+    for (var l = 0; l < neighbourPosns.length; l++) {
+        if (isInArray(penguinPossibleMoves, neighbourPosns[l])) {
+            return getCMove(penguinFromPos, neighbourPosns[l], movedBoard);
         }
     }
     // returns false if no valid action exists
@@ -322,5 +322,14 @@ console.log(getFinalResult({"state" : {"board": [[0,1,5,1,1],[2,4,3,2,1],[1,3,1,
 console.log(getFinalResult({"state" : {"board": [[0,1,5,1,1],[2,4,3,2,1],[1,0,1,0,1],[1,2,1,1]], "players": [{"color": "black", "places" : [[3,0]], "score": 0}, {"color": "white", "places" : [[0,1], [0,3],[3,2]], "score": 0},
 {"color": "red", "places" : [[1,4]], "score": 0}]}, "from": [3,0], "to": [1,1]}))
 
-console.log(getFinalResult({"state" : {"board": [[0,1,5,1,1],[2,4,3,2,1],[1,0,1,0,1],[1,2,1]], "players": [{"color": "black", "places" : [[3,0]], "score": 0}, {"color": "red", "places" : [[1,4]], "score": 0},
-{"color": "white", "places" : [[0,1], [0,3],[3,2]], "score": 0}]}, "from": [3,0], "to": [1,1]}))*/
+console.log(getFinalResult({"state" : {"board": [[1,3,1,1],[0,1,2,1],[2,2,4,0],[1,3,1,1],[3,4,1,1]], "players": [{"color": "black", "places" : [[3,0]], "score": 0},
+{"color": "white", "places" : [[0,0], [1,1],[4,2]], "score": 0}]}, "from": [3,0], "to": [2,1]}))
+
+console.log(getFinalResult({"state" : {"board": [[1,0,1,1],[0,1,2,1],[2,2,4,0],[1,3,1,1],[3,4,1,1]], "players": [{"color": "black", "places" : [[3,0]], "score": 0},
+{"color": "white", "places" : [[0,0], [1,1],[4,2]], "score": 0}]}, "from": [3,0], "to": [2,1]}))
+
+console.log(getFinalResult({"state" : {"board": [[1,0,1,1],[0,1,2,1],[2,2,4,0],[1,3,1,1],[3,4,1,1]], "players": [{"color": "black", "places" : [[3,0]], "score": 0},
+{"color": "white", "places" : [[0,0],[4,2]], "score": 0}]}, "from": [3,0], "to": [2,1]}))
+
+console.log(getFinalResult({"state" : {"board": [[0,1,5,1,1],[2,4,3,2,1],[1,0,1,0,1],[1,2,1,1]], "players": [{"color": "black", "places" : [[3,0]], "score": 0}, {"color": "white", "places" : [[0,1], [0,3],[3,2]], "score": 0},
+{"color": "red", "places" : [[1,4]], "score": 0}]}, "from": [3,0], "to": [1,1]}))*/
