@@ -38,7 +38,7 @@ export function PRED_isCState(cstate: any) {
 
 
 export function GET__nextMove(cState: CState): CPenguin {
-  return GET_currentPlayer(GET__CScoresFromCState(cState));
+  return GET_currentPlayerFromCScores(GET__CScoresFromCState(cState));
 }
 
 export function TEMPLATE_CState(cState: CState): void {
@@ -68,8 +68,12 @@ export function GET_currentScore(cScores: CScores): CScore {
   return cScores[0]
 }
 
-export function GET_currentPlayer(cScores: CScores): CPenguin {
+export function GET_currentPlayerFromCScores(cScores: CScores): CPenguin {
   return GET_currentScore(cScores)[0];
+}
+
+export function GET_currentPlayer(cState: CState): CPenguin {
+  return GET__CPenguinFromCScore(GET__CScoresFromCState(cState)[0])
 }
 
 
@@ -261,7 +265,7 @@ export function cPlace(cPosn: CPosn, cState: CState): CState {
   const cBoard = GET__CBoardFromCState(cState)
   const cScores = GET__CScoresFromCState(cState)
   let fishesToCollect = cBoard[row][col] as CFish;
-  let boardPlaced = placeOnBoard(cBoard, cPosn, GET_currentPlayer(cScores));
+  let boardPlaced = placeOnBoard(cBoard, cPosn, GET_currentPlayerFromCScores(cScores));
   let newScores: CScores = updateAndRotateScore(cScores, (old) => { return old + fishesToCollect })
   return MAKE__CState(cStage, boardPlaced, newScores);
 

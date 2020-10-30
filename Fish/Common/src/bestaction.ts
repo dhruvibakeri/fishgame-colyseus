@@ -26,8 +26,7 @@
 import { BoardPosn } from "./board-to-hex-tiles";
 import { getReachable } from "./cboard-reachable";
 import { CBoard, CPenguin, CScore, CScores, CState, GET_currentPlayer, GET__CBoardFromCState, GET__CPenguinFromCScore, GET__CScoreNumFromCScore, GET__CScoresFromCState, GET__nextMove, PRED_isCSpaceACPenguin, PRED_isCState } from "./cstate";
-import { createGameTree, GameTree, getStateFromTree, getValidSubStates, getValidSubStatesForGameBoard } from "./game-tree";
-import { playinginitstate } from "./run";
+import { createGameTree, GameTree, getStateFromTree, getValidSubStatesForGameBoard } from "./game-tree";
 
 
 // - - - - - - - - - PSEUDOCODE: MINIMAX - - - - - - 
@@ -55,70 +54,65 @@ import { playinginitstate } from "./run";
 //       if beta <= alpha:
 //         break
 //     return minEval
-
 // Implements a modified version of minimax for >=2 players.
 
-
-let scores: number[] = []
+// ----------------------------------------------------------------------------------
 
 // returns the best action for P to be made to receive max score in N turns,
 // considering players who are not P make moves to minimize P's score
-function getBestAction(position: GameTree, depth: number, maximizingPlayer: CPenguin, mainPlayer: CPenguin): BoardPosn[] {
-  let maximizingActions = []
-  minimax(position, depth, maximizingPlayer, mainPlayer, maximizingActions)
-  return maximizingActions[0];
+export function getBestAction(
+  position: GameTree,
+  depth: number,
+): [BoardPosn, BoardPosn] {
+  let currentPlayer: CPenguin = GET_currentPlayer(getStateFromTree(position))
+  return miniMaxResToBestAction(minimax(position, depth, currentPlayer, currentPlayer, []));
 }
 
-
-
-function minimax(position: GameTree, depth: number, maximizingPlayer: CPenguin, mainPlayer: CPenguin, maximizingActions: BoardPosn[][]): number {
-
-  let action: BoardPosn[] = []
-
+function minimax(
+  position: GameTree,
+  depth: number,
+  maximizingPlayer: CPenguin,
+  mainPlayer: CPenguin,
+  maximizingActions: Move[]
+): [number, Move[]] {
+  let action: [BoardPosn, BoardPosn];
   if (depth === 0 || PRED_isCState(position)) {
-    return staticEvaluation(maximizingPlayer, getStateFromTree(position));
+    return [
+      staticEvaluation(maximizingPlayer, getStateFromTree(position)),
+      maximizingActions
+    ];
   }
-
   let substates = getValidSubStatesForGameBoard(getStateFromTree(position))
-
   if (mainPlayer === maximizingPlayer) {
     let maxEval = Number.NEGATIVE_INFINITY;
-
     substates.forEach(childPosition => {
-      let ev: number = minimax(
+      let staticEval: number = miniMaxResToStaticEvaluation(minimax(
         childPosition,
         depth - 1,
         maximizingPlayer,
         GET__nextMove(getStateFromTree(childPosition)),
         maximizingActions
-      );
-      if (ev > maxEval) {
-        action = (getFromTo(getStateFromTree(position), getStateFromTree(childPosition), maximizingPlayer) as BoardPosn[])
+      ));
+      if (staticEval > maxEval) {
+        action = (getFromTo(getStateFromTree(position), getStateFromTree(childPosition), maximizingPlayer))
       }
-      maxEval = Math.max(maxEval, ev);
+      maxEval = Math.max(maxEval, staticEval);
     });
-
-    maximizingActions.push(action)
-    scores.push(maxEval)
-    return maxEval;
-
-
+    return [maxEval, [...maximizingActions, action]];
   } else {
     let minEval = Number.POSITIVE_INFINITY;
     substates.forEach(childPosition => {
-
-
-      let ev: number = minimax(
-        childPosition,
-        depth,
-        maximizingPlayer,
-        GET__nextMove(getStateFromTree(childPosition)),
-        maximizingActions
-      );
-      minEval = Math.min(minEval, ev);
+      let staticEval: number = miniMaxResToStaticEvaluation(
+        minimax(
+          childPosition,
+          depth,
+          maximizingPlayer,
+          GET__nextMove(getStateFromTree(childPosition)),
+          maximizingActions
+        ));
+      minEval = Math.min(minEval, staticEval);
     });
-
-    return minEval;
+    return [minEval, maximizingActions];
   }
 }
 
@@ -136,30 +130,16 @@ function staticEvaluation(p: CPenguin, cState: CState): number {
     }
   }
   throw console.error("penguin not in cState!");
-
-
 }
 
-// The game is over when no penguin has any valid moves left. 
-// i.e. The reachable states for ALL penguins is an empty list.
-export function isGameOver(cState: CState): boolean {
-  let cBoard: CBoard = GET__CBoardFromCState(cState)
-  let pPosns: BoardPosn[] = penguinPosns(cBoard);
-  for (let i = 0; i < pPosns.length; i++) {
-    let posn = pPosns[i];
-    if (getReachable(cBoard, posn).length > 0) {
-      return false;
-    }
-  }
-  return true;
-}
 
-function penguinPosns(cBoard: CBoard): BoardPosn[] {
+// all positions of pengiun on cBoard.
+function givenPenguinPosns(cBoard: CBoard, penguin: CPenguin): BoardPosn[] {
   let pPosns: BoardPosn[] = []
   for (let i = 0; i < cBoard.length; i++) {
     for (let j = 0; j < cBoard[i].length; j++) {
       let e = cBoard[i][j];
-      if (PRED_isCSpaceACPenguin(e)) {
+      if (PRED_isCSpaceACPenguin(e) && e == penguin) {
         pPosns.push({ row: i, col: j });
       }
     }
@@ -167,33 +147,22 @@ function penguinPosns(cBoard: CBoard): BoardPosn[] {
   return pPosns;
 }
 
-function playerPenguinPosns(cBoard: CBoard, p: CPenguin): BoardPosn[] {
-  let pPosns: BoardPosn[] = []
-  for (let i = 0; i < cBoard.length; i++) {
-    for (let j = 0; j < cBoard[i].length; j++) {
-      let e = cBoard[i][j];
-      if (PRED_isCSpaceACPenguin(e) && e == p) {
-        pPosns.push({ row: i, col: j });
-      }
-    }
-  }
-  return pPosns;
-}
-
-
-export function getFromTo(prevState: CState, nextState: CState, p: CPenguin): [BoardPosn, BoardPosn] | false {
+// Move made from `prevState` to `nextState`.
+export function getFromTo(
+  prevState: CState,
+  nextState: CState,
+  p: CPenguin): [BoardPosn, BoardPosn] {
   const prevBoard: CBoard = GET__CBoardFromCState(prevState)
   const nextBoard: CBoard = GET__CBoardFromCState(nextState)
 
-  const prevPenguinPosns: BoardPosn[] = playerPenguinPosns(prevBoard, p)
-  const nextPenguinPosns: BoardPosn[] = playerPenguinPosns(nextBoard, p)
+  const prevPenguinPosns: BoardPosn[] = givenPenguinPosns(prevBoard, p)
+  const nextPenguinPosns: BoardPosn[] = givenPenguinPosns(nextBoard, p)
 
   for (let i = 0; i < prevPenguinPosns.length; i++) {
-    if (JSON.stringify(prevPenguinPosns[i]) === JSON.stringify(nextPenguinPosns[i])) {
+    if (boardPosEq(prevPenguinPosns[i], nextPenguinPosns[i])) {
       prevPenguinPosns.splice(i, 1);
       nextPenguinPosns.splice(i, 1);
-    }
-    else {
+    } else {
       for (let j = 0; j < nextPenguinPosns.length; j++) {
         if (isValidMove(prevPenguinPosns[i], nextPenguinPosns[j], prevBoard)) {
           return [prevPenguinPosns[i], nextPenguinPosns[j]]
@@ -201,174 +170,37 @@ export function getFromTo(prevState: CState, nextState: CState, p: CPenguin): [B
       }
     }
   }
-
-  return false;
-
 }
 
 // checks if given move is a valid move
 function isValidMove(from: BoardPosn, to: BoardPosn, board: CBoard): boolean {
   let reachablePoints = getReachable(board, from);
-  return isInArray(reachablePoints, to);
+  return isInReachable(reachablePoints, to);
 }
 
 // checks if given item is in given list
-function isInArray(list: any[], item: any): boolean {
+function isInReachable(list: BoardPosn[], item: BoardPosn): boolean {
   for (let i = 0; i < list.length; i++) {
-    if (JSON.stringify(item) === JSON.stringify(list[i])) {
+    if (boardPosEq(item, list[i])) {
       return true;
     }
   }
   return false;
 }
 
-//        0
-//       / \
-//      /   \
-//     1     2
-//    / \   / \
-//   3  4  5   6
-//   |  |  |   |
-//   7  8  9   10
+/**
+ * Represents a move on CBoard representation.
+ */
+type Move = [BoardPosn, BoardPosn]
 
-let stateAt0: CState = [
-  "playing", [
-    ["black", 1, 4, "red"],
-    ["white", "unusable", 5, "unusable"]
-  ],
-  [
-    ["black", 4],
-    ["white", 3],
-    ["red", 0]
-  ]
-]
+function boardPosEq(boardPosn1: BoardPosn, boardPosn2: BoardPosn) {
+  return boardPosn1.row === boardPosn2.row && boardPosn1.col === boardPosn2.col
+}
 
-let stateAt1 = [
-  "playing", [
-    ["hole", "black", 4, "red"],
-    ["white", "unusable", 5, "unusable"]
-  ],
-  [
-    ["white", 3],
-    ["red", 0],
-    ["black", 5]
-  ]
-]
+function miniMaxResToBestAction(minimaxRes) {
+  return minimaxRes[1][0];
+}
 
-
-let stateAt2 = [
-  "playing", [
-    ["hole", 1, 4, "red"],
-    ["white", "unusable", "black", "unusable"]
-  ],
-  [
-    ["white", 3],
-    ["red", 0],
-    ["black", 9]
-  ]
-]
-
-
-let stateAt3 = [
-  "playing", [
-    ["hole", "black", 4, "hole"],
-    ["white", "unusable", "red", "unusable"]
-  ],
-  [
-    ["black", 5],
-    ["white", 3],
-    ["red", 5]
-  ]
-]
-
-
-let stateAt4 = [
-  "playing", [
-    ["hole", "black", "red", "hole"],
-    ["white", "unusable", 5, "unusable"]
-  ],
-  [
-    ["black", 5],
-    ["white", 3],
-    ["red", 4]
-  ]
-]
-
-let stateAt7 = [
-  "playing", [
-    ["hole", "black", 4, "hole"],
-    ["white", "unusable", "red", "unusable"]
-  ],
-  [
-    ["white", 3],
-    ["red", 5],
-    ["black", 9]
-  ]
-]
-
-
-let stateAt8 = [
-  "playing", [
-    ["hole", "black", "red", "hole"],
-    ["white", "unusable", 5, "unusable"]
-  ],
-  [
-    ["white", 3],
-    ["red", 4],
-    ["black", 10]
-  ]
-]
-
-
-let stateAt5 = [
-  "playing", [
-    ["hole", 1, "white", "red"],
-    ["hole", "unusable", "black", "unusable"]
-  ],
-  [
-    ["red", 0],
-    ["black", 9],
-    ["white", 4]
-  ]
-]
-
-let stateAt6 = [
-  "playing", [
-    ["hole", "white", 4, "red"],
-    ["hole", "unusable", "black", "unusable"]
-  ],
-  [
-    ["red", 0],
-    ["black", 9],
-    ["white", 7]
-  ]
-]
-
-let stateAt9 = [
-  "playing", [
-    ["hole", "white", "red", "hole"],
-    ["hole", "unusable", "black", "unusable"]
-  ],
-  [
-    ["black", 9],
-    ["white", 4],
-    ["red", 4]
-  ]
-]
-
-let stateAt10 = [
-  "playing", [
-    ["hole", "black", "white", "red"],
-    ["hole", "unusable", "hole", "unusable"]
-  ],
-  [
-    ["white", 7],
-    ["red", 0],
-    ["black", 10]
-  ]
-]
-
-
-
-console.log(getBestAction(createGameTree(stateAt0), 2, "black", GET__nextMove(stateAt0)))
-//console.log(maximizingActions, scores)
+function miniMaxResToStaticEvaluation(minimaxRes) {
+  return minimaxRes[0];
+}
