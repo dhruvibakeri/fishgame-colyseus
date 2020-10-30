@@ -31,9 +31,14 @@ export function SET__CScoresInCState(cscore: CScores, cstate: CState): CState {
 export function MAKE__CState(cStage: CStage, cBoard: CBoard, cScores: CScores): CState {
   return [cStage, cBoard, cScores]
 }
-export function PRED_isCState(cstate : any) {
+export function PRED_isCState(cstate: any) {
   return (Array.isArray(cstate)
-        && cstate.length === 3)
+    && cstate.length === 3)
+}
+
+
+export function GET__nextMove(cState: CState): CPenguin {
+  return GET_currentPlayer(GET__CScoresFromCState(cState));
 }
 
 export function TEMPLATE_CState(cState: CState): void {
@@ -251,7 +256,7 @@ export function TEMPLATE_CMove(cMove: CMove) {
 
 // creates a CState where player whose turn it is,is at the given posn
 export function cPlace(cPosn: CPosn, cState: CState): CState {
-  const [row,col] = cPosn;
+  const [row, col] = cPosn;
   const cStage = GET__CStageFromCState(cState)
   const cBoard = GET__CBoardFromCState(cState)
   const cScores = GET__CScoresFromCState(cState)
@@ -267,7 +272,7 @@ export function cPlace(cPosn: CPosn, cState: CState): CState {
  * places the given space at cPosn in cBoard. 
  */
 function placeOnBoard(cBoard: CBoard, cPosn: CPosn, space: CSpace): CBoard {
-  let [row,col] = cPosn;
+  let [row, col] = cPosn;
   cBoard[row][col] = space;
   return cBoard;
 }
@@ -287,10 +292,10 @@ export function updateAndRotateScore(cScores: CScores, transFunc: (oldScore: num
 
 // CBoard -> CBoard
 // creates a deep copy of the given CBoard
-export function duplicateCBoard(board : CBoard) : CBoard {
-  var newArray = board.map(function(b) {
+export function duplicateCBoard(board: CBoard): CBoard {
+  var newArray = board.map(function (b) {
     return b.slice();
-});
+  });
   return newArray
 }
 
@@ -315,15 +320,15 @@ export function cMove(cState: CState, cMove: CMove): CState {
 }
 
 // gets the positions of all the penguins of the given player in the given CState
-export function getPenguinPositions(penguin : CPenguin, state : CState) : CPosn[] {
-  const board : CBoard = GET__CBoardFromCState(state)
-  let posns : CPosn[] = []
+export function getPenguinPositions(penguin: CPenguin, state: CState): CPosn[] {
+  const board: CBoard = GET__CBoardFromCState(state)
+  let posns: CPosn[] = []
 
-  for(let i = 0; i < board.length; i++) {
-    for(let j = 0; j < board[i].length; j++) {
-      if(PRED_isCSpaceACPenguin(board[i][j])) {
-        if(board[i][j] == penguin) {
-          posns.push([i,j])
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      if (PRED_isCSpaceACPenguin(board[i][j])) {
+        if (board[i][j] == penguin) {
+          posns.push([i, j])
         }
       }
     }

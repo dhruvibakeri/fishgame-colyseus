@@ -25,10 +25,11 @@
 
 import { BoardPosn } from "./board-to-hex-tiles";
 import { getReachable } from "./cboard-reachable";
-import { CBoard, CPenguin, CScore, CScores, CState, GET__CBoardFromCState, GET__CPenguinFromCScore, GET__CScoreNumFromCScore, GET__CScoresFromCState, PRED_isCSpaceACPenguin } from "./cstate";
+import { CBoard, CPenguin, CScore, CScores, CState, GET_currentPlayer, GET__CBoardFromCState, GET__CPenguinFromCScore, GET__CScoreNumFromCScore, GET__CScoresFromCState, GET__nextMove, PRED_isCSpaceACPenguin, PRED_isCState } from "./cstate";
+import { GameTree, getStateFromTree, getValidSubStates } from "./game-tree";
 
 
-
+// - - - - - - - - - PSEUDOCODE: MINIMAX - - - - - - 
 // function minimax(position, depth, alpha, beta, maximizingPlayer)
 //   if depth == 0 or game over in position
 //     return static evaluation of position
@@ -54,31 +55,40 @@ import { CBoard, CPenguin, CScore, CScores, CState, GET__CBoardFromCState, GET__
 //         break
 //     return minEval
 
-
+// Implements a modified version of minimax for >=2 players.  
 function minimax(
-  position: CState,
+  position: GameTree,
   depth: number,
-  maximizingPlayer: CPenguin
+  maximizingPlayer: CPenguin,
+  mainPlayer: CPenguin
 ): number {
-  if (depth === 0 || isGameOver(position)) {
-    return staticEvaluation(maximizingPlayer, position);
+  if (depth === 0 || PRED_isCState(position)) {
+    return staticEvaluation(maximizingPlayer, getStateFromTree(position));
   }
-  if (maximizingPlayer) {
+  let substates = getValidSubStates(getStateFromTree(position))
+  if (mainPlayer === maximizingPlayer) {
     let maxEval = Number.NEGATIVE_INFINITY;
-    let children = [];
-    let nextPlayer = children[2][0];
-    children.forEach(child => {
-      let ev: number = minimax(child, depth - 1, nextPlayer);
+
+    substates.forEach(childPosition => {
+      let ev: number = minimax(
+        childPosition,
+        depth - 1,
+        GET__nextMove(getStateFromTree(childPosition)),
+        mainPlayer
+      );
       maxEval = Math.max(maxEval, ev);
     });
     return maxEval;
   } else {
     let minEval = Number.POSITIVE_INFINITY;
 
-    let children = [];
-    let nextPlayer = children[2][0];
-    children.forEach(child => {
-      let ev: number = minimax(child, depth - 1, nextPlayer);
+    substates.forEach(childPosition => {
+      let ev: number = minimax(
+        childPosition,
+        depth - 1,
+        GET__nextMove(getStateFromTree(childPosition)),
+        mainPlayer
+      );
       minEval = Math.min(minEval, ev);
     });
     return minEval;
