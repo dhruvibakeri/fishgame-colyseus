@@ -1,7 +1,7 @@
 import { getReachable } from "./board-reachable";
 //------------------------------------- DATA DEFINITION -----------------------------------------------------------
 
-import { CBoard, CMove, cMove, CPenguin, CPosn, CScore, CState, duplicateCBoard, getPenguinPositions, GET_currentPlayer, GET__CBoardFromCState, GET__CScoresFromCState, GET__CStageFromCState, PRED_isCSpaceACFish, PRED_isCState } from "./cstate";
+import { CBoard, CMove, cMove, CPenguin, CPosn, CScore, CState, duplicateCBoard, getPenguinPositions, getPenguinPositionsForGameBoard, GET_currentPlayer, GET__CBoardFromCState, GET__CScoresFromCState, GET__CStageFromCState, PRED_isCSpaceACFish, PRED_isCState } from "./cstate";
 import { placePenguinStrategy, placingstate } from "./penguin-placement-strategy";
 import { playinginitstate } from "./run";
 
@@ -116,6 +116,18 @@ export function applyToDirectlyReachable(gs : CState, func : (state : CState) =>
 // - - - - - - - I N T E R N A L  - - - - - - -
 // - - - - - - - - - - - - - - - - - - - - - - 
 
+// GameState -> GameTree[]
+// gets all reachable states from the given GameState
+export function getValidSubStatesForGameBoard(myGameState : CState) : GameTree[] {
+    let res : GameTree[] = []
+    let allPenguinPos : CPosn[] = getPenguinPositionsForGameBoard(GET_currentPlayer(GET__CScoresFromCState(myGameState)), myGameState)
+
+    allPenguinPos.forEach(p => {
+        res = [...res, ...makeAllMovesForAPenguin(GET_currentPlayer(GET__CScoresFromCState(myGameState)), p, myGameState)]
+    })
+
+    return res;
+}
 
 // GameState -> GameTree[]
 // gets all reachable states from the given GameState
