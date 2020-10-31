@@ -41,7 +41,7 @@ Create the initial state with the following properties:
 
 ```ts
 // generates initial state from spec
-generateInitialState(roomOptions: GameRoomOptions): GameState 
+generateInitialState(roomOptions: GameRoomOptions): GameState
 
 // sets the initial state for `this` room
 Room.setState(gameState: GameState);
@@ -49,7 +49,7 @@ Room.setState(gameState: GameState);
 
 The referee starts the game (in placing stage). It broadcasts the initial state o the game, and then:
 
-- **Broadcasting State Changes**: Broadcasts any change to the state of the game. 
+- **Broadcasting State Changes**: Broadcasts any change to the state of the game.
 
   - **AI Clients**: The clients will listen to the state changes and make appropriate responses.
   - **Game Observers**: The rendering for the Game Observers may listen to these changes to render the game state on every change.
@@ -60,16 +60,16 @@ The referee starts the game (in placing stage). It broadcasts the initial state 
 - **Listening for Messages**: Listeners on the messages broadcasted by the AI clients, these messages are specified in the `player-protocol.md`.
 
   - **Input Validation**: Any message that does not adhere to the format specified in Player Protol leads to the sender of the message being kicked out.
-  - **Time to Response**: When the state of the game changes to show that a certain player is supposed to move/place, the player has `5` seconds to respond with a valid response (unless the game is in `done` stage). If there is no response, the corresponding AI is kicked out. 
+  - **Time to Response**: When the state of the game changes to show that a certain player is supposed to move/place, the player has `5` seconds to respond with a valid response (unless the game is in `done` stage). If there is no response, the corresponding AI is kicked out.
   - **Changing State**: The referee uses the State Interface to change the state of the game with the valid input from the player.
 
 ```ts
-onMessage("move", (client, message) => { 
-	// *Internal functions*
+onMessage("move", (client, message) => {
+  // *Internal functions*
 })
- 
-onMessage("place", (client, message) => { 
-	// *Internal functions*
+
+onMessage("place", (client, message) => {
+  // *Internal functions*
 })
 
 // Internal functions:
@@ -82,7 +82,7 @@ onMessage("place", (client, message) => {
 
 When there are no more valid moves left, the referee changes the state of the game to `done`, and broadcasts it for the last time, and sends a message to the Tournament Manager with the last state of the game with the Room ID and the player IDs.
 
-```
+```ts
 type EndGameResult {
     roomId: string;
     gameState: GameState,
@@ -94,4 +94,3 @@ type EndGameResult {
 // usage (from within Room)
 broadcast(endGameResult: EndGameResult): void
 ```
-
