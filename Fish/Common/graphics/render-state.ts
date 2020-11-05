@@ -66,7 +66,7 @@ function renderPenguin(size: number, hex: HexTile, t: CPenguin, canvas): void {
   canvas.add(im);
 }
 
-export function renderBoard(size: number, board: CBoard, canvas: fabric.Canvas): void {
+export function renderBoard(size: number, board: CBoard, canvas): void {
   let hexes: HexTile[] = boardToHexTiles(size, board, (space) => !PRED_isCSpaceACUnusable(space));
   hexes.forEach((hex: HexTile) => {
     const boardPosn = hex.posn

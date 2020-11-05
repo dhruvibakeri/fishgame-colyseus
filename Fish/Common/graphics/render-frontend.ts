@@ -88,7 +88,7 @@ export function render(
   rows: number,
   cols: number,
   state: CState,
-  htmlCanvas: HTMLCanvasElement,
+  htmlCanvas,
   fabricCanvas,
 ) {
   setCanvasConfig(fabricCanvas);
@@ -106,7 +106,7 @@ export function render(
  * @param {PositiveNumber} width The width of the canvas to set.
  * @param {PositiveNumber} height The height of the canvas to set.
  */
-function setCanvasDimension(width: number, height: number, htmlCanvas: HTMLCanvasElement, fabricCanvas): void {
+function setCanvasDimension(width: number, height: number, htmlCanvas, fabricCanvas): void {
   htmlCanvas.width = width;
   htmlCanvas.height = height;
   fabricCanvas.setDimensions({ width: width, height: height })

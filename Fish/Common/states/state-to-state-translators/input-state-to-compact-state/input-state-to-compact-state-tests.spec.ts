@@ -1,9 +1,9 @@
 import { assert } from "chai";
 import { CBoard } from "../../compact-state/compact-state-data-definition";
 import { InputBoard } from "../../input-state/input-state-data-definition";
-import { inputBoardToCompactBoard, interleave, padInputBoard } from "./input-state-to-compact-state";
-import _ from 'lodash';
-
+import { inputBoardToCBoardNoPlayers, inputStateToCState, interleave, padInputBoard } from "./input-state-to-compact-state";
+import { prelim1InputState, prelim2InputState } from "../../input-state/input-state-examples";
+import { prelim1, prelim2 } from "../../compact-state/compact-state-examples";
 
 
 const U = "unusable"
@@ -133,34 +133,34 @@ const compact_board_10: CBoard = [
 
 describe("Tests for InputBoard to CompactBoard translation", () => {
   it("input_board_1 --> compact_board_1", () => {
-    assert.deepEqual(inputBoardToCompactBoard(input_board_1), compact_board_1)
+    assert.deepEqual(inputBoardToCBoardNoPlayers(input_board_1), compact_board_1)
   })
   it("input_board_2 --> compacT_board_2", () => {
-    assert.deepEqual(inputBoardToCompactBoard(input_board_2), compacT_board_2)
+    assert.deepEqual(inputBoardToCBoardNoPlayers(input_board_2), compacT_board_2)
   })
   it("input_board_3 --> compact_board_3", () => {
-    assert.deepEqual(inputBoardToCompactBoard(input_board_3), compact_board_3)
+    assert.deepEqual(inputBoardToCBoardNoPlayers(input_board_3), compact_board_3)
   })
   it("input_board_4 --> compact_board_4", () => {
-    assert.deepEqual(inputBoardToCompactBoard(input_board_4), compact_board_4)
+    assert.deepEqual(inputBoardToCBoardNoPlayers(input_board_4), compact_board_4)
   })
   it("input_board_5 --> compact_board_5", () => {
-    assert.deepEqual(inputBoardToCompactBoard(input_board_5), compact_board_5)
+    assert.deepEqual(inputBoardToCBoardNoPlayers(input_board_5), compact_board_5)
   })
   it("input_board_6 --> compact_board_6", () => {
-    assert.deepEqual(inputBoardToCompactBoard(input_board_6), compact_board_6)
+    assert.deepEqual(inputBoardToCBoardNoPlayers(input_board_6), compact_board_6)
   })
   it("input_board_7 --> compact_board_7", () => {
-    assert.deepEqual(inputBoardToCompactBoard(input_board_7), compact_board_7)
+    assert.deepEqual(inputBoardToCBoardNoPlayers(input_board_7), compact_board_7)
   })
   it("input_board_8 --> compact_board_8", () => {
-    assert.deepEqual(inputBoardToCompactBoard(input_board_8), compact_board_8)
+    assert.deepEqual(inputBoardToCBoardNoPlayers(input_board_8), compact_board_8)
   })
   it("input_board_9 --> compact_board_9", () => {
-    assert.deepEqual(inputBoardToCompactBoard(input_board_9), compact_board_9)
+    assert.deepEqual(inputBoardToCBoardNoPlayers(input_board_9), compact_board_9)
   })
   it("input_board_10 --> compact_board_10", () => {
-    assert.deepEqual(inputBoardToCompactBoard(input_board_10), compact_board_10)
+    assert.deepEqual(inputBoardToCBoardNoPlayers(input_board_10), compact_board_10)
   })
 })
 
@@ -212,5 +212,15 @@ describe("interleaving tests", () => {
   })
   it("interleave 3-elem list", () => {
     assert.deepEqual(interleave([1, 2, 3], [4, 0, 5]), [1, 4, 2, 0, 3, 5])
+  })
+})
+
+
+describe("Converting input state to compact state", () => {
+  it("converting the first prelims input state example to compact state", () => {
+    assert.deepEqual(inputStateToCState(prelim1InputState), prelim1)
+  })
+  it("converting the second prelims input state example to compact state", () => {
+    assert.deepEqual(inputStateToCState(prelim2InputState), prelim2)
   })
 })
