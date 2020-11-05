@@ -12,7 +12,7 @@ export function getRowFromCPosn(cPosn: CPosn): number {
  * Get col from CPosn.
  */
 export function getColFromCPosn(cPosn: CPosn): number {
-  return cPosn[0];
+  return cPosn[1];
 }
 
 export function makeCPosn(row: number, col: number): CPosn {
