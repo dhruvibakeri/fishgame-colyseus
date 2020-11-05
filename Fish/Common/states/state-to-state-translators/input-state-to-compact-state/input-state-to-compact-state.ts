@@ -1,5 +1,5 @@
-import { CBoard, CPosn } from "../../compact-state/compact-state-data-definition";
-import { InputBoard, InputPosition } from "../../input-state/input-state-data-definition";
+import { CBoard, CPosn, CState } from "../../compact-state/compact-state-data-definition";
+import { InputBoard, InputPosition, InputState } from "../../input-state/input-state-data-definition";
 import { getRowFromInputPosition, getColFromInputPosition, makeInputPosition } from "../../input-state/input-state-interface";
 import { getRowFromCPosn, getColFromCPosn } from "../../compact-state/compact-state-interface";
 import { makeCPosn } from "../../compact-state/compact-state-interface";
@@ -111,3 +111,10 @@ export function compactPosnToInputPosn(cPosn: CPosn): InputPosition {
 }
 
 
+export function inputStateToCState(inputState: InputState): CState {
+  // TODO: 
+  return ["playing",
+    [],
+    []
+  ]
+}

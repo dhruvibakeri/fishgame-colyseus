@@ -1,5 +1,5 @@
 import { Room } from "colyseus";
-import { ex2, state0 } from "../minimax/best-action-game-state";
+import { ex2, state0 } from "../states/compact-state/compact-state-examples";
 import { StateSchema } from "../states/schema-state/schema-state-data-definition";
 import { cStateToSchema } from "../states/state-to-state-translators/compact-state-to-schema-state";
 // import { all_places } from "../../Player/strategy";
@@ -21,12 +21,12 @@ export class FishRoom extends Room<StateSchema> {
     setInterval(() => {
       i = i + 1
 
-      if(i < 10) {
-      let newState = getPlacedState(i)
-      this.state.board = newState.board;
-      this.state.gamestage = newState.gamestage;
-      this.state.players = newState.players;
-      this.state.rowlen = newState.rowlen;
+      if (i < 10) {
+        let newState = getPlacedState(i)
+        this.state.board = newState.board;
+        this.state.gamestage = newState.gamestage;
+        this.state.players = newState.players;
+        this.state.rowlen = newState.rowlen;
       }
     }, 500)
 
@@ -62,7 +62,7 @@ export class FishRoom extends Room<StateSchema> {
 // }
 
 function getPlacedState(i: number): StateSchema {
-  if(i % 2 === 0) {
+  if (i % 2 === 0) {
     return cStateToSchema(ex2)
   }
   else {

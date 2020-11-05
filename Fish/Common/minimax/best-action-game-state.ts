@@ -1,3 +1,12 @@
+import { getReachable } from "../states/game-state/game-state-reachable";
+import { GameTree, getStateFromTree, getValidSubStates, getValidSubStatesForGameBoard } from "../game-tree/game-tree-state";
+import { Board, GameState, Penguin, PenguinColor, Player, Players, Tile, UsableSpace } from "../states/game-state/game-state-data-definition";
+import { GET_GameStateBoard, GET_GameStateNextToPlace, GET_GameStatePlayers, GET_OnTile, GET_OnUsableSpace, GET_penguinColor, GET_PlayerColor, GET_PlayerScore } from "../states/game-state/game-state-selectors";
+import { PRED_isGameState, PRED_isPenguinSpace } from "../states/game-state/game-state-predicates";
+import { CState } from "../states/compact-state/compact-state-data-definition";
+import { cStateToGameState } from "../states/state-to-state-translators/compact-state-to-game-state";
+import { BoardPosn } from "../utils/other-data-definitions";
+
 /**
  * This file implements point #2 of the Programming Task in the assignment:
  * [5 — The Strategy](https://www.ccs.neu.edu/home/matthias/4500-f20/5.html)
@@ -23,15 +32,27 @@
  * -------------------------------------------------------------------------------
  */
 
-type BoardPosn = { row: number, col: number }
 
-import { getReachable } from "../states/game-state/game-state-reachable";
-import { GameTree, getStateFromTree, getValidSubStates, getValidSubStatesForGameBoard } from "../game-tree/game-tree-state";
-import { Board, GameState, Penguin, PenguinColor, Player, Players, Tile, UsableSpace } from "../states/game-state/game-state-data-definition";
-import { GET_GameStateBoard, GET_GameStateNextToPlace, GET_GameStatePlayers, GET_OnTile, GET_OnUsableSpace, GET_penguinColor, GET_PlayerColor, GET_PlayerScore } from "../states/game-state/game-state-selectors";
-import { PRED_isGameState, PRED_isPenguinSpace } from "../states/game-state/game-state-predicates";
-import { CState } from "../states/compact-state/compact-state-data-definition";
-import { cStateToGameState } from "../states/state-to-state-translators/compact-state-to-game-state";
+
+// TODO: add INTERP. 
+export type Move = DefMove | false
+
+export type DefMove = [FromPosn, ToPosn];
+export type FromPosn = BoardPosn;
+export type ToPosn = BoardPosn;
+
+export function getFromPosnFromMove(move: DefMove): FromPosn {
+  return move[0];
+}
+export function getToPosnFromMove(move: DefMove): ToPosn {
+  return move[1];
+}
+
+
+
+
+export type MinimaxRes = [MaxScore, Move[]];
+export type MaxScore = number;
 
 
 /**         INTERPRETATION OF OUR BEST GAIN STRATEGY ALGORITHM
@@ -69,7 +90,7 @@ import { cStateToGameState } from "../states/state-to-state-translators/compact-
  *    which would represent the best move the MAIN PLAYER should make first.
  */
 
-// GameTree Number -> [BoardPosn, BoarPosn]
+// GameTree Number -> [BoardPosn, BoarPosn] | false
 // returns the bestAction for the current player according to the
 // given gameTree and depth (no of turns at which the player wants to calculate best gain)
 // The function would return a tuple of BoardPosn (see above for definition)
@@ -78,13 +99,14 @@ import { cStateToGameState } from "../states/state-to-state-translators/compact-
 export function getBestAction(
   position: GameTree,
   depth: number,
-): [BoardPosn, BoardPosn] {
+): Move {
   let currentPlayer: PenguinColor = GET_PlayerColor(GET_GameStateNextToPlace(getStateFromTree(position)))
   return miniMaxResToBestAction(minimax(position, depth, currentPlayer, currentPlayer, []));
 }
 
 //GameTree Number PenguinColor PenguinColor Move[]-> [number, [BoardPosn, BoarPosn]]
 //Returns a tuple of [Max Score for 'depth' turns using the strategy, best action to achieve that max score]
+// TODO: split this into mutually recursive helpers. 
 function minimax(
   position: GameTree,
   depth: number,
@@ -93,7 +115,7 @@ function minimax(
   maximizingActions: Move[]
 ): [number, Move[]] {
 
-  let action: [BoardPosn, BoardPosn] | false
+  let action: Move = false;
 
   if (depth === 0 || PRED_isGameState(position)) {
     return [staticEvaluation(mainPlayer, getStateFromTree(position)), maximizingActions];
@@ -173,7 +195,7 @@ function givenPenguinPosns(board: Board, penguin: PenguinColor): BoardPosn[] {
 export function getFromTo(
   prevState: GameState,
   nextState: GameState,
-  p: PenguinColor): [BoardPosn, BoardPosn] | false{
+  p: PenguinColor): [BoardPosn, BoardPosn] | false {
   const prevBoard: Board = GET_GameStateBoard(prevState)
   const nextBoard: Board = GET_GameStateBoard(nextState)
 
@@ -211,85 +233,24 @@ function isInReachable(list: BoardPosn[], item: BoardPosn): boolean {
   return false;
 }
 
-/**
- * Represents a move on CBoard representation.
- */
-type Move = [BoardPosn, BoardPosn] | false
 
-function boardPosEq(boardPosn1: BoardPosn, boardPosn2: BoardPosn) {
+
+
+
+
+function boardPosEq(boardPosn1: BoardPosn, boardPosn2: BoardPosn): boolean {
   return boardPosn1.row === boardPosn2.row && boardPosn1.col === boardPosn2.col
 }
 
-function miniMaxResToBestAction(minimaxRes) {
+function miniMaxResToBestAction(minimaxRes: MinimaxRes): Move {
   return minimaxRes[1][0];
 }
 
-function miniMaxResToStaticEvaluation(minimaxRes) {
+function miniMaxResToStaticEvaluation(minimaxRes: MinimaxRes): MaxScore {
   return minimaxRes[0];
 }
 
 
-export const state0: CState = ["playing",
 
-  [[["black",4], 1, 4, ["red",0]],
-  [["white",3], "unusable", 5, "unusable"]],
-  
-  [["black", 0],
-  ["white", 0],
-  ["red", 0]]]
 
-  export const ex2 : CState = ["playing", 
-                                    [[["red",1], 1, ["red",1], "hole", ["black",1], 1, ["black",1], "hole"],
-                                    [4, "hole", 4, "hole", 4, "hole", 4, "hole"],
-                                    [["white",1], ["brown",1], "hole", "hole", ["white",1], ["brown",1], "hole", "hole"]],
-                                     [["red", 0],
-                                     ["black", 0],
-                                     ["white", 0],
-                                     ["brown", 0] ]]
-
-//--------------------------------------------------------------------------------------------------------    */     
-const prelim1 : CState = ["playing",
-
-  [[1,1,1,1,1,1],
-  ["hole","hole","hole","hole","hole","hole"],
-    [["red",1],["white",1],["red",1],["white",1],["red",1],["white",1]],
-    [["brown",1],"unusable",["brown",1],"unusable",["brown",1],"unusable"]],
-  
-  [["red", 0],
-  ["white", 0],
-  ["brown", 0]]]
-
-const prelim2 : CState = ["playing",
-
-[[["red",1],1,1,1,1,1],
-["hole","hole","hole","hole","hole","hole"],
-  [["red",1],["white",1],["red",1],["white",1],"hole",["white",1]],
-  [["brown",1],"unusable",["brown",1],"unusable",["brown",1],"unusable"]],
-
-[["red", 0],
-["white", 0],
-["brown", 0]]]
-
-//console.log("final",minimax([state0 , () => getValidSubStates(state0)], 4, GET_currentPlayer(state0), GET_currentPlayer(state0)))
-console.log("best action", getBestAction([cStateToGameState(state0), () => getValidSubStates(cStateToGameState(state0))], 3))
-console.log("best action - prelim1", getBestAction([cStateToGameState(prelim1) , () => getValidSubStates(cStateToGameState(prelim1))], 2))
-console.log("best action - prelim2", getBestAction([cStateToGameState(prelim2) , () => getValidSubStates(cStateToGameState(prelim2))], 2))
-//console.log(getValidSubStatesForGameBoard((getValidSubStatesForGameBoard(getValidSubStatesForGameBoard(cStateToGameState(ex2))[0][0])[0][0]))[1][0])
-
-/*[2,{"players":[{"places":[[4,1],[4,0],[0,0]],"score":0,"color":"red"}
-,{"places":[[5,2],[5,1],[5,0]],"score":0,"color":"white"},
-{"places":[[6,2],[6,1],[6,0]],"score":0,"color":"brown"}],
-///"board":
-[[1,1,1],[1,1,1] ///,
-[0,0,0],[0,0,0],///
-[1,1,0],[1,1,1],
-///[1,1,1]]}]*/
-
-/*[2,{"players":[{"places":[[4,2],[4,1],[4,0]],"score":0,"color":"red"},
-{"places":[[5,2],[5,1],[5,0]],"score":0,"color":"white"},
-{"places":[[6,2],[6,1],[6,0]],"score":0,"color":"brown"}],
-"board":[[1,1,1],[1,1,1],
-[0,0,0],[0,0,0],
-[1,1,1],[1,1,1],
-[1,1,1]]}]*/
 

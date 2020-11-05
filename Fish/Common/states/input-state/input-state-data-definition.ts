@@ -40,3 +40,13 @@ export type InputMoveResponseQuery = {
 }
 
 export type InputAction = false | [InputPosition, InputPosition];
+
+
+/**
+ * Specified in Milestone 6.
+ */
+
+export type DepthState = [D, InputState]
+
+export type D = 1 | 2;
+

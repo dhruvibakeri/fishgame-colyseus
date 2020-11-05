@@ -69,7 +69,8 @@ export type CUnusable = "unusable"
 export type CHole = "hole"
 
 /**
- * A Compact Posn.
+ * A Compact Posn. 
+ * [row, col]
  */
 export type CPosn = [number, number]
 
