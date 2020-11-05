@@ -7,10 +7,12 @@
     "build-backend": "tsc --project tsconfig.backend.json",
     "build": "webpack",
     "watch": "webpack serve",
-    "test": "ts-mocha -p tsconfig.frontend.json src/**/*.spec.ts",
-    "watchtests": "ts-mocha -p tsconfig.frontend.json src/**/*.spec.ts -w --watch-files src/**/*.spec.ts",
+    "test": "ts-mocha -p tsconfig.frontend.json **/*.spec.ts",
+    "watchtests": "ts-mocha -p tsconfig.frontend.json **/*.spec.ts -w --watch-files **/*.spec.ts",
     "clean": "rimraf ./dist",
-    "start": "ts-node --project tsconfig.backend.json backend-start.ts"
+    "start": "ts-node --project tsconfig.backend.json start-backend.ts",
+    "test-milestone-3": "ts-mocha -p tsconfig.frontend.json tests/milestone-3-tests.spec.ts",
+    "test-milestone-4": "ts-mocha -p tsconfig.frontend.json tests/milestone-4-tests.spec.ts"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,55 @@
+#!/bin/bash
+
+#
+# USAGE: Call this script from within the ./Fish/Other directory.
+# like ./tree-push
+#
+# PURPOSE: Generates a README.md with the tree structure of 
+# Fish/ directory and commit and push README.md onto remote.
+#
+
+echo ------------------------  START OF SCRIPT  ----------------------------
+
+currdir=${PWD##*/}
+
+echo ---\> The current directory should be Other
+echo ---\> The current directory is ${currdir}
+
+if [ ${currdir} = "Other" ]; then
+    cd ..
+    updir=${PWD##*/}
+
+    echo ---\> The parent directory of Other should be Fish
+    echo ---\> The parent directory of Other is $updir
+
+    if [ ${updir} = "Fish" ]; then
+        echo ---\> Removing the README.md file.
+        rm README.md
+        
+        touch README.md
+        echo \`\`\` > README.md
+        echo ---\> Appending the tree of ./Fish without node_modules README.md
+        tree . -I "node_modules|milestone-3-test-fest|milestone-4-test-fest|milestone-5-test-fest" echo >> README.md
+        echo \`\`\` >> README.md
+        
+        echo ---\> Add, Commit and Push README.md 
+        # git add README.md
+        # git commit -m "Generate README.md"
+        # git push
+    else
+      echo ---\> !! Call this script such that Fish is the parent of Other !!
+    fi
+else
+  echo ---\> !! Call this script the Other directory !!
+fi
+
+echo ------------------------  END OF SCRIPT  ------------------------------
+
+
+
+
+
+
+
+
+

@@ -1,15 +1,7 @@
 #!/bin/bash
 
-case "$(uname -s)" in
+#
+# `xtest` is about the unit testing task for the entire project.
+#
 
-   Darwin)
-      node ./Common/compiled/compiled.js
-     ;;
-
-   Linux)
-     /opt/rh/rh-nodejs10/root/usr/bin/node ./Common/compiled/compiled.js
-     ;;
-
-   *)
-
-esac
+echo 'STUB'

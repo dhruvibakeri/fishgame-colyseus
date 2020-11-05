@@ -10,8 +10,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = {
   mode: 'development',
   entry: {
-    app: './src/index.ts',
-    importData: './src/importData.js',
+    app: './frontend/frontend.ts',
+    importData: './frontend/importData.js',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -24,7 +24,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: `Hey! That's My Fish`,
-      favicon: "./src/assets/favicon.ico",
+      favicon: "./frontend/assets/favicon.ico",
       inject: "body",
       scriptLoading: "defer"
     }),

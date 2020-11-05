@@ -1,0 +1,11 @@
+{
+  "players": [
+    {
+      "color": "white",
+      "score": 0,
+      "places": [
+      ]
+    }
+  ],
+  "board": [[1, 2, 3]]
+}

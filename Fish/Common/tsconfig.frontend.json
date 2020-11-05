@@ -8,7 +8,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "rootDirs": [
-      "./src"
+      "./fabric"
     ],
     "experimentalDecorators": true,
     "strict": true,
@@ -19,7 +19,7 @@
     "noImplicitAny": false
   },
   "exclude": [
-    "./backend",
+    "./server",
     "./dist/",
     "./build/",
     "./webpack.config.js",

@@ -25,7 +25,8 @@
 //         break
 //     return minEval
 
-// Implements a modified version of minimax for >=2 players.  
+/*
+// Implements a modified version of minimax for >=2 players.
 function minimax(
   position: GameTree,
   depth: number,
@@ -66,7 +67,7 @@ function minimax(
 }
 
 // For a given state, returns the static evaluation of
-// a position for the player p. i.e. score of the player p. 
+// a position for the player p. i.e. score of the player p.
 function staticEvaluation(p: CPenguin, cState: CState): number {
   let scores: CScores = GET__CScoresFromCState(cState);
 
@@ -81,7 +82,7 @@ function staticEvaluation(p: CPenguin, cState: CState): number {
 
 }
 
-// The game is over when no penguin has any valid moves left. 
+// The game is over when no penguin has any valid moves left.
 // i.e. The reachable states for ALL penguins is an empty list.
 export function isGameOver(cState: CState): boolean {
   let cBoard: CBoard = GET__CBoardFromCState(cState)
@@ -121,7 +122,7 @@ export function duplicateCBoard(board: CBoard): CBoard {
 
 // CBoard CSpace -> CBoard
 // traverses the given CBoard according to the penguin placement strategy
-// and places penguin of given color at first available space 
+// and places penguin of given color at first available space
 export function traverseCBoard(board: CBoard, penguinColor: CSpace): CBoard {
 
   let nboard = duplicateCBoard(board)
@@ -148,7 +149,7 @@ export function traverseCBoard(board: CBoard, penguinColor: CSpace): CBoard {
 }
 
 // CState -> CState
-// places player penguins of the given state on the board of 
+// places player penguins of the given state on the board of
 // the given state according to the placement strategy
 export function placePenguinStrategy(state: CState): CState {
 
@@ -165,3 +166,4 @@ export function placePenguinStrategy(state: CState): CState {
   }
   return [GET__CStageFromCState(state), newBoard, GET__CScoresFromCState(state)]
 }
+*/

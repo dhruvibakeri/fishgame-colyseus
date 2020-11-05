@@ -11,9 +11,5 @@
     "experimentalDecorators": true,
     "sourceMap": false,
     "esModuleInterop": true
-  },
-  "include": [
-    "**/*.ts",
-    "**/spec.ts"
-  ]
+  }
 }
