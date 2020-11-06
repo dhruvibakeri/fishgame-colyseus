@@ -1,13 +1,9 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.inputStateToCState = exports.compactPosnToInputPosn = exports.inputPosnToCompactPosn = exports.interleave = exports.padInputBoard = exports.getLongestRowLength = exports.longestRowAsUnusable = exports.inputBoardToCBoardNoPlayers = void 0;
 const input_state_interface_1 = require("../../input-state/input-state-interface");
 const compact_state_interface_1 = require("../../compact-state/compact-state-interface");
 const compact_state_interface_2 = require("../../compact-state/compact-state-interface");
-const lodash_1 = __importDefault(require("lodash"));
 /**
  * Convert an input board to a compact board. The 0s in the board is mapped
  * to "holes" because 0s represent blank tiles on compact board.
@@ -127,6 +123,10 @@ function inputStateToCState(inputState) {
 }
 exports.inputStateToCState = inputStateToCState;
 function zeroesToHoles(cBoard) {
-    return lodash_1.default.map(cBoard, row => lodash_1.default.map(row, elem => elem === 0 ? "hole" : elem));
+    return cBoard.map(row => {
+        return row.map(elem => {
+            return elem === 0 ? "hole" : elem;
+        });
+    });
 }
 //# sourceMappingURL=input-state-to-compact-state.js.map
