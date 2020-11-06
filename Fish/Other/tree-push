@@ -29,7 +29,7 @@ if [ ${currdir} = "Other" ]; then
         touch README.md
         echo \`\`\` > README.md
         echo ---\> Appending the tree of ./Fish without node_modules README.md
-        tree . -I "node_modules|milestone-3-test-fest|milestone-4-test-fest|milestone-5-test-fest" echo >> README.md
+        tree . -I "node_modules|milestone-3-test-fest|milestone-4-test-fest|milestone-5-test-fest|dist" echo >> README.md
         echo \`\`\` >> README.md
         
         echo ---\> Add, Commit and Push README.md 
