@@ -3,23 +3,23 @@
  */
 
 
-type GameState = number;
-type GameTree = GameState | [GameState, () => GameTree[]];
+type GameStateN = number;
+type GameTree = GameStateN | [GameStateN, () => GameTree[]];
 
-function isGameState(anything: any): anything is GameState {
+function isGameState(anything: any): anything is GameStateN {
   return typeof anything === "number" && anything % 1 === 0;
 }
 
 function foldOnTree<T>(
-  f: (gs: GameState, gtrees: GameTree[]) => T,
-  g: (gs: GameState, resArr: T[]) => T,
+  f: (gs: GameStateN, gtrees: GameTree[]) => T,
+  g: (gs: GameStateN, resArr: T[]) => T,
   b: T,
   gameTree: GameTree
 ): T {
   if (!Array.isArray(gameTree)) {
     return b;
   } else {
-    let gs: GameState = gameTree[0];
+    let gs: GameStateN = gameTree[0];
     let subFunc: () => GameTree[] = gameTree[1]
     let res: T[] = subFunc().map(tree => foldOnTree(f, g, b, tree));
     return g(gs, res);

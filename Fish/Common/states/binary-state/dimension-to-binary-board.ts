@@ -1,4 +1,5 @@
 import { isOdd } from "../../utils/utility-functions"
+import { CBoard } from "../compact-state/compact-state-data-definition";
 
 /**
  * Converts the given board dimensions to a
@@ -34,11 +35,11 @@ export type BinaryBoard = (1 | 0)[][]
  * Turns the specification of a hexagonal grid into a 2d-array representation.
  * 
  */
-export function dimToBinBoard(inputRows: number, inputCols: number): BinaryBoard {
+export function dimToBinBoard(inputRows: number, inputCols: number): CBoard {
   const [matrixRows, matrixCols] = [binBoardRows(inputRows), binBoardCols(inputCols)]
-  const unusableBoard = array2DFill(matrixRows, matrixCols, 0);
+  const unusableBoard = array2DFill(matrixRows, matrixCols, "unusable");
   return unusableBoard.map((row, rowIdx) =>
-    row.map((_col, colIdx) => isUnusable(inputRows, rowIdx, colIdx, matrixRows) ? 0 : 1))
+    row.map((_col, colIdx) => isUnusable(inputRows, rowIdx, colIdx, matrixRows) ? "unusable" : 1))
 }
 
 

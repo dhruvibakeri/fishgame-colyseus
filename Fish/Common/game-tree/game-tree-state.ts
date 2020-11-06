@@ -136,16 +136,16 @@ export function applyToDirectlyReachable(gs: GameState, func: (state: GameState)
 export function getValidSubStatesForGameBoard(myGameState: GameState): GameTree[] {
   let res: GameTree[] = []
   let allPenguinPos: BoardPosn[] = getPenguinPositionsForGameBoard(GET_GameStateNextToPlace(myGameState), myGameState)
-  
+
   // checks for GAME OVER and returns a state
-  if(isGameOver(myGameState)) {
+  if (isGameOver(myGameState)) {
     let endGameState = addFinalScore(myGameState)
     res = [...res, endGameState]
   }
   else {
-  allPenguinPos.forEach(p => {
-    res = [...res, ...makeAllMovesForAPenguin(p, myGameState)]
-  })
+    allPenguinPos.forEach(p => {
+      res = [...res, ...makeAllMovesForAPenguin(p, myGameState)]
+    })
   }
 
   return res;
@@ -172,7 +172,7 @@ export function makeAllMovesForAPenguin(fromPosn: BoardPosn, gs: GameState): Gam
 
   let reachablePoints: BoardPosn[] = getReachable(GET_GameStateBoard(gs), fromPosn)
 
-  reachablePoints.sort(function(a, b) {
+  reachablePoints.sort(function (a, b) {
     return a.row == b.row ? a.col - b.col : a.row - b.row;
   });
 
@@ -205,14 +205,14 @@ export function isValidAction(action: Action, gs: GameState): boolean {
       let posn_place: BoardPosn = action.posn as BoardPosn
       return PRED_isFishSpace(board[posn_place.row][posn_place.col])
     default:
-      return false 
+      return false
   }
 }
- 
+
 // Action GameState -> GameState
 // applies action to given GameState
 export function takeAction(action: Action, gs: GameState): GameState {
-  const gameBoard : Board = GET_GameStateBoard(gs)
+  const gameBoard: Board = GET_GameStateBoard(gs)
   let new_board: Board = duplicateCBoard(gameBoard)
   switch (action.kind) {
     case "move":
@@ -229,12 +229,12 @@ export function takeAction(action: Action, gs: GameState): GameState {
 // GameState -> boolean
 // Checks whehter the game is over according to the 
 // given gameState
-function isGameOver(state : GameState) : boolean {
-  const allPenguinPosns : BoardPosn[] = getAllPenguinPositionsForGameBoard(state)
-  const board : Board = GET_GameStateBoard(state)
-  let allToPoints : BoardPosn[] = []
-  for(let i = 0; i < allPenguinPosns.length; i++) {
-    let reachablePoints : BoardPosn[] = getReachable( board, allPenguinPosns[i])
+export function isGameOver(state: GameState): boolean {
+  const allPenguinPosns: BoardPosn[] = getAllPenguinPositionsForGameBoard(state)
+  const board: Board = GET_GameStateBoard(state)
+  let allToPoints: BoardPosn[] = []
+  for (let i = 0; i < allPenguinPosns.length; i++) {
+    let reachablePoints: BoardPosn[] = getReachable(board, allPenguinPosns[i])
     allToPoints = [...allToPoints, ...reachablePoints]
   }
   return allToPoints.length === 0
