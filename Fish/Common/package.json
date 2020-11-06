@@ -76,6 +76,6 @@
     "colyseus.js": "^0.14.0",
     "cors": "^2.8.5",
     "express-jwt": "^6.0.0",
-    "fabric": "^4.2.0",
+    "fabric": "^4.2.0"
   }
 }
