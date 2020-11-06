@@ -8,7 +8,7 @@ import {
 
 import {
   xBoard
-} from "../executables/xBoard";
+} from "../executables/xBoard/xBoard";
 
 const ex1_in: InputBoardPosn = {
   "position": [0, 0],

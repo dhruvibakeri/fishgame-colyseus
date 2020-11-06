@@ -3,7 +3,7 @@ import {
 } from 'chai';
 import {
   xTree
-} from '../executables/xTree'
+} from '../executables/xTree/xTree'
 import {
   InputAction,
   InputMoveResponseQuery

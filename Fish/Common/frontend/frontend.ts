@@ -17,10 +17,16 @@ var client = new Colyseus.Client(location.protocol.replace("http", "ws")
 
 client.joinOrCreate("fish").then((room: Colyseus.Room) => {
   room.onStateChange((newState) => {
-    console.log("New state:");
-    console.log(JSON.stringify(newState.toJSON()))
     let cState = schemaToCompact(newState)
-    console.log(cState)
+
+    console.log(`
+newState.toJSON() ==>
+${JSON.stringify(newState.toJSON())}
+       -*-*-
+cState            ==>
+${JSON.stringify(cState)}
+       -*-*-`)
+
     rerender(DEFAULT_SIZE, DEFAULT_BOARD_ROWS, DEFAULT_BOARD_COLS, cState)
   });
 });
@@ -36,7 +42,6 @@ export function getBestActionStrategy(state: GameState, depth: number): Move {
 
 export function isMyTurn(gs: GameState, player: Player): boolean {
   let nextTurn: Player = GET_GameStateNextToPlace(gs)
-
   return player === nextTurn
 }
 
@@ -46,5 +51,4 @@ export function placePenguin(room: Colyseus.Room, placementPosn: BoardPosn): voi
 
 export function movePenguin(room: Colyseus.Room, move: [BoardPosn, BoardPosn]): void {
   room.send("move", move);
-
 }

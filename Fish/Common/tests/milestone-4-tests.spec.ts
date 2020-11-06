@@ -3,7 +3,7 @@ import {
 } from 'chai';
 import {
   xState
-} from '../executables/xState'
+} from '../executables/xState/xState'
 import {
   InputState
 } from '../states/input-state/input-state-data-definition';

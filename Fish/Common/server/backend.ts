@@ -60,7 +60,7 @@ export class FishRoom extends Room<StateSchema> {
       this.onMessage("place", (client, message) => {
         let currentPlayer: Player = GET_GameStateNextToPlace(currentGameState)
         let currentTurn: PenguinColor = GET_PlayerColor(currentPlayer)
-        let clientColor: PenguinColor = this.playerMap.get(client.sessionId)
+        let clientColor: PenguinColor = <PenguinColor>this.playerMap.get(client.sessionId)
         let action: Action = { kind: "place", posn: message, player: currentPlayer }
 
         if (clientColor === currentTurn && isValidAction(action, currentGameState)) {
@@ -80,7 +80,7 @@ export class FishRoom extends Room<StateSchema> {
       this.onMessage("move", (client, message) => {
         let currentPlayer: Player = GET_GameStateNextToPlace(currentGameState)
         let currentTurn: PenguinColor = GET_PlayerColor(currentPlayer)
-        let clientColor: PenguinColor = this.playerMap.get(client.sessionId)
+        let clientColor: PenguinColor = <PenguinColor>this.playerMap.get(client.sessionId)
         let action: Action = { kind: "move", posn: message }
 
         if (clientColor === currentTurn && isValidAction(action, currentGameState)) {

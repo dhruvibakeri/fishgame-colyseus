@@ -1,9 +1,9 @@
-import { CBoard, CPenguin, CPosn, CState } from "../../compact-state/compact-state-data-definition";
+import { CBoard, CPenguin, CPosn, CScore, CScorePenguin, CState } from "../../compact-state/compact-state-data-definition";
 import { InputBoard, InputPlayer, InputPosition, InputState } from "../../input-state/input-state-data-definition";
 import { getRowFromInputPosition, getColFromInputPosition, makeInputPosition } from "../../input-state/input-state-interface";
 import { getRowFromCPosn, getColFromCPosn } from "../../compact-state/compact-state-interface";
 import { makeCPosn } from "../../compact-state/compact-state-interface";
-import _, { functions } from "lodash";
+import _ from "lodash";
 
 /**
  * Convert an input board to a compact board. The 0s in the board is mapped 
@@ -115,7 +115,7 @@ export function inputStateToCState(inputState: InputState): CState {
 
   let cBoardNoPlayers: CBoard = zeroesToHoles(inputBoardToCBoardNoPlayers(inputState.board))
   let inputPlayers = inputState.players;
-  let scores = [];
+  let scores: CScore[] = [];
 
   for (let i = 0; i < inputPlayers.length; i++) {
     const { color, score, places }: InputPlayer = inputPlayers[i];
@@ -123,7 +123,7 @@ export function inputStateToCState(inputState: InputState): CState {
       let [row, col]: CPosn = inputPosnToCompactPosn(places[j]);
       cBoardNoPlayers[row][col] = <CPenguin>[color, cBoardNoPlayers[row][col]]
     }
-    scores.push([color, score]);
+    scores.push([<CScorePenguin>color, score]);
   }
 
   return ["playing",
