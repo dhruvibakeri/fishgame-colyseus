@@ -3,7 +3,6 @@ import { InputBoard, InputPlayer, InputPosition, InputState } from "../../input-
 import { getRowFromInputPosition, getColFromInputPosition, makeInputPosition } from "../../input-state/input-state-interface";
 import { getRowFromCPosn, getColFromCPosn } from "../../compact-state/compact-state-interface";
 import { makeCPosn } from "../../compact-state/compact-state-interface";
-import _ from "lodash";
 
 /**
  * Convert an input board to a compact board. The 0s in the board is mapped 
@@ -133,5 +132,9 @@ export function inputStateToCState(inputState: InputState): CState {
 }
 
 function zeroesToHoles(cBoard) {
-  return _.map(cBoard, row => _.map(row, elem => elem === 0 ? "hole" : elem));
+  return cBoard.map(row => {
+    return row.map(elem => {
+      return elem === 0 ? "hole" : elem
+    })
+  })
 }
