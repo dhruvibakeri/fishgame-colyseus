@@ -14,9 +14,9 @@ function readFestWriteTest(dirName: string): void {
     res = `${res}\nconst ex${name} = ${JSON.stringify(JSON.parse(contents))}`
   });
 
-  fs.writeFile(`tests/${dirName}-tests.spec.ts`, res, (err) => {
+  fs.writeFile(`../tests/${dirName}-tests.spec.ts`, res, (err) => {
     if (err) throw err;
   })
 }
 
-// readFestWriteTest("milestone-5-test-fest");
+readFestWriteTest("milestone-6-test-fest");

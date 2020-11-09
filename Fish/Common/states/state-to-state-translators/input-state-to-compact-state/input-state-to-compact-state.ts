@@ -1,4 +1,4 @@
-import { CBoard, CPenguin, CPosn, CScore, CScorePenguin, CState } from "../../compact-state/compact-state-data-definition";
+import { CBoard, CPenguin, CPosn, CScore, CScorePenguin, CSpace, CState } from "../../compact-state/compact-state-data-definition";
 import { InputBoard, InputPlayer, InputPosition, InputState } from "../../input-state/input-state-data-definition";
 import { getRowFromInputPosition, getColFromInputPosition, makeInputPosition } from "../../input-state/input-state-interface";
 import { getRowFromCPosn, getColFromCPosn } from "../../compact-state/compact-state-interface";
@@ -78,10 +78,19 @@ export function padInputBoard(board: InputBoard): InputBoard {
 export function interleave<T>(l1: T[], l2: T[]): T[] {
   let interLeaved: T[] = [];
   for (let i = 0; i < l1.length; i++) {
-    interLeaved.push(l1[i]);
-    interLeaved.push(l2[i]);
+    interLeaved.push(makeCSpace(l1[i]));
+    interLeaved.push(makeCSpace(l2[i]));
   }
   return interLeaved;
+}
+
+function makeCSpace(space : any) : any {
+  if(space === 0) {
+    return "hole"
+  }
+  else {
+    return space;
+  }
 }
 
 
@@ -108,7 +117,6 @@ export function compactPosnToInputPosn(cPosn: CPosn): InputPosition {
     ? makeInputPosition((row * 2), col / 2)
     : makeInputPosition((row * 2) + 1, (col - 1) / 2)
 }
-
 
 export function inputStateToCState(inputState: InputState): CState {
 

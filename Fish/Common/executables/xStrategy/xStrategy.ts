@@ -8,11 +8,11 @@ import { inputPosnToCompactPosn, inputStateToCState } from "../../states/state-t
 import { boardPosnToInputPosn } from "../../utils/utility-functions";
 import { prelim1InputState } from "../../states/input-state/input-state-examples"
 
-const readline = require('readline');
+//const readline = require('readline');
 
 // Compiles all the lines from
 // STDIN and sends to `xjson`
-export function main(): void {
+/*export function main(): void {
   let lines: string[] = []
   let readLine = readline.createInterface({
     input: process.stdin,
@@ -22,9 +22,9 @@ export function main(): void {
   readLine.on('close', () => {
     console.log(JSON.stringify(xStrategy(JSON.parse(lines.join("\n")) as DepthState)))
   });
-}
+}*/
 
-function xStrategy(depthState: DepthState) {
+export function xStrategy(depthState: DepthState) {
   let [depth, inputState]: [D, InputState] = [depthState[0], depthState[1]];
   let gameTree: GameTree = createGameTree(cStateToGameState(inputStateToCState(inputState)));
 
@@ -43,7 +43,7 @@ function xStrategy(depthState: DepthState) {
 }
 
 
-main();
+//main();
 
 // TODO: remove these before submission. 
 // console.log("best action", getBestAction([cStateToGameState(state0), () => getValidSubStates(cStateToGameState(state0))], 3))

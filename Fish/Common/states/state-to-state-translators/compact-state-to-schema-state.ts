@@ -1,4 +1,4 @@
-import { CState, CBoard } from "../compact-state/compact-state-data-definition";
+import { CState, CBoard, CScores } from "../compact-state/compact-state-data-definition";
 import { GET__CStageFromCState, GET__CBoardFromCState, GET__CScoresFromCState, GET__CPenguinFromCScore, GET__CScoreNumFromCScore } from "../compact-state/compact-state-selectors";
 import { ScoreSchema, StateSchema } from "../schema-state/schema-state-data-definition"
 
@@ -17,6 +17,7 @@ export function cStateToSchema(cState: CState): StateSchema {
     cScores.map(score => new ScoreSchema(GET__CPenguinFromCScore(score), GET__CScoreNumFromCScore(score)))
   )
 }
+
 
 
 /**

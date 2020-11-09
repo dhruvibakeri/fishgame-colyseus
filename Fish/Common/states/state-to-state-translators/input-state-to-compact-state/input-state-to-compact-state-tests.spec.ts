@@ -8,7 +8,7 @@ import { prelim1, prelim2 } from "../../compact-state/compact-state-examples";
 
 const U = "unusable"
 
-const input_board_1: InputBoard = [
+const input_board_1: InputBoard = [ 
   [0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0],
   [0, 0, 1, 0, 0],

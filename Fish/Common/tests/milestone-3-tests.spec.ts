@@ -23,9 +23,9 @@ const ex1_out: number = 1
 const ex10_in: InputBoardPosn = {
   "board": [
     [2, 0, 0],
+      [2, 2, 2],
     [2, 2, 2],
-    [2, 2, 2],
-    [2, 2, 2],
+      [2, 2, 2],
     [0, 0, 2]
   ],
   "position": [2, 1]

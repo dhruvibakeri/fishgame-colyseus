@@ -1,4 +1,4 @@
-import { getReachable } from "../../states/compact-state/compact-board-reachable";
+import { getReachable, getReachableNeighbours } from "../../states/compact-state/compact-board-reachable";
 import { CBoard, CPosn } from "../../states/compact-state/compact-state-data-definition";
 import { compactPosnToBoardPosn } from "../../states/compact-state/compact-state-interface";
 import { InputBoardPosn } from "../../states/input-state/input-state-data-definition";
@@ -14,4 +14,4 @@ export function xBoard(boardPosn: InputBoardPosn): number {
   let cPos: CPosn = inputPosnToCompactPosn(boardPosn.position)
   let bPosn: BoardPosn = compactPosnToBoardPosn(cPos);
   return getReachable(cBoard, bPosn).length;
-}
+} 

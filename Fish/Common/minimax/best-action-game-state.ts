@@ -6,6 +6,7 @@ import { PRED_isGameState, PRED_isPenguinSpace } from "../states/game-state/game
 import { CState } from "../states/compact-state/compact-state-data-definition";
 import { cStateToGameState } from "../states/state-to-state-translators/compact-state-to-game-state";
 import { BoardPosn } from "../utils/other-data-definitions";
+import { getPenguinPositionsForGameBoard } from "../states/game-state/game-state-functions";
 
 /**
  * This file implements point #2 of the Programming Task in the assignment:
@@ -197,22 +198,17 @@ export function getFromTo(
   nextState: GameState,
   p: PenguinColor): [BoardPosn, BoardPosn] | false {
   const prevBoard: Board = GET_GameStateBoard(prevState)
-  const nextBoard: Board = GET_GameStateBoard(nextState)
+  const player : Player = GET_GameStateNextToPlace(prevState)
 
-  const prevPenguinPosns: BoardPosn[] = givenPenguinPosns(prevBoard, p)
-  const nextPenguinPosns: BoardPosn[] = givenPenguinPosns(nextBoard, p)
+  const prevPenguinPosns: BoardPosn[] = getPenguinPositionsForGameBoard(player, prevState)
+  const nextPenguinPosns: BoardPosn[] = getPenguinPositionsForGameBoard(player, nextState)
 
   for (let i = 0; i < prevPenguinPosns.length; i++) {
-    if (boardPosEq(prevPenguinPosns[i], nextPenguinPosns[i])) {
-      prevPenguinPosns.splice(i, 1);
-      nextPenguinPosns.splice(i, 1);
-    } else {
       for (let j = 0; j < nextPenguinPosns.length; j++) {
         if (isValidMove(prevPenguinPosns[i], nextPenguinPosns[j], prevBoard)) {
           return [prevPenguinPosns[i], nextPenguinPosns[j]]
         }
       }
-    }
   }
   return false
 }

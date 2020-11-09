@@ -8,6 +8,8 @@ import { getBestAction, Move } from '../minimax/best-action-game-state';
 import { DEFAULT_BOARD_COLS, DEFAULT_BOARD_ROWS, DEFAULT_SIZE } from "../graphics/render-frontend"
 import * as Colyseus from "colyseus.js";
 import { rerender } from './frontend-canvas';
+import { cStateToGameState } from '../states/state-to-state-translators/compact-state-to-game-state';
+import { GET__CScoresFromCState } from '../states/compact-state/compact-state-selectors';
 
 
 // Connecting to the server(from Lib docs)
@@ -32,6 +34,7 @@ ${JSON.stringify(cState)}
        -*-*-`)
 
     rerender(DEFAULT_SIZE, DEFAULT_BOARD_ROWS, DEFAULT_BOARD_COLS, cState)
+
   });
 });
 
@@ -46,7 +49,7 @@ export function placementStrategy(state: GameState): BoardPosn | IllegalAction {
 // GameState Number -> [BoardPosn,BoardPosn]
 // A player can use this function while deciding a move for its penguin to move
 // it according to the best gain strategy
-export function getBestActionStrategy(state: GameState, depth: number): [BoardPosn, BoardPosn] {
+export function getBestActionStrategy(state: GameState, depth: number): Move {
   return getBestAction([state, () => { return getValidSubStatesForGameBoard(state) }], depth)
 }
 

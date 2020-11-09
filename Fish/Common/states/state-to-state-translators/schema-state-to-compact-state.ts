@@ -19,11 +19,13 @@ export function schemaToCompact(schema: StateSchema): CState {
   function boardFrom2DArr(arr2D: string[][]): CBoard {
     return arr2D.map(row => row.map(strToCSpace))
   }
+  
+  const dupBoard : string[] = [...schema.board]
 
   // returns a CState
   return [
     schema.gamestage as CStage,
-    boardFrom2DArr(make2DArrFrom1DArr(schema.board, schema.rowlen)) as CBoard,
+    boardFrom2DArr(make2DArrFrom1DArr(dupBoard, schema.rowlen)) as CBoard,
     schema.players.map(player => [player.penguincolor, player.score]) as CScores
   ]
 }

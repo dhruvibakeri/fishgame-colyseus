@@ -1,5 +1,4 @@
 import { Room, Client, nosync } from "colyseus";
-import { ex2, state0 } from "../minimax/best-action-game-state";
 import { dimToBinBoard } from "../states/binary-state/dimension-to-binary-board";
 import { CBoard, CScores, CSpace, CState } from "../states/compact-state/compact-state-data-definition";
 import { GET__CBoardFromCState, GET__CScoresFromCState, GET__CStageFromCState } from "../states/compact-state/compact-state-selectors";
@@ -74,20 +73,21 @@ export class FishRoom extends Room<StateSchema> {
     // (if they join before the game starts)
     this.setState(this.initState);
 
-    // this updates the list of players as clients join the room.
-    this.state.players = this.players;
-
     // if there are 2 or more clients that have joined,
     // the game begins
 
-    if (this.clients.length > 1) {
+      // if the referee receives a "place" message
+      this.onMessage("place", (client, message) => {
 
-      // we will convert from the Colyseus Schema state representation to our GameState representation
+        // we will convert from the Colyseus Schema state representation to our GameState representation
       // so we can use our GameState interface to perform referee functions.
       let currentGameState: GameState = cStateToGameState(schemaToCompact(this.state))
+      console.log("CURRENT",currentGameState)
+      console.log("PLACE MESSAGE",message)
 
+      if(this.players.length > 1) {
       // we first check if the game is OVER according to the currentGameState
-      if (isGameOver(currentGameState)) {
+      if (GET_GameStateKind(currentGameState) === "playing" && isGameOver(currentGameState)) {
         let endGameState = addFinalScore(currentGameState)
         // we create a GameState at the "done" stage which contains
         // the final positions and scores of all players
@@ -95,14 +95,15 @@ export class FishRoom extends Room<StateSchema> {
         // we then update our current Colyseus Schema state with this state
         changeState(newState, this.state)
       }
+      else {
 
-      // if the referee receives a "place" message
-      this.onMessage("place", (client, message) => {
         let currentPlayer: Player = GET_GameStateNextToPlace(currentGameState)
         let currentTurn: PenguinColor = GET_PlayerColor(currentPlayer)
         let clientColor: PenguinColor = <PenguinColor>this.playerMap.get(client.sessionId)
         let action: Action = { kind: "place", posn: message, player: currentPlayer }
-
+        console.log("clientcolor", clientColor)
+        console.log(currentTurn)
+        console.log(clientColor === currentTurn)
         // the referee will check if the message has been received from a client
         // whose turn it currently is
         // the referee will also check if the desired placement position is a
@@ -125,10 +126,29 @@ export class FishRoom extends Room<StateSchema> {
           this.kickedPlayers.push(client.sessionId)
         }
 
-      });
+      }
+    }
+  });
 
       // if the referee receives a "move" message
       this.onMessage("move", (client, message) => {
+
+        // we will convert from the Colyseus Schema state representation to our GameState representation
+      // so we can use our GameState interface to perform referee functions.
+      let currentGameState: GameState = cStateToGameState(schemaToCompact(this.state))
+      console.log("CURRENT",currentGameState)
+
+      if(this.players.length > 1) {
+      // we first check if the game is OVER according to the currentGameState
+      if (GET_GameStateKind(currentGameState) === "playing" && isGameOver(currentGameState)) {
+        let endGameState = addFinalScore(currentGameState)
+        // we create a GameState at the "done" stage which contains
+        // the final positions and scores of all players
+        let newState: GameState = MAKE_GameStateDone("done", GET_GameStateBoard(endGameState), GET_GameStatePlayers(endGameState))
+        // we then update our current Colyseus Schema state with this state
+        changeState(newState, this.state)
+      }
+       else {
         let currentPlayer: Player = GET_GameStateNextToPlace(currentGameState)
         let currentTurn: PenguinColor = GET_PlayerColor(currentPlayer)
         let clientColor: PenguinColor = <PenguinColor>this.playerMap.get(client.sessionId)
@@ -154,8 +174,9 @@ export class FishRoom extends Room<StateSchema> {
           changeState(newState, this.state)
           this.kickedPlayers.push(client.sessionId)
         }
-      });
+      }
     }
+  });
   }
 
   // everytime a client joins the room, the referee assigns the client
@@ -167,6 +188,9 @@ export class FishRoom extends Room<StateSchema> {
     this.colors.splice(randIdx, 1)
     this.players.push(new ScoreSchema(clientColor, 0))
     this.playerMap.set(client.sessionId, clientColor);
+    // this updates the list of players as clients join the room.
+    this.state.players = this.players;
+    
   }
 
   onLeave(Client) {

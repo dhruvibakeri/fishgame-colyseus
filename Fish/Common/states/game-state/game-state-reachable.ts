@@ -78,6 +78,54 @@ export function getPathInDirection(
   return res;
 }
 
+// FOR TESTING
+// gets board positions of reachable neighbours
+export function getReachableNeighbours(board : Board, boardPosn : BoardPosn) {
+  let paths = getPathsNeighbours(board, boardPosn);
+  return [
+      ...paths.north,
+      ...paths.northEast,
+      ...paths.southEast,
+      ...paths.south,
+      ...paths.southWest,
+      ...paths.northWest
+  ];
+}
+
+// Board BoardPosn -> Paths
+// gets a `Path` object from `booardPosn` in `baord`.
+function getPathsNeighbours(board : Board, boardCoord : BoardPosn)  {
+  return {
+      "north": getPathInDirection1(board, boardCoord, getNeighborNorth),
+      "south": getPathInDirection1(board, boardCoord, getNeighborSouth),
+      "northWest": getPathInDirection1(board, boardCoord, getNeighborNorthWest),
+      "northEast": getPathInDirection1(board, boardCoord, getNeighborNorthEast),
+      "southWest": getPathInDirection1(board, boardCoord, getNeighborSouthWest),
+      "southEast": getPathInDirection1(board, boardCoord, getNeighborSouthEast)
+  };
+}
+
+// BoardPosn [BoardPosn -> BoardPosn] -> BoardPosn[]
+// longest path in a direction that getNeighborInDirection
+// generates the neighbors for.
+export function getPathInDirection1(
+  board: Board,
+  posn: BoardPosn,
+  getNeighborInDirection: (p: BoardPosn) => BoardPosn
+) {
+  let res = [];
+  let next = getNeighborInDirection(posn);
+  // TERMINATION ARGUMENT: 
+  // getNeighborInDirection: Number Number -> BoardPosn
+  // will eventually hit the edge of the board or
+  // water or another player (which are unreachable).
+  if (!isNeighborUnreachable(board, next)) {
+      res.push(next);
+  }
+  return res;
+}
+// FOR TESTING
+
 /**
  * Checks if a neighbouring tile is not a valid move
  */
