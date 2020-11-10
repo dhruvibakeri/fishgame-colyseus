@@ -51,7 +51,7 @@ function addFinalScore(state) {
     var players = game_state_selectors_1.GET_GameStatePlayers(state);
     var nplayers = [];
     for (var i = 0; i < players.length; i++) {
-        var nscore = players[i].score + getTotalFishesWithPenguin(players[i].penguinColor, board);
+        var nscore = players[i].score; //+ getTotalFishesWithPenguin(players[i].penguinColor, board)
         nplayers.push(game_state_constructors_1.MAKE_Player(players[i].penguinColor, nscore, players[i].playerStatus));
     }
     return game_state_constructors_1.MAKE_GameState(game_state_constructors_1.MAKE_GameStatePlaying("playing", board, game_state_selectors_1.GET_GameStateNextToPlace(state), nplayers));

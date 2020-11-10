@@ -5,6 +5,9 @@ import { BoardPosn } from "../utils/other-data-definitions";
 import { GET_GameStateBoard, GET_GameStateKind, GET_GameStateNextToPlace, GET_GameStatePlayers, GET_OnTile, GET_OnUsableSpace, GET_PlayerColor, GET_totalFishes } from "../states/game-state/game-state-selectors";
 import { PRED_isFishSpace, PRED_isGameState } from "../states/game-state/game-state-predicates";
 import { MAKE_GameState, MAKE_GameStatePlacing, MAKE_HoleSpace, MAKE_PenguinSpace } from "../states/game-state/game-state-constructors";
+import { boardPosnToInputPosn } from "../utils/utility-functions";
+import { inputPosnToCompactPosn } from "../states/state-to-state-translators/input-state-to-compact-state/input-state-to-compact-state";
+import { compactPosnToBoardPosn } from "../states/compact-state/compact-state-interface";
 
 
 //------------------------------------- DATA DEFINITION -----------------------------------------------------------
@@ -50,7 +53,7 @@ import { MAKE_GameState, MAKE_GameStatePlacing, MAKE_HoleSpace, MAKE_PenguinSpac
 
 export type BoardMove = [BoardPosn, BoardPosn] | "SKIP"
 
-export type SubGameTree = [GameState, () => GameTree[]]
+export type SubGameTree = [GameState, () => GameTree[]] 
 
 export type GameTree = GameState | SubGameTree;
 
@@ -172,17 +175,23 @@ export function makeAllMovesForAPenguin(fromPosn: BoardPosn, gs: GameState): Gam
 
   let reachablePoints: BoardPosn[] = getReachable(GET_GameStateBoard(gs), fromPosn)
 
-  reachablePoints.sort(function (a, b) {
-    return a.row == b.row ? a.col - b.col : a.row - b.row;
+  // convert to input board posn
+  let inputReachablePoints = reachablePoints.map((p) => { return boardPosnToInputPosn(p)})
+
+  inputReachablePoints.sort(function (a, b) {
+    return a[0] == b[0]? a[1] - b[1] : a[0] - b[0];
   });
 
+  // convert to board posn
+  let sortedReachablePoints = inputReachablePoints.map((p) => { return compactPosnToBoardPosn(inputPosnToCompactPosn(p))})
+ 
   // accounts for SKIPS
-  if (reachablePoints.length == 0) {
+  if (sortedReachablePoints.length == 0) {
     let skipState = moveGameState(gs, "SKIP")
     res.push([skipState, () => { return getValidSubStates(skipState) }])
   }
   else {
-    reachablePoints.forEach(p => {
+    sortedReachablePoints.forEach(p => {
       let moveState = moveGameState(gs, [fromPosn, p])
       res.push([moveState, () => { return getValidSubStates(moveState) }])
 

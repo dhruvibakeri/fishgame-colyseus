@@ -4,8 +4,8 @@ import { prelim1, prelim2, state0 } from "../../states/compact-state/compact-sta
 import { GameState } from "../../states/game-state/game-state-data-definition";
 import { D, DepthState, InputAction, InputPosition, InputState } from "../../states/input-state/input-state-data-definition";
 import { cStateToGameState } from "../../states/state-to-state-translators/compact-state-to-game-state";
-import { inputPosnToCompactPosn, inputStateToCState } from "../../states/state-to-state-translators/input-state-to-compact-state/input-state-to-compact-state";
-import { boardPosnToInputPosn } from "../../utils/utility-functions";
+import { compactPosnToInputPosn, inputPosnToCompactPosn, inputStateToCState } from "../../states/state-to-state-translators/input-state-to-compact-state/input-state-to-compact-state";
+import { boardPosnToCompactPosn, boardPosnToInputPosn } from "../../utils/utility-functions";
 import { prelim1InputState } from "../../states/input-state/input-state-examples"
 
 //const readline = require('readline');
@@ -35,8 +35,8 @@ export function xStrategy(depthState: DepthState) {
     return action;
   } else {
     let defMove: DefMove = maybeBoardPosn;
-    let fromPosn: InputPosition = boardPosnToInputPosn(getFromPosnFromDefMove(defMove));
-    let toPosn: InputPosition = boardPosnToInputPosn(getToPosnFromDefMove(defMove));
+    let fromPosn: InputPosition = compactPosnToInputPosn(boardPosnToCompactPosn(getFromPosnFromDefMove(defMove)));
+    let toPosn: InputPosition = compactPosnToInputPosn(boardPosnToCompactPosn(getToPosnFromDefMove(defMove)));
     let action: [InputPosition, InputPosition] = [fromPosn, toPosn]
     return action;
   }

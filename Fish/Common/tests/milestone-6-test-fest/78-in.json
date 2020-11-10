@@ -1,0 +1,27 @@
+[
+    1,
+    {
+        "players":[
+            {
+                "places":[[3,1],[4,2]],
+                "score":0,
+                "color":"white"
+            },
+            {
+                "places":[[0,0],[1,1]],
+                "score":0,
+                "color":"red"
+            },
+            {
+                "places":[[1,2],[2,2]],
+                "score":0,
+                "color":"black"
+            },
+            {
+                "places":[[0,2],[3,2]],
+                "score":0,
+                "color":"brown"
+            }],
+        "board":[[1,0,1],[0,3, 3],[0,0,1],[1,1,1], [4, 0, 3]]
+    }
+]  

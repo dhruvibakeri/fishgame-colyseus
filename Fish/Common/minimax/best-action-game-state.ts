@@ -7,6 +7,7 @@ import { CState } from "../states/compact-state/compact-state-data-definition";
 import { cStateToGameState } from "../states/state-to-state-translators/compact-state-to-game-state";
 import { BoardPosn } from "../utils/other-data-definitions";
 import { getPenguinPositionsForGameBoard } from "../states/game-state/game-state-functions";
+import { stateToCState } from "../states/state-to-state-translators/game-state-to-compact-game-state";
 
 /**
  * This file implements point #2 of the Programming Task in the assignment:
@@ -111,8 +112,8 @@ export function getBestAction(
 function minimax(
   position: GameTree,
   depth: number,
-  maximizingPlayer: PenguinColor,
-  mainPlayer: PenguinColor,
+  maximizingPlayer: PenguinColor, // player who's turn it is
+  mainPlayer: PenguinColor, // the player who's score we want to maximize
   maximizingActions: Move[]
 ): [number, Move[]] {
 
@@ -124,11 +125,12 @@ function minimax(
 
   let substates = getValidSubStatesForGameBoard(getStateFromTree(position))
 
+
   if (mainPlayer === maximizingPlayer) {
 
     let maxEval = Number.NEGATIVE_INFINITY;
-
     substates.forEach(childPosition => {
+      
       let ev: number = miniMaxResToStaticEvaluation(minimax(
         childPosition,
         depth - 1,
@@ -136,12 +138,27 @@ function minimax(
         mainPlayer,
         maximizingActions
       ));
+
       if (ev > maxEval) {
+       
         action = (getFromTo(getStateFromTree(position), getStateFromTree(childPosition), maximizingPlayer))
+        
       }
+      
       maxEval = Math.max(maxEval, ev);
     });
-    return [maxEval, [...maximizingActions, action]];
+
+    if(action === false) {
+      for(let i = 0; i < substates.length; i++) {
+      let temp_action : Move = (getFromTo(getStateFromTree(position), getStateFromTree(substates[i]), maximizingPlayer))
+      if(temp_action != false) {
+        action = temp_action
+        break;
+      }
+      }
+    }
+
+    return [maxEval,  [...maximizingActions, action]];
   }
   else {
     let minEval = Number.POSITIVE_INFINITY;
@@ -204,11 +221,13 @@ export function getFromTo(
   const nextPenguinPosns: BoardPosn[] = getPenguinPositionsForGameBoard(player, nextState)
 
   for (let i = 0; i < prevPenguinPosns.length; i++) {
+    if( !isInReachable(nextPenguinPosns, prevPenguinPosns[i])) {
       for (let j = 0; j < nextPenguinPosns.length; j++) {
         if (isValidMove(prevPenguinPosns[i], nextPenguinPosns[j], prevBoard)) {
           return [prevPenguinPosns[i], nextPenguinPosns[j]]
         }
       }
+    }
   }
   return false
 }

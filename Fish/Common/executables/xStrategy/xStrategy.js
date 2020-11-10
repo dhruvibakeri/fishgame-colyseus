@@ -6,7 +6,7 @@ var best_action_game_state_1 = require("../../minimax/best-action-game-state");
 var compact_state_to_game_state_1 = require("../../states/state-to-state-translators/compact-state-to-game-state");
 var input_state_to_compact_state_1 = require("../../states/state-to-state-translators/input-state-to-compact-state/input-state-to-compact-state");
 var utility_functions_1 = require("../../utils/utility-functions");
-var readline = require('readline');
+//const readline = require('readline');
 // Compiles all the lines from
 // STDIN and sends to `xjson`
 /*export function main(): void {
@@ -30,8 +30,8 @@ function xStrategy(depthState) {
     }
     else {
         var defMove = maybeBoardPosn;
-        var fromPosn = utility_functions_1.boardPosnToInputPosn(best_action_game_state_1.getFromPosnFromMove(defMove));
-        var toPosn = utility_functions_1.boardPosnToInputPosn(best_action_game_state_1.getToPosnFromMove(defMove));
+        var fromPosn = input_state_to_compact_state_1.compactPosnToInputPosn(utility_functions_1.boardPosnToCompactPosn(best_action_game_state_1.getFromPosnFromMove(defMove)));
+        var toPosn = input_state_to_compact_state_1.compactPosnToInputPosn(utility_functions_1.boardPosnToCompactPosn(best_action_game_state_1.getToPosnFromMove(defMove)));
         var action = [fromPosn, toPosn];
         return action;
     }

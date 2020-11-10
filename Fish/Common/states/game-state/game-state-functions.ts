@@ -48,7 +48,7 @@ export function addFinalScore(state: GameState): GameState {
   const players: Players = GET_GameStatePlayers(state)
   const nplayers: Players = []
   for (let i = 0; i < players.length; i++) {
-    let nscore = players[i].score + getTotalFishesWithPenguin(players[i].penguinColor, board)
+    let nscore = players[i].score //+ getTotalFishesWithPenguin(players[i].penguinColor, board)
     nplayers.push(MAKE_Player(players[i].penguinColor, nscore, players[i].playerStatus))
   }
   return MAKE_GameState(MAKE_GameStatePlaying("playing", board, GET_GameStateNextToPlace(state), nplayers))

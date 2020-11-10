@@ -1,0 +1,1 @@
+[2,{"players":[{"places":[[0,0],[1,0]],"score":2,"color":"black"}, {"places":[[3,0],[3,2]],"score":3,"color":"white"}, {"places":[[4,1],[4,2]],"score":3,"color":"red"}, {"places":[[4,4],[2,0]],"score":1,"color":"brown"}],"board":[[5, 0,2, 3],[4,4,1, 5],[5],[5,4,3,0,0], [3, 3, 3, 1, 2]]}]

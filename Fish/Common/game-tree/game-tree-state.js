@@ -13,6 +13,9 @@ var game_state_reachable_1 = require("../states/game-state/game-state-reachable"
 var game_state_selectors_1 = require("../states/game-state/game-state-selectors");
 var game_state_predicates_1 = require("../states/game-state/game-state-predicates");
 var game_state_constructors_1 = require("../states/game-state/game-state-constructors");
+var utility_functions_1 = require("../utils/utility-functions");
+var input_state_to_compact_state_1 = require("../states/state-to-state-translators/input-state-to-compact-state/input-state-to-compact-state");
+var compact_state_interface_1 = require("../states/compact-state/compact-state-interface");
 // GameTree -> GameState
 // gets the parent of the tree(current GameState)
 function getStateFromTree(gameTree) {
@@ -110,16 +113,20 @@ exports.getValidSubStates = getValidSubStates;
 function makeAllMovesForAPenguin(fromPosn, gs) {
     var res = [];
     var reachablePoints = game_state_reachable_1.getReachable(game_state_selectors_1.GET_GameStateBoard(gs), fromPosn);
-    reachablePoints.sort(function (a, b) {
-        return a.row == b.row ? a.col - b.col : a.row - b.row;
+    // convert to input board posn
+    var inputReachablePoints = reachablePoints.map(function (p) { return utility_functions_1.boardPosnToInputPosn(p); });
+    inputReachablePoints.sort(function (a, b) {
+        return a[0] == b[0] ? a[1] - b[1] : a[0] - b[0];
     });
+    // convert to board posn
+    var sortedReachablePoints = inputReachablePoints.map(function (p) { return compact_state_interface_1.compactPosnToBoardPosn(input_state_to_compact_state_1.inputPosnToCompactPosn(p)); });
     // accounts for SKIPS
-    if (reachablePoints.length == 0) {
+    if (sortedReachablePoints.length == 0) {
         var skipState_1 = game_state_functions_1.moveGameState(gs, "SKIP");
         res.push([skipState_1, function () { return getValidSubStates(skipState_1); }]);
     }
     else {
-        reachablePoints.forEach(function (p) {
+        sortedReachablePoints.forEach(function (p) {
             var moveState = game_state_functions_1.moveGameState(gs, [fromPosn, p]);
             res.push([moveState, function () { return getValidSubStates(moveState); }]);
         });

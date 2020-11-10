@@ -69,7 +69,9 @@ exports.getBestAction = getBestAction;
 //GameTree Number PenguinColor PenguinColor Move[]-> [number, [BoardPosn, BoarPosn]]
 //Returns a tuple of [Max Score for 'depth' turns using the strategy, best action to achieve that max score]
 // TODO: split this into mutually recursive helpers. 
-function minimax(position, depth, maximizingPlayer, mainPlayer, maximizingActions) {
+function minimax(position, depth, maximizingPlayer, // player who's turn it is
+mainPlayer, // the player who's score we want to maximize
+maximizingActions) {
     var action = false;
     if (depth === 0 || game_state_predicates_1.PRED_isGameState(position)) {
         return [staticEvaluation(mainPlayer, game_tree_state_1.getStateFromTree(position)), maximizingActions];
@@ -84,6 +86,15 @@ function minimax(position, depth, maximizingPlayer, mainPlayer, maximizingAction
             }
             maxEval_1 = Math.max(maxEval_1, ev);
         });
+        if (action === false) {
+            for (var i = 0; i < substates.length; i++) {
+                var temp_action = (getFromTo(game_tree_state_1.getStateFromTree(position), game_tree_state_1.getStateFromTree(substates[i]), maximizingPlayer));
+                if (temp_action != false) {
+                    action = temp_action;
+                    break;
+                }
+            }
+        }
         return [maxEval_1, __spreadArrays(maximizingActions, [action])];
     }
     else {
@@ -127,9 +138,11 @@ function getFromTo(prevState, nextState, p) {
     var prevPenguinPosns = game_state_functions_1.getPenguinPositionsForGameBoard(player, prevState);
     var nextPenguinPosns = game_state_functions_1.getPenguinPositionsForGameBoard(player, nextState);
     for (var i = 0; i < prevPenguinPosns.length; i++) {
-        for (var j = 0; j < nextPenguinPosns.length; j++) {
-            if (isValidMove(prevPenguinPosns[i], nextPenguinPosns[j], prevBoard)) {
-                return [prevPenguinPosns[i], nextPenguinPosns[j]];
+        if (!isInReachable(nextPenguinPosns, prevPenguinPosns[i])) {
+            for (var j = 0; j < nextPenguinPosns.length; j++) {
+                if (isValidMove(prevPenguinPosns[i], nextPenguinPosns[j], prevBoard)) {
+                    return [prevPenguinPosns[i], nextPenguinPosns[j]];
+                }
             }
         }
     }
