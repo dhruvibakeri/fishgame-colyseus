@@ -16,9 +16,9 @@ export const ICE_TILE_BORDER = 'rgba(255, 255, 255, 1.00)'
 export const CANVAS_SELECTION_COLOR = 'rgba(190, 211, 229, 0.40)'
 export const CANVAS_BACKGROUND_COLOR = 'rgb(190, 190, 190)'
 
-export const DEFAULT_SIZE = 45
-export const DEFAULT_BOARD_ROWS = 5;
-export const DEFAULT_BOARD_COLS = 6;
+export const DEFAULT_SIZE = 55
+export const DEFAULT_BOARD_ROWS = 6;
+export const DEFAULT_BOARD_COLS = 5;
 
 
 

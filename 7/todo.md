@@ -1,4 +1,10 @@
 # -- MILESTONE 2 ---
+
+- add tests for game-state functions
+- restructure the files 
+- add what I added to fix milestone 6 edge case
+- rename data type for GameTree | SubTree
+
 Code Inspection 60/90
 ------------------------------
 

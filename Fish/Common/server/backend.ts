@@ -10,7 +10,7 @@ import { Schema, ArraySchema, type } from "@colyseus/schema";
 import { schemaToCompact } from "../states/state-to-state-translators/schema-state-to-compact-state";
 import { cStateToGameState } from "../states/state-to-state-translators/compact-state-to-game-state";
 import { GET_GameStateBoard, GET_GameStateKind, GET_GameStateNextToPlace, GET_GameStatePlayers, GET_PlayerColor } from "../states/game-state/game-state-selectors";
-import { addFinalScore, getPenguinPositions, moveGameState, placePenguinAtPosn } from "../states/game-state/game-state-functions";
+import { addFinalScore, getAllPenguinPositionsForGameBoard, getPenguinPositions, moveGameState, placePenguinAtPosn } from "../states/game-state/game-state-functions";
 import { Action, isGameOver, isValidAction } from "../game-tree/game-tree-state";
 import { stateToCState } from "../states/state-to-state-translators/game-state-to-compact-game-state";
 import { BoardPosn } from "../utils/other-data-definitions";
@@ -34,8 +34,8 @@ export class FishRoom extends Room<StateSchema> {
   // rows of column dimensions of board
   // when tournament manager is implemented,
   // the referee will receive these from there
-  private DEFAULT_ROWS = 4;
-  private DEFAULT_COLS = 3;
+  private DEFAULT_ROWS = 6;
+  private DEFAULT_COLS = 5;
   private players: ScoreSchema[]
   private colors: PenguinColor[]
   private initBoard: CBoard
@@ -108,10 +108,14 @@ export class FishRoom extends Room<StateSchema> {
         // whose turn it currently is
         // the referee will also check if the desired placement position is a
         // valid position
-        if (clientColor === currentTurn && isValidAction(action, currentGameState)) {
+        if (GET_GameStateKind(currentGameState) === "placing" && clientColor === currentTurn && isValidAction(action, currentGameState)) {
           // if all is valid, referee will place the penguin at that positon
           let newState: GameState = placePenguinAtPosn(message, currentGameState)
           // then update our current Colyseus Schema state with the newState
+          console.log("PLACED?", allPenguinsPlaced(newState))  
+          if(allPenguinsPlaced(newState)) {
+              newState.gameStateKind = "playing"
+          }
           changeState(newState, this.state)
         }
         // if the message was sent out-of-turn or if it was invalid,
@@ -120,7 +124,7 @@ export class FishRoom extends Room<StateSchema> {
         // then update our current Colyseus Schema state with the removed player state
         else {
           this.playerMap.delete(client.sessionId);
-          this.players.slice(getIdx(clientColor, this.players), 1)
+          this.players.splice(getIdx(clientColor, this.players), 1)
           let newState: GameState = removePenguin(clientColor, currentGameState)
           changeState(newState, this.state)
           this.kickedPlayers.push(client.sessionId)
@@ -137,6 +141,7 @@ export class FishRoom extends Room<StateSchema> {
       // so we can use our GameState interface to perform referee functions.
       let currentGameState: GameState = cStateToGameState(schemaToCompact(this.state))
       console.log("CURRENT",currentGameState)
+      console.log("MOVE MESSAGE",message)
 
       if(this.players.length > 1) {
       // we first check if the game is OVER according to the currentGameState
@@ -158,9 +163,15 @@ export class FishRoom extends Room<StateSchema> {
         // whose turn it currently is
         // the referee will also check if the desired move is a
         // valid move
-        if (clientColor === currentTurn && isValidAction(action, currentGameState)) {
+        console.log("IS VALID ACTION", isValidAction(action, currentGameState))
+        if (GET_GameStateKind(currentGameState) === "playing" && clientColor === currentTurn && isValidAction(action, currentGameState)) {
           let newState: GameState = moveGameState(currentGameState, message)
           // then update our current Colyseus Schema state with the newState
+          if(GET_GameStateKind(newState) === "playing" && isGameOver(newState)) {
+            let endGameState = addFinalScore(newState)
+            newState = MAKE_GameStateDone("done", GET_GameStateBoard(endGameState), GET_GameStatePlayers(endGameState))
+            console.log("GAME IS OVER")
+          }
           changeState(newState, this.state)
         }
         // if the message was sent out-of-turn or if it was invalid,
@@ -242,13 +253,15 @@ export function customizeState(state: CState, totalTiles: number): CState {
 // gets the index at which the player with the given penguinColor lies 
 // in the given list
 export function getIdx(col: PenguinColor, list: ScoreSchema[]): number {
-  for (let i = 0; i < list.length; i++) {
-    if (list[i].penguincolor === col) {
-      return i;
+  let res = 0
+  let i : number = 0;
+  list.forEach(element => {
+    if(element.penguincolor === col) {
+      res = i
     }
-  }
-  throw console.error("no such penguin in Players");
-
+    i = i + 1
+});
+  return res;
 }
 
 // PenguinColor Players -> Number
@@ -292,6 +305,16 @@ export function changeState(state: GameState, ourState: StateSchema): void {
   ourState.players = schemaState.players;
   ourState.rowlen = schemaState.rowlen;
 
+}
+
+export function allPenguinsPlaced(state : GameState) : boolean {
+  let noOfPlayers : number = GET_GameStatePlayers(state).length
+  let noOfPenguinsOnBoard : number = getAllPenguinPositionsForGameBoard(state).length
+  let noOfPenguinsAllowed : number = (6 - noOfPlayers) * noOfPlayers
+  console.log("no of players", noOfPlayers)
+  console.log("no of penguins on board", noOfPenguinsOnBoard)
+  console.log("no of penguins allowed", noOfPenguinsAllowed)
+  return noOfPenguinsOnBoard === noOfPenguinsAllowed
 }
 
 

@@ -209,7 +209,7 @@ export function isValidAction(action: Action, gs: GameState): boolean {
   switch (action.kind) {
     case "move":
       let posn: BoardMove = action.posn as [BoardPosn, BoardPosn]
-      return isValidMove(posn[0], posn[1], board)
+      return action.posn === "SKIP" || isValidMove(posn[0], posn[1], board)
     case "place":
       let posn_place: BoardPosn = action.posn as BoardPosn
       return PRED_isFishSpace(board[posn_place.row][posn_place.col])

@@ -117,9 +117,9 @@ export function getPathInDirection1(
   board: CBoard,
   posn: BoardPosn,
   getNeighborInDirection: (p: BoardPosn) => BoardPosn
-) {
-  let res = [];
-  let next = getNeighborInDirection(posn);
+) : BoardPosn[] {
+  let res : BoardPosn[] = [];
+  let next : BoardPosn = getNeighborInDirection(posn);
   // TERMINATION ARGUMENT: 
   // getNeighborInDirection: Number Number -> BoardPosn
   // will eventually hit the edge of the board or

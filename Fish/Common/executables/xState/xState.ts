@@ -26,7 +26,7 @@ export function xState(inputState: InputState) : InputState | false{
   let firstPenguinBoardPosn: BoardPosn = compactPosnToBoardPosn(firstPenguinCPosn);
   let inputGameState : GameState = cStateToGameState(inputStateToCState(inputState)) as GameStatePlaying
   let board: Board = inputGameState.board
-  let reachablePosns = getReachableNeighbours(board, firstPenguinBoardPosn);
+  let reachablePosns : BoardPosn[] = getReachableNeighbours(board, firstPenguinBoardPosn);
 
   if (reachablePosns.length === 0) {
     return false
