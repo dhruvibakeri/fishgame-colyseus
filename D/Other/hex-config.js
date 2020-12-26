@@ -1,1 +1,0 @@
-const size = 100

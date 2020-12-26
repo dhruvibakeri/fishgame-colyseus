@@ -13,7 +13,7 @@
     "start": "ts-node --project tsconfig.backend.json start-backend.ts",
     "test-milestone-3": "ts-mocha -p tsconfig.frontend.json tests/milestone-3-tests.spec.ts",
     "test-milestone-4": "ts-mocha -p tsconfig.frontend.json tests/milestone-4-tests.spec.ts",
-    "test-milestone-fests" : "ts-mocha -p tsconfig.frontend.json tests/*.spec.ts",
+    "test-milestone-fests": "ts-mocha -p tsconfig.frontend.json tests/*.spec.ts",
     "testthis": "ts-node --project tsconfig.backend.json executables/xStrategy/xStrategy.ts"
   },
   "repository": {
