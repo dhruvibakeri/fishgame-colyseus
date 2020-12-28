@@ -56,9 +56,9 @@ export function genHexConfig(
  * changes the cursor to pointer, and provides the coordinates for its position.
  */
 export function genImageConfig(
-  boardP: BoardPosn,
   imageX: number,
-  imageY: number
+  imageY: number,
+  boardP?: BoardPosn
 ) {
   return {
     boardPosn: boardP,
@@ -76,7 +76,7 @@ export function genImageConfig(
  * EFFECT: changes the fabric.canvas properties.
  * @returns void
  */
-function setCanvasConfig(fabricCanvas) {
+export function setCanvasConfig(fabricCanvas) {
   fabricCanvas.selectionColor = CANVAS_SELECTION_COLOR;
   fabricCanvas.backgroundColor = CANVAS_BACKGROUND_COLOR;
 }
@@ -113,7 +113,7 @@ export function render(
  * @param {PositiveNumber} width The width of the canvas to set.
  * @param {PositiveNumber} height The height of the canvas to set.
  */
-function setCanvasDimension(
+export function setCanvasDimension(
   width: number,
   height: number,
   htmlCanvas,

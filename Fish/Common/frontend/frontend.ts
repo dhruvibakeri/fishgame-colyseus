@@ -32,7 +32,7 @@ import {
 import { getReachable } from "../states/game-state/game-state-reachable";
 import { hasMovesLeft } from "../states/game-state/game-state-functions";
 
-let CURRENT_STATE: CState = ["placing", [], []];
+let CURRENT_STATE: CState = ["joining", [], []];
 
 // Connecting to the server(from Lib docs)
 //var host = window.document.location.host.replace(/:.*/, '');
@@ -74,10 +74,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   };
 
-  room.onMessage("skip", (message) => {
-    if (CURRENT_STATE[2][0][0] === message.color) {
-      movePenguin(room, "SKIP");
-    }
+  room.onStateChange.once((state) => {
+    let cState = schemaToCompact(state);
+    console.log("this is the first room state!", cState);
+    rerender(DEFAULT_SIZE, DEFAULT_BOARD_ROWS, DEFAULT_BOARD_COLS, cState);
+    rerender(DEFAULT_SIZE, DEFAULT_BOARD_ROWS, DEFAULT_BOARD_COLS, cState);
   });
 
   room.onStateChange((newState) => {
@@ -98,23 +99,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     rerender(DEFAULT_SIZE, DEFAULT_BOARD_ROWS, DEFAULT_BOARD_COLS, cState);
   });
 });
-
-/*client.joinOrCreate("fish").then((room: Colyseus.Room) => {
-  room.onStateChange((newState) => {
-    let cState = schemaToCompact(newState)
-
-    console.log(`
-newState.toJSON() ==>
-${JSON.stringify(newState.toJSON())}
-       -*-*-
-cState            ==>
-${JSON.stringify(cState)}
-       -*-*-`)
-
-    rerender(DEFAULT_SIZE, DEFAULT_BOARD_ROWS, DEFAULT_BOARD_COLS, cState)
-
-  });
-});*/
 
 // GameState Player -> BoardPosn | IllegalAction
 // A player can use this function while deciding a placement for its penguin to place

@@ -16,8 +16,11 @@ import {
   genHexConfig,
   genImageConfig,
   ICE_TILE_COLOR,
+  setCanvasConfig,
+  setCanvasDimension,
 } from "./render-frontend";
 import { BoardPosn, HexTile } from "../utils/other-data-definitions";
+import { BLACK } from "../states/game-state/game-state-data-definition";
 
 const PENGUIN_HEIGHT = 354; //px
 const PENGUIN_WIDTH = 214; //px
@@ -38,13 +41,6 @@ function renderHole(hex: HexTile, t: CSpace, canvas): void {
     genHexConfig(hex.posn, "grey", false)
   );
   canvas.add(fabricHole);
-  /*canvas.on("mouse:up", function (e) {
-    console.log("Event mouse:up Triggered", e.target.boardPosn);
-  });
-
-  canvas.on("mouse:down", function () {
-    console.log("Event mouse:down Triggered");
-  });*/
 }
 
 function renderBlankTile(hex: HexTile, t: CSpace, canvas): void {
@@ -71,32 +67,34 @@ function renderFishes(size: number, hex: HexTile, t: CSpace, canvas): void {
   let fishPosDown = size / 5;
   let fishPos = 0;
   // adds fish on the cur hex
-  for (let i = 0; i < t; i++) {
-    if (i % 2 == 0) {
-      let im = new fabric.Image(
-        fish,
-        genImageConfig(
-          hex.posn,
-          hex.corners[0].x + size,
-          hex.corners[0].y + fishPosUp
-        )
-      ).scale(size / 245);
-      canvas.add(im);
-    } else {
-      let im = new fabric.Image(
-        fish,
-        genImageConfig(
-          hex.posn,
-          hex.corners[0].x + size,
-          hex.corners[0].y - fishPosUp
-        )
-      ).scale(size / 245);
-      canvas.add(im);
-    }
+  fish.onload = function (img) {
+    for (let i = 0; i < t; i++) {
+      if (i % 2 == 0) {
+        let im = new fabric.Image(
+          fish,
+          genImageConfig(
+            hex.corners[0].x + size,
+            hex.corners[0].y + fishPosUp,
+            hex.posn
+          )
+        ).scale(size / 245);
+        canvas.add(im);
+      } else {
+        let im = new fabric.Image(
+          fish,
+          genImageConfig(
+            hex.corners[0].x + size,
+            hex.corners[0].y - fishPosUp,
+            hex.posn
+          )
+        ).scale(size / 245);
+        canvas.add(im);
+      }
 
-    fishPosUp += size / 5;
-    fishPosDown += size / 5;
-  }
+      fishPosUp += size / 5;
+      fishPosDown += size / 5;
+    }
+  };
 }
 
 function renderPenguin(size: number, hex: HexTile, t: CPenguin, canvas): void {
@@ -106,17 +104,77 @@ function renderPenguin(size: number, hex: HexTile, t: CPenguin, canvas): void {
       genHexConfig(hex.posn, ICE_TILE_COLOR, false)
     )
   );
-  const penguin = new Image();
-  penguin.src = ImportedData[t[0]];
-  let im = new fabric.Image(
-    penguin,
-    genImageConfig(
-      hex.posn,
-      hex.corners[0].x + size - size / 3,
-      hex.corners[0].y - size * 1.25
-    )
-  ).scale(size / 175);
-  canvas.add(im);
+
+  var penguinImg = new Image();
+  penguinImg.onload = function (img) {
+    let im = new fabric.Image(
+      penguinImg,
+      genImageConfig(
+        hex.corners[0].x + size - size / 3,
+        hex.corners[0].y - size * 1.25,
+        hex.posn
+      )
+    ).scale(size / 175);
+    canvas.add(im);
+  };
+  penguinImg.src = ImportedData[t[0]];
+}
+
+export function renderPenguinRoster(
+  cpenguins: CPenguin[],
+  htmlCanvas,
+  fabricCanvas
+) {
+  setCanvasConfig(fabricCanvas);
+  setCanvasDimension(100 * cpenguins.length, 100, htmlCanvas, fabricCanvas);
+  let i = 0;
+  let j = 0;
+  cpenguins.forEach((p) => {
+    var penguinImg = new Image();
+    penguinImg.onload = function (img) {
+      let im = new fabric.Image(penguinImg, {
+        left: 100 * i,
+        top: 0,
+        lockMovementY: true,
+        lockMovementX: true,
+        selectable: false,
+        hoverCursor: "pointer",
+      }).scale(45 / 175);
+      fabricCanvas.add(im);
+      i++;
+    };
+    penguinImg.src = ImportedData[p[0]];
+  });
+
+  cpenguins.forEach((p) => {
+    let text = new fabric.Text(p[1].toString(), {
+      left: j === 0 ? 55 : 155,
+      top: 30,
+      fontSize: 40,
+      lockMovementY: true,
+      lockMovementX: true,
+      selectable: false,
+      hoverCursor: "pointer",
+    });
+    fabricCanvas.add(text);
+    j++;
+  });
+
+  const rect = new fabric.Rect({
+    top: 0,
+    left: 0,
+    width: 96,
+    height: 96,
+    hasBorder: true,
+    stroke: "black",
+    strokeWidth: 4,
+    lockMovementY: true,
+    lockMovementX: true,
+    selectable: false,
+    fill: "transparent",
+  });
+
+  fabricCanvas.add(rect);
 }
 
 export function renderBoard(size: number, board: CBoard, canvas): void {

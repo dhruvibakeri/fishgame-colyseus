@@ -1,42 +1,47 @@
-import './styles/style.css';
-import ImportedData from './importData'
+import "./styles/style.css";
+import ImportedData from "./importData";
 import { fabric } from "fabric";
-import { render } from "../graphics/render-frontend"
-import { CState } from '../states/compact-state/compact-state-data-definition';
+import { render } from "../graphics/render-frontend";
+import { CState } from "../states/compact-state/compact-state-data-definition";
+import { renderPenguinRoster } from "../graphics/render-state";
 
-
-
-const BANNER_WIDTH = 600;
-const BANNER_HEIGHT = 185;
+const BANNER_WIDTH = 454.054054048;
+const BANNER_HEIGHT = 140;
 
 function addBannerAndCanvas() {
-
   // <p class="banner">
   //   <img src="assets/banner.jpg"
   //        width="600px">
   // </p>
   const bannerPara: HTMLParagraphElement = document.createElement("p");
-  bannerPara.id = "bannerPara"
+  bannerPara.id = "bannerPara";
   const banner: HTMLImageElement = new Image(BANNER_WIDTH, BANNER_HEIGHT);
   banner.src = ImportedData.banner;
   bannerPara.appendChild(banner);
   bannerPara.classList.add("banner");
   document.body.appendChild(bannerPara);
 
+  let canvasRoster: HTMLParagraphElement = document.createElement("p");
+  canvasRoster.id = "canvasRoster";
+  canvasRoster.align = "center";
+  const canvasRosterElem: HTMLCanvasElement = document.createElement("canvas");
+  canvasRosterElem.id = "mycanvasRoster";
+  canvasRoster.appendChild(canvasRosterElem);
+  document.body.appendChild(canvasRoster);
+
   // <p align="center">
   //  <canvas id="canvas">
   //  </canvas>
   // </p>
   let canvasPara: HTMLParagraphElement = document.createElement("p");
-  canvasPara.id = "canvasPara"
-  canvasPara.classList.add("canvasPara")
+  canvasPara.id = "canvasPara";
+  canvasPara.classList.add("canvasPara");
   canvasPara.align = "center";
   const canvasElem: HTMLCanvasElement = document.createElement("canvas");
   canvasElem.id = "mycanvas";
   canvasPara.appendChild(canvasElem);
-  document.body.appendChild(canvasPara)
+  document.body.appendChild(canvasPara);
 }
-
 
 function main() {
   addBannerAndCanvas();
@@ -45,14 +50,25 @@ function main() {
 main();
 
 /**
-* Clears out the existing canvas and renders a new one with the
-* given size, rows, and cols. Useful for testing.
-*/
-export function rerender(size: number, row: number, col: number, state: CState) {
-  window.document.getElementById("bannerPara")!.remove()
-  window.document.getElementById("canvasPara")!.remove()
+ * Clears out the existing canvas and renders a new one with the
+ * given size, rows, and cols. Useful for testing.
+ */
+export function rerender(
+  size: number,
+  row: number,
+  col: number,
+  state: CState
+) {
+  window.document.getElementById("bannerPara")!.remove();
+  window.document.getElementById("canvasPara")!.remove();
+  window.document.getElementById("canvasRoster")!.remove();
   addBannerAndCanvas();
-  let htmlCanvas = <HTMLCanvasElement>document.getElementById('mycanvas')
-  let fabricCanvas = new fabric.Canvas('mycanvas');
-  render(size, row, col, state, htmlCanvas, fabricCanvas)
+  let htmlCanvas = <HTMLCanvasElement>document.getElementById("mycanvas");
+  let fabricCanvas = new fabric.Canvas("mycanvas");
+  let htmlRosterCanvas = <HTMLCanvasElement>(
+    document.getElementById("mycanvasRoster")
+  );
+  let fabricRosterCanvas = new fabric.Canvas("mycanvasRoster");
+  renderPenguinRoster(state[2], htmlRosterCanvas, fabricRosterCanvas);
+  render(size, row, col, state, htmlCanvas, fabricCanvas);
 }

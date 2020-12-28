@@ -58,6 +58,7 @@ import {
 import { stateToCState } from "../states/state-to-state-translators/game-state-to-compact-game-state";
 import { BoardPosn } from "../utils/other-data-definitions";
 import { movePenguin } from "../frontend/frontend";
+
 // import { all_places } from "../../Player/strategy";
 // import { stateList } from "../states/compact-state/compact-state-examples";
 // import { cStateToSchema } from "../states/state-to-state-translators/compact-state-to-schema-state";
@@ -73,7 +74,7 @@ import { movePenguin } from "../frontend/frontend";
  */
 
 export class FishRoom extends Room<StateSchema> {
-  maxClients = 4;
+  maxClients = 2;
 
   // rows of column dimensions of board
   // when tournament manager is implemented,
@@ -266,14 +267,6 @@ export class FishRoom extends Room<StateSchema> {
               );
               console.log("GAME IS OVER");
             }
-            /*if (
-              !hasMovesLeft(
-                GET_GameStateNextToPlace(newState),
-                newState as GameStatePlaying
-              )
-            ) {
-              client.send("skip", { shouldSkip: true, color: clientColor });
-            }*/
             changeState(newState, this.state);
           }
           // if the message was sent out-of-turn or if it was invalid,
