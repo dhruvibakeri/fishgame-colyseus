@@ -12,6 +12,13 @@
   /* background: url('./assets/icon.png'); */
 }
 
+.same-line-elements {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
 body {
   background-color: rgb(183, 212, 230);
 }

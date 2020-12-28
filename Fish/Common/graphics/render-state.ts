@@ -16,6 +16,7 @@ import {
   genHexConfig,
   genImageConfig,
   ICE_TILE_COLOR,
+  MOUSE_OVER_COLOR,
   setCanvasConfig,
   setCanvasDimension,
 } from "./render-frontend";
@@ -47,7 +48,7 @@ function renderBlankTile(hex: HexTile, t: CSpace, canvas): void {
   canvas.add(
     new fabric.Polygon(
       hex.corners,
-      genHexConfig(hex.posn, ICE_TILE_COLOR, false)
+      genHexConfig(hex.posn, ICE_TILE_COLOR, true)
     )
   );
 }
@@ -56,7 +57,7 @@ function renderFishes(size: number, hex: HexTile, t: CSpace, canvas): void {
   canvas.add(
     new fabric.Polygon(
       hex.corners,
-      genHexConfig(hex.posn, ICE_TILE_COLOR, false)
+      genHexConfig(hex.posn, ICE_TILE_COLOR, true)
     )
   );
 
@@ -101,7 +102,7 @@ function renderPenguin(size: number, hex: HexTile, t: CPenguin, canvas): void {
   canvas.add(
     new fabric.Polygon(
       hex.corners,
-      genHexConfig(hex.posn, ICE_TILE_COLOR, false)
+      genHexConfig(hex.posn, ICE_TILE_COLOR, true)
     )
   );
 
@@ -177,6 +178,30 @@ export function renderPenguinRoster(
   fabricCanvas.add(rect);
 }
 
+export function renderChatBox(
+  messages: string[] | undefined,
+  htmlCanvas,
+  fabricCanvas
+) {
+  setCanvasConfig(fabricCanvas);
+  setCanvasDimension(210, 210, htmlCanvas, fabricCanvas);
+  let j = 0;
+  messages &&
+    messages.forEach((p) => {
+      let text = new fabric.Text(p, {
+        left: 0,
+        top: 20 * j,
+        fontSize: 15,
+        lockMovementY: true,
+        lockMovementX: true,
+        selectable: false,
+        hoverCursor: "pointer",
+      });
+      fabricCanvas.add(text);
+      j++;
+    });
+}
+
 export function renderBoard(size: number, board: CBoard, canvas): void {
   let hexes: HexTile[] = boardToHexTiles(
     size,
@@ -206,6 +231,9 @@ export function renderBoard(size: number, board: CBoard, canvas): void {
     console.log(PLACEMENT_POSN);
     if (flag) {
       FROM_POSN = e.target.boardPosn;
+      e.target.set("fill", MOUSE_OVER_COLOR);
+      e.target.set("clicked", true);
+      canvas.renderAll();
       console.log("from", FROM_POSN);
       flag = false;
     } else {
@@ -215,5 +243,18 @@ export function renderBoard(size: number, board: CBoard, canvas): void {
       flag = true;
     }
     console.log("can move", CAN_MOVE);
+  });
+
+  canvas.on("mouse:over", function (e) {
+    e.target.set("fill", MOUSE_OVER_COLOR);
+    canvas.renderAll();
+  });
+
+  canvas.on("mouse:out", function (e) {
+    e.target.set("fill", ICE_TILE_COLOR);
+    if (e.target.clicked) {
+      e.target.set("fill", MOUSE_OVER_COLOR);
+    }
+    canvas.renderAll();
   });
 }

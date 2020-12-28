@@ -34,6 +34,8 @@ import { hasMovesLeft } from "../states/game-state/game-state-functions";
 
 let CURRENT_STATE: CState = ["joining", [], []];
 
+let messages: string[] = [];
+
 // Connecting to the server(from Lib docs)
 //var host = window.document.location.host.replace(/:.*/, '');
 //var client = new Colyseus.Client(location.protocol.replace("http", "ws")
@@ -77,8 +79,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   room.onStateChange.once((state) => {
     let cState = schemaToCompact(state);
     console.log("this is the first room state!", cState);
-    rerender(DEFAULT_SIZE, DEFAULT_BOARD_ROWS, DEFAULT_BOARD_COLS, cState);
-    rerender(DEFAULT_SIZE, DEFAULT_BOARD_ROWS, DEFAULT_BOARD_COLS, cState);
+    rerender(
+      DEFAULT_SIZE,
+      DEFAULT_BOARD_ROWS,
+      DEFAULT_BOARD_COLS,
+      cState,
+      messages
+    );
+  });
+
+  room.onMessage("update", (message) => {
+    console.log("message received from server");
+    console.log(message);
+    messages.push(message);
   });
 
   room.onStateChange((newState) => {
@@ -96,7 +109,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       ${JSON.stringify(cState)}
        -*-*-`);
 
-    rerender(DEFAULT_SIZE, DEFAULT_BOARD_ROWS, DEFAULT_BOARD_COLS, cState);
+    rerender(
+      DEFAULT_SIZE,
+      DEFAULT_BOARD_ROWS,
+      DEFAULT_BOARD_COLS,
+      cState,
+      messages
+    );
   });
 });
 

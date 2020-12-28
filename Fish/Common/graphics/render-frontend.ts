@@ -32,13 +32,14 @@ export const DEFAULT_BOARD_COLS = 5;
 export function genHexConfig(
   boardP: BoardPosn,
   fill: string,
-  isEvented: boolean
+  isEvented: boolean,
+  clicked?: boolean
 ) {
   return {
     boardPosn: boardP,
     fill: fill,
     hasControls: false,
-    evented: true,
+    evented: isEvented,
     lockMovementY: true,
     lockMovementX: true,
     selectable: false,
@@ -47,6 +48,7 @@ export function genHexConfig(
     strokeWidth: 1,
     hoverCursor: "pointer",
     perPixelTargetFind: true,
+    clicked: clicked,
   };
 }
 
