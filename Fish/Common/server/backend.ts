@@ -2,6 +2,7 @@ import { Room, Client, nosync } from "colyseus";
 import { dimToBinBoard } from "../states/binary-state/dimension-to-binary-board";
 import {
   CBoard,
+  CPenguin,
   CScores,
   CSpace,
   CState,
@@ -22,6 +23,7 @@ import {
 import {
   Board,
   GameState,
+  GameStateDone,
   GameStatePlaying,
   PenguinColor,
   Player,
@@ -40,24 +42,30 @@ import {
   GET_GameStateKind,
   GET_GameStateNextToPlace,
   GET_GameStatePlayers,
+  GET_OnTile,
+  GET_OnUsableSpace,
+  GET_penguinColor,
   GET_PlayerColor,
+  GET_PlayerScore,
 } from "../states/game-state/game-state-selectors";
 import {
   addFinalScore,
   getAllPenguinPositionsForGameBoard,
   getPenguinPositions,
-  hasMovesLeft,
   moveGameState,
   placePenguinAtPosn,
 } from "../states/game-state/game-state-functions";
 import {
   Action,
+  BoardMove,
   isGameOver,
   isValidAction,
 } from "../game-tree/game-tree-state";
 import { stateToCState } from "../states/state-to-state-translators/game-state-to-compact-game-state";
 import { BoardPosn } from "../utils/other-data-definitions";
 import { movePenguin } from "../frontend/frontend";
+import { PRED_isCSpaceACPenguin } from "../states/compact-state/compact-state-predicates";
+import { getReachable } from "../states/game-state/game-state-reachable";
 
 let SHOULD_SKIP: [PenguinColor | "", boolean] = ["", false];
 
@@ -204,7 +212,7 @@ export class FishRoom extends Room<StateSchema> {
               }) +
                 ": " +
                 clientColor +
-                " placed it's penguin"
+                " placed it's \npenguin"
             );
           }
           // if the message was sent out-of-turn or if it was invalid,
@@ -212,14 +220,33 @@ export class FishRoom extends Room<StateSchema> {
           // the referee will also remove all of that player's penguins from the board.
           // then update our current Colyseus Schema state with the removed player state
           else {
-            this.playerMap.delete(client.sessionId);
-            this.players.splice(getIdx(clientColor, this.players), 1);
-            let newState: GameState = removePenguin(
-              clientColor,
-              currentGameState
-            );
-            changeState(newState, this.state);
-            this.kickedPlayers.push(client.sessionId);
+            if (clientColor !== currentTurn) {
+              this.broadcast("updateAndRender", {
+                text:
+                  new Date().toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }) +
+                  ": " +
+                  clientColor +
+                  " it is not   " +
+                  "\nyour turn to place",
+                state: schemaToCompact(this.state),
+              });
+            } else if (!isValidAction(action, currentGameState)) {
+              this.broadcast("updateAndRender", {
+                text:
+                  new Date().toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }) +
+                  ": " +
+                  clientColor +
+                  ", that is an   " +
+                  "\ninvalid tile. Try again.",
+                state: schemaToCompact(this.state),
+              });
+            }
           }
         }
       }
@@ -272,7 +299,15 @@ export class FishRoom extends Room<StateSchema> {
           if (
             GET_GameStateKind(currentGameState) === "playing" &&
             clientColor === currentTurn &&
-            isValidAction(action, currentGameState)
+            isValidAction(action, currentGameState) &&
+            PRED_isCSpaceACPenguin(
+              GET__CBoardFromCState(stateToCState(currentGameState))[
+                (action.posn[0] as BoardPosn).row
+              ][(action.posn[0] as BoardPosn).col]
+            ) &&
+            (GET__CBoardFromCState(stateToCState(currentGameState))[
+              (action.posn[0] as BoardPosn).row
+            ][(action.posn[0] as BoardPosn).col] as CPenguin)[0] === currentTurn
           ) {
             let newState: GameState = moveGameState(currentGameState, message);
             this.broadcast(
@@ -299,25 +334,39 @@ export class FishRoom extends Room<StateSchema> {
               );
               console.log("GAME IS OVER");
             } else if (
-              SHOULD_SKIP[1] &&
-              GET_GameStateNextToPlace(newState).penguinColor === SHOULD_SKIP[0]
+              !hasMovesLeft(
+                GET_GameStateNextToPlace(newState),
+                newState as GameStatePlaying
+              )
             ) {
+              let skippedPlayer = GET_GameStateNextToPlace(newState)
+                .penguinColor;
               newState = moveGameState(newState, "SKIP");
-              this.broadcast(
-                "update",
-                new Date().toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }) +
+
+              this.broadcast("updateAndRender", {
+                text:
+                  new Date().toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }) +
                   ": " +
-                  SHOULD_SKIP[0] +
-                  " skipped a turn"
-              );
-              SHOULD_SKIP = ["", false];
+                  skippedPlayer +
+                  " has no   " +
+                  "\nmoves left",
+                state: stateToCState(newState),
+              });
             }
             changeState(newState, this.state);
             if (GET_GameStateKind(newState) === "done") {
               console.log("disconnecting all clients");
+              this.broadcast(
+                "update",
+                "GAME OVER    " +
+                  "\n" +
+                  getWinner(newState as GameStateDone) +
+                  " WON!"
+              );
+              this.broadcast("game over", "bye");
             }
           }
 
@@ -326,11 +375,39 @@ export class FishRoom extends Room<StateSchema> {
           // the referee will also remove all of that player's penguins from the board.
           // then update our current Colyseus Schema state with the removed player state
           else {
-            SHOULD_SKIP = [clientColor, true];
-            this.broadcast(
-              "update",
-              "ILLEGAL ACTION" + ": " + clientColor + " will skip NEXT TURN"
-            );
+            if (clientColor !== currentTurn) {
+              this.broadcast("updateAndRender", {
+                text:
+                  new Date().toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }) +
+                  ": " +
+                  clientColor +
+                  " it is not   " +
+                  "\nyour turn to move",
+                state: schemaToCompact(this.state),
+              });
+            } else if (
+              !isValidAction(action, currentGameState) ||
+              (GET__CBoardFromCState(stateToCState(currentGameState))[
+                (action.posn[0] as BoardPosn).row
+              ][(action.posn[0] as BoardPosn).col] as CPenguin)[0] !==
+                currentTurn
+            ) {
+              this.broadcast("updateAndRender", {
+                text:
+                  new Date().toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }) +
+                  ": " +
+                  clientColor +
+                  ", that is an   " +
+                  "\ninvalid move. Try again.",
+                state: schemaToCompact(this.state),
+              });
+            }
           }
         }
       }
@@ -348,6 +425,42 @@ export class FishRoom extends Room<StateSchema> {
     this.playerMap.set(client.sessionId, clientColor);
     // this updates the list of players as clients join the room.
     this.state.players = this.players;
+    this.broadcast("updateAndRender", {
+      text:
+        new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }) +
+        ": " +
+        clientColor +
+        " has joined    " +
+        "\nthe game",
+      state: schemaToCompact(this.state),
+    });
+    if (this.players.length === 1) {
+      this.broadcast("updateAndRender", {
+        text:
+          new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }) +
+          ": " +
+          "waiting .......",
+        state: schemaToCompact(this.state),
+      });
+    } else if (this.players.length === 2) {
+      this.broadcast("updateAndRender", {
+        text:
+          new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }) +
+          ": " +
+          "you can start the   " +
+          "\ngame",
+        state: schemaToCompact(this.state),
+      });
+    }
   }
 
   onLeave(Client) {}
@@ -471,3 +584,32 @@ export function allPenguinsPlaced(state: GameState): boolean {
   console.log("no of penguins allowed", noOfPenguinsAllowed);
   return noOfPenguinsOnBoard === noOfPenguinsAllowed;
 }
+
+// checks if the given player has moves left in the given game state
+export function hasMovesLeft(
+  penguin: Player,
+  state: GameStatePlaying
+): boolean {
+  let fromPosns: BoardPosn[] = getPenguinPositions(penguin, state);
+
+  let res = 0;
+
+  fromPosns.forEach((p) => {
+    let res_temp = getReachable(state.board, p).length;
+    res += res_temp;
+  });
+
+  return res > 0;
+}
+
+export const getWinner = (state: GameStateDone): PenguinColor => {
+  let maxScore: number = Number.NEGATIVE_INFINITY;
+  let winner: PenguinColor | string = "";
+  GET_GameStatePlayers(state).forEach((p) => {
+    if (GET_PlayerScore(p) > maxScore) {
+      winner = GET_PlayerColor(p);
+    }
+  });
+
+  return winner as PenguinColor;
+};

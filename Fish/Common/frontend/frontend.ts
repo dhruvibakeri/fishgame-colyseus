@@ -27,10 +27,10 @@ import {
   CAN_MOVE,
   FROM_POSN,
   PLACEMENT_POSN,
+  renderNewGame,
   TO_POSN,
 } from "../graphics/render-state";
-import { getReachable } from "../states/game-state/game-state-reachable";
-import { hasMovesLeft } from "../states/game-state/game-state-functions";
+import swal from "sweetalert";
 
 let CURRENT_STATE: CState = ["joining", [], []];
 
@@ -55,11 +55,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       (location.port ? ":" + location.port : "")
   );
 
-  const room: Colyseus.Room<StateSchema> = await client.joinOrCreate<StateSchema>(
+  let room: Colyseus.Room<StateSchema> = await client.joinOrCreate<StateSchema>(
     "fish"
   );
 
-  const handleInput = () => {
+  const handleInput = async () => {
     console.log(CURRENT_STATE[0]);
     if (CURRENT_STATE[0] === "placing") {
       placePenguin(room, PLACEMENT_POSN);
@@ -92,6 +92,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("message received from server");
     console.log(message);
     messages.push(message);
+  });
+
+  room.onMessage("game over", (message) => {
+    swal("GAME OVER!").then((value) => {
+      if (value) {
+        room.leave();
+      }
+    });
+  });
+
+  room.onMessage("updateAndRender", (message) => {
+    console.log("message received from server");
+    console.log(message);
+    messages.push(message.text);
+    rerender(
+      DEFAULT_SIZE,
+      DEFAULT_BOARD_ROWS,
+      DEFAULT_BOARD_COLS,
+      message.state,
+      messages
+    );
   });
 
   room.onStateChange((newState) => {

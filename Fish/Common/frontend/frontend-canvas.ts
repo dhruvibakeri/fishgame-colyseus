@@ -20,9 +20,12 @@ function addBannerAndCanvas() {
   divInit.classList.add("same-line-elements");
 
   let canvasRoster: HTMLParagraphElement = document.createElement("p");
+  canvasRoster.classList.add("change-font");
+  canvasRoster.innerText = "SCORE BOARD";
   canvasRoster.id = "canvasRoster";
   canvasRoster.align = "center";
   const canvasRosterElem: HTMLCanvasElement = document.createElement("canvas");
+  canvasRosterElem.classList.add("top-space");
   canvasRosterElem.id = "mycanvasRoster";
   canvasRoster.appendChild(canvasRosterElem);
   divInit.appendChild(canvasRoster);
@@ -35,12 +38,17 @@ function addBannerAndCanvas() {
   bannerPara.classList.add("banner");
   divInit.appendChild(bannerPara);
 
+  const divViewPort: HTMLDivElement = document.createElement("div");
+  divViewPort.id = "scrollbottom";
+  divViewPort.classList.add("container");
   let canvasChat: HTMLParagraphElement = document.createElement("p");
   canvasChat.id = "canvasChat";
   const canvasChatElem: HTMLCanvasElement = document.createElement("canvas");
   canvasChatElem.id = "mycanvasChat";
-  canvasChat.appendChild(canvasChatElem);
+  canvasChat.appendChild(divViewPort);
+  divViewPort.appendChild(canvasChatElem);
   divInit.appendChild(canvasChat);
+  //divInit.appendChild(divViewPort);
 
   document.body.appendChild(divInit);
 
@@ -90,6 +98,6 @@ export function rerender(
   );
   let fabricChatCanvas = new fabric.Canvas("mycanvasChat");
   renderPenguinRoster(state[2], htmlRosterCanvas, fabricRosterCanvas);
-  renderChatBox(messages, htmlChatCanvas, fabricChatCanvas);
+  renderChatBox(messages as string[], htmlChatCanvas, fabricChatCanvas);
   render(size, row, col, state, htmlCanvas, fabricCanvas);
 }

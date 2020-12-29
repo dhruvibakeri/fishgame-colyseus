@@ -2,6 +2,7 @@ import {
   CBoard,
   CPenguin,
   CSpace,
+  CState,
 } from "../states/compact-state/compact-state-data-definition";
 import {
   PRED_isCSpaceACFish,
@@ -31,7 +32,6 @@ export let FROM_POSN: BoardPosn = { row: 0, col: 0 };
 export let TO_POSN: BoardPosn = { row: 0, col: 0 };
 export let CAN_MOVE: boolean = false;
 let flag = true;
-
 function renderUnusable(hex: HexTile, t: CSpace, canvas): void {
   // No rendering for "unusable" space. We just show the background.
 }
@@ -126,10 +126,12 @@ export function renderPenguinRoster(
   htmlCanvas,
   fabricCanvas
 ) {
-  setCanvasConfig(fabricCanvas);
+  fabricCanvas.selectionColor = BLACK;
+  fabricCanvas.backgroundColor = BLACK;
   setCanvasDimension(100 * cpenguins.length, 100, htmlCanvas, fabricCanvas);
   let i = 0;
   let j = 0;
+  let k = 0;
   cpenguins.forEach((p) => {
     var penguinImg = new Image();
     penguinImg.onload = function (img) {
@@ -151,7 +153,10 @@ export function renderPenguinRoster(
     let text = new fabric.Text(p[1].toString(), {
       left: j === 0 ? 55 : 155,
       top: 30,
-      fontSize: 40,
+      fontSize: 35,
+      fontFamily: "Courier Prime",
+      fontWeight: "bold",
+      fill: "white",
       lockMovementY: true,
       lockMovementX: true,
       selectable: false,
@@ -161,13 +166,30 @@ export function renderPenguinRoster(
     j++;
   });
 
+  cpenguins.forEach((p) => {
+    let text = new fabric.Text(p[0], {
+      left: k === 0 ? 30 : 130,
+      top: 75,
+      fontSize: 15,
+      fontFamily: "Courier Prime",
+      fontWeight: "bold",
+      fill: "white",
+      lockMovementY: true,
+      lockMovementX: true,
+      selectable: false,
+      hoverCursor: "pointer",
+    });
+    fabricCanvas.add(text);
+    k++;
+  });
+
   const rect = new fabric.Rect({
     top: 0,
     left: 0,
     width: 96,
     height: 96,
     hasBorder: true,
-    stroke: "black",
+    stroke: "white",
     strokeWidth: 4,
     lockMovementY: true,
     lockMovementX: true,
@@ -178,31 +200,45 @@ export function renderPenguinRoster(
   fabricCanvas.add(rect);
 }
 
-export function renderChatBox(
-  messages: string[] | undefined,
-  htmlCanvas,
-  fabricCanvas
-) {
-  setCanvasConfig(fabricCanvas);
-  setCanvasDimension(210, 210, htmlCanvas, fabricCanvas);
-  let j = 0;
-  messages &&
-    messages.forEach((p) => {
-      let text = new fabric.Text(p, {
-        left: 0,
-        top: 20 * j,
-        fontSize: 15,
-        lockMovementY: true,
-        lockMovementX: true,
-        selectable: false,
-        hoverCursor: "pointer",
-      });
-      fabricCanvas.add(text);
-      j++;
+export function renderChatBox(messages: string[], htmlCanvas, fabricCanvas) {
+  fabricCanvas.selectionColor = BLACK;
+  fabricCanvas.backgroundColor = BLACK;
+  setCanvasDimension(
+    210,
+    210 + (messages.length < 7 ? 0 : (messages.length - 6) * 35),
+    htmlCanvas,
+    fabricCanvas
+  );
+  let j: number = 0;
+  messages.forEach((p) => {
+    let text = new fabric.Text(p, {
+      left: 0,
+      top: 35 * j,
+      fontSize: 12,
+      fontFamily: "Courier Prime",
+      fontWeight: "bold",
+      fill: "white",
+      lockMovementY: true,
+      lockMovementX: true,
+      selectable: false,
+      hoverCursor: "pointer",
     });
+    fabricCanvas.add(text);
+    j++;
+  });
+
+  var div: HTMLElement = document.getElementById("scrollbottom") as HTMLElement;
+  div.scrollTop = (210 +
+    (messages.length < 7 ? 0 : (messages.length - 6) * 50) -
+    210) as number;
 }
 
-export function renderBoard(size: number, board: CBoard, canvas): void {
+export function renderBoard(
+  size: number,
+  board: CBoard,
+  canvas,
+  state?: CState
+): void {
   let hexes: HexTile[] = boardToHexTiles(
     size,
     board,
@@ -226,23 +262,25 @@ export function renderBoard(size: number, board: CBoard, canvas): void {
 
   canvas.on("mouse:up", function (e) {
     CAN_MOVE = false;
-    console.log("Event mouse:up Triggered", e.target.boardPosn);
-    PLACEMENT_POSN = e.target.boardPosn;
-    console.log(PLACEMENT_POSN);
-    if (flag) {
-      FROM_POSN = e.target.boardPosn;
-      e.target.set("fill", MOUSE_OVER_COLOR);
-      e.target.set("clicked", true);
-      canvas.renderAll();
-      console.log("from", FROM_POSN);
-      flag = false;
-    } else {
-      TO_POSN = e.target.boardPosn;
-      console.log("to", TO_POSN);
-      CAN_MOVE = true;
-      flag = true;
+    if (state && state[0] === "placing") {
+      PLACEMENT_POSN = e.target.boardPosn;
+      console.log(PLACEMENT_POSN);
+    } else if (state && state[0] === "playing") {
+      if (flag) {
+        FROM_POSN = e.target.boardPosn;
+        e.target.set("fill", MOUSE_OVER_COLOR);
+        e.target.set("clicked", true);
+        canvas.renderAll();
+        console.log("from", FROM_POSN);
+        flag = false;
+      } else {
+        TO_POSN = e.target.boardPosn;
+        console.log("to", TO_POSN);
+        CAN_MOVE = true;
+        flag = true;
+      }
+      console.log("can move", CAN_MOVE);
     }
-    console.log("can move", CAN_MOVE);
   });
 
   canvas.on("mouse:over", function (e) {

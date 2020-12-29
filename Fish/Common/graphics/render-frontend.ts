@@ -105,7 +105,7 @@ export function render(
     ...backgDimFromBoardDim(rows, cols, size),
   ];
   setCanvasDimension(canvasWidth, canvasHeight, htmlCanvas, fabricCanvas);
-  renderBoard(size, GET__CBoardFromCState(state), fabricCanvas);
+  renderBoard(size, GET__CBoardFromCState(state), fabricCanvas, state);
 }
 
 // - - - - - - - - - - Setting Canvas Dimensions - - - - - - - - - -
