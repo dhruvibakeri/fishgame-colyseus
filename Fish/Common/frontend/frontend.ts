@@ -27,7 +27,6 @@ import {
   CAN_MOVE,
   FROM_POSN,
   PLACEMENT_POSN,
-  renderNewGame,
   TO_POSN,
 } from "../graphics/render-state";
 import swal from "sweetalert";
