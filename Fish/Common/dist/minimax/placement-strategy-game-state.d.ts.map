@@ -1,0 +1,1 @@
+{"version":3,"file":"placement-strategy-game-state.d.ts","sourceRoot":"","sources":["../../minimax/placement-strategy-game-state.ts"],"names":[],"mappings":"AACA,OAAO,EAAS,SAAS,EAAmB,MAAM,iDAAiD,CAAC;AACpG,OAAO,EAAE,SAAS,EAAE,MAAM,iCAAiC,CAAC;AAG5D,OAAO,EAAE,aAAa,EAAE,MAAM,8BAA8B,CAAC;AAa7D,wBAAgB,uBAAuB,CAAC,KAAK,EAAE,SAAS,GAAG,SAAS,GAAG,aAAa,CA8BnF"}

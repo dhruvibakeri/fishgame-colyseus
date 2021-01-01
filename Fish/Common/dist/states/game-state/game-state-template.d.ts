@@ -1,0 +1,22 @@
+import { GameState, GameStateJoining, Players, GameStatePlacing, Board, Player, GameStatePlaying, GameStateDone, Space, UnusableSpace, UsableSpace, OnUsableSpace, Tile, TileInfo, OnTile, Hole, Fishes, Penguin, PlayerStatus, PenguinColor } from "./game-state-data-definition";
+export declare function gameStateTemplate(gameState: GameState): void;
+export declare function gameStateJoiningTemplate(gameStateJoining: GameStateJoining): void;
+export declare function gameStatePlacingTemplate(gameStatePlacing: GameStatePlacing): void;
+export declare function gameStatePlayingTemplate(gameStatePlaying: GameStatePlaying): void;
+export declare function gameStateDoneTemplate(gameStateDone: GameStateDone): void;
+export declare function playersTemplate(players: Players): void;
+export declare function boardTemplate(board: Board): void;
+export declare function spaceTemplate(space: Space): void;
+export declare function unusableSpaceTemplate(unusableSpace: UnusableSpace): void;
+export declare function usableSpaceTemplate(usableSpace: UsableSpace): void;
+export declare function onUsableSpaceTemplate(onUsableSpace: OnUsableSpace): void;
+export declare function tileTemplate(tile: Tile): void;
+export declare function holeTemplate(hole: Hole): void;
+export declare function tileInfoTemplate(tileInfo: TileInfo): void;
+export declare function onTileTemplate(onTile: OnTile): void;
+export declare function fishesTemplate(fishes: Fishes): void;
+export declare function penguinTemplate(penguin: Penguin): void;
+export declare function playerTemplate(player: Player): void;
+export declare function playerStatusTemplate(playerStatus: PlayerStatus): void;
+export declare function penguinColorTemplate(penguinColor: PenguinColor): void;
+//# sourceMappingURL=game-state-template.d.ts.map

@@ -2,6 +2,9 @@
   "name": "bells",
   "version": "1.0.0",
   "description": "run `npm run start` from Fish/Common/ and go to http://localhost:2567/",
+  "engines": {
+    "node": "12.x"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
