@@ -8,6 +8,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-prebuild": "npm install --prefix ./Fish/Common --dev",
     "install": "npm install --prefix ./Fish/Common && npm run build --prefix ./Fish/Common",
     "start": "npm run start --prefix ./Fish/Common"
   },
