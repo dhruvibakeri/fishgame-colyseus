@@ -7,7 +7,7 @@ const webpackDevMiddleware = require("webpack-dev-middleware");
 import { Server } from "colyseus";
 import { FishRoom } from "./server/backend";
 
-const port = Number(2567);
+const port = Number(process.env.PORT || 2567);
 const app = express();
 
 const webpackConfig = require("./webpack.config.js");
