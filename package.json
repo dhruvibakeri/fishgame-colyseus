@@ -1,0 +1,21 @@
+{
+  "name": "bells",
+  "version": "1.0.0",
+  "description": "run `npm run start` from Fish/Common/ and go to http://localhost:2567/",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "npm install --prefix ./Fish/Common && npm run build --prefix ./Fish/Common",
+    "start": "npm run start --prefix ./Fish/Common"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dhruvibakeri/fishgame-colyseus.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dhruvibakeri/fishgame-colyseus/issues"
+  },
+  "homepage": "https://github.com/dhruvibakeri/fishgame-colyseus#readme"
+}

@@ -2,14 +2,12 @@
   "compilerOptions": {
     "outDir": "dist",
     "module": "commonjs",
-    "lib": [
-      "es6"
-    ],
+    "lib": ["es6"],
     "target": "es2016",
     "noImplicitAny": false,
     "experimentalDecorators": true,
     "sourceMap": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "exclude": [
     "./graphics/",
