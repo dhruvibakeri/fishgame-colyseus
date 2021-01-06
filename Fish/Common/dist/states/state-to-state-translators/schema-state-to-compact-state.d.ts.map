@@ -1,1 +1,0 @@
-{"version":3,"file":"schema-state-to-compact-state.d.ts","sourceRoot":"","sources":["../../../states/state-to-state-translators/schema-state-to-compact-state.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,MAAM,8CAA8C,CAAC;AAC3E,OAAO,EAA0C,MAAM,EAAE,MAAM,gDAAgD,CAAA;AAK/G,wBAAgB,eAAe,CAAC,MAAM,EAAE,WAAW,GAAG,MAAM,CAwB3D"}
