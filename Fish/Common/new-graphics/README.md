@@ -18,3 +18,10 @@ Player
 ```
 
 We use the fabric library for rendering the state above.
+
+
+CHANGES:
+
+- Instead of iteratively rendering each hexagon in the grid, 
+  we functionally generate the set of "hexagon corners" of the whole 
+  grid. We then map each of those to a hex in the grid.
