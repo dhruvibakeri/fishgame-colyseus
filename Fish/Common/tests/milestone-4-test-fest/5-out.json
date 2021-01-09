@@ -1,1 +1,0 @@
-{"players": [{"color": "white", "score": 11, "places": [[0, 0]]}, {"color": "black", "score": 5, "places": [[2, 0]]}, {"color": "brown", "score": 2, "places": [[1, 1]]}, {"color": "red", "score": 10, "places": [[0, 3], [2, 1], [2, 2], [1, 3]]}], "board": [[1, 2, 3, 5, 5], [4, 1, 0, 2, 0], [1, 1, 1, 0, 0]]}
