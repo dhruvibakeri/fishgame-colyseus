@@ -1,4 +1,3 @@
-import { schemaToCompact } from "../states/state-to-state-translators/schema-state-to-compact-state";
 import {
   GameState,
   GameStatePlaying,
@@ -11,7 +10,11 @@ import {
   getValidSubStatesForGameBoard,
   IllegalAction,
 } from "../game-tree/game-tree-state";
-import { getBestAction, Move } from "../minimax/best-action-game-state";
+import {
+  DefMove,
+  getBestAction,
+  Move,
+} from "../minimax/best-action-game-state";
 import {
   DEFAULT_BOARD_COLS,
   DEFAULT_BOARD_ROWS,
@@ -21,7 +24,6 @@ import * as Colyseus from "colyseus.js";
 import { rerender } from "./frontend-canvas";
 import { cStateToGameState } from "../states/state-to-state-translators/compact-state-to-game-state";
 import { GET__CScoresFromCState } from "../states/compact-state/compact-state-selectors";
-import { StateSchema } from "../states/schema-state/schema-state-data-definition";
 import { CState } from "../states/compact-state/compact-state-data-definition";
 import {
   CAN_MOVE,
@@ -30,6 +32,11 @@ import {
   TO_POSN,
 } from "../graphics/render-state";
 import swal from "sweetalert";
+import { Posn } from "../../../common";
+import { compactPosnToInputPosn } from "../states/state-to-state-translators/input-state-to-compact-state/input-state-to-compact-state";
+import { newStateToCState } from "../new-state/new-state-to-compact-state";
+import { schemaToNewState } from "../new-state/new-schema-to-new-state";
+import { StateSchema } from "../new-state/new-schema-state";
 
 let CURRENT_STATE: CState = ["joining", [], []];
 
@@ -49,9 +56,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   var host = window.document.location.host.replace(/:.*/, "");
   var client = new Colyseus.Client(
     location.protocol.replace("http", "ws") +
-      "//" +
-      host +
-      (location.port ? ":" + location.port : "")
+    "//" +
+    host +
+    (location.port ? ":" + location.port : "")
   );
 
   let room: Colyseus.Room<StateSchema> = await client.joinOrCreate<StateSchema>(
@@ -69,14 +76,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   };
 
-  const handleKeyInput = (ev: KeyboardEvent) => {
-    if (ev.code === "Space") {
-      movePenguin(room, "SKIP");
-    }
-  };
-
   room.onStateChange.once((state) => {
-    let cState = schemaToCompact(state);
+    let cState = newStateToCState(schemaToNewState(state));
     console.log("this is the first room state!", cState);
     rerender(
       DEFAULT_SIZE,
@@ -109,17 +110,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       DEFAULT_SIZE,
       DEFAULT_BOARD_ROWS,
       DEFAULT_BOARD_COLS,
-      message.state,
+      newStateToCState(schemaToNewState(message.state)),
       messages
     );
   });
 
   room.onStateChange((newState) => {
-    let cState = schemaToCompact(newState);
+    let cState = newStateToCState(schemaToNewState(newState));
     CURRENT_STATE = cState;
 
     document.addEventListener("click", handleInput);
-    document.addEventListener("keydown", handleKeyInput);
 
     console.log(`
       newState.toJSON() ==>
@@ -181,14 +181,22 @@ export function isMyTurn(gs: GameState, player: Player): boolean {
 // with its desired placement positon
 export function placePenguin(
   room: Colyseus.Room,
-  placementPosn: BoardPosn | IllegalAction
+  placementPosn: BoardPosn
 ): void {
-  room.send("place", placementPosn);
+  let compactPosn: Posn = [placementPosn.row, placementPosn.col];
+  let newStatePosn: Posn = compactPosnToInputPosn(compactPosn);
+  room.send("place", { row: newStatePosn[0], col: newStatePosn[1] });
 }
 
 // Colyseus.room [BoardPosn, BoardPosn] -> void
 // A player can use this function to send a "move" message to the referee
 // with its desired move
-export function movePenguin(room: Colyseus.Room, move: Move | "SKIP"): void {
-  room.send("move", move);
+export function movePenguin(room: Colyseus.Room, move: DefMove): void {
+  let fcompactPosn: Posn = [move[0].row, move[0].col];
+  let fnewStatePosn: Posn = compactPosnToInputPosn(fcompactPosn);
+  let from = { row: fnewStatePosn[0], col: fnewStatePosn[1] };
+  let tcompactPosn: Posn = [move[1].row, move[1].col];
+  let tnewStatePosn: Posn = compactPosnToInputPosn(tcompactPosn);
+  let to = { row: tnewStatePosn[0], col: tnewStatePosn[1] };
+  room.send("move", [from, to]);
 }

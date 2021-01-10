@@ -1,514 +1,191 @@
-import { Room, Client, nosync } from "colyseus";
-import { dimToBinBoard } from "../states/binary-state/dimension-to-binary-board";
-import {
-  CBoard,
-  CPenguin,
-  CScores,
-  CSpace,
-  CState,
-} from "../states/compact-state/compact-state-data-definition";
-import {
-  GET__CBoardFromCState,
-  GET__CScoresFromCState,
-  GET__CStageFromCState,
-} from "../states/compact-state/compact-state-selectors";
-import {
-  MAKE_FishesSpace,
-  MAKE_GameState,
-  MAKE_GameStateDone,
-  MAKE_GameStatePlacing,
-  MAKE_GameStatePlaying,
-  MAKE_Player,
-} from "../states/game-state/game-state-constructors";
+import { Room, Client } from "colyseus";
 import {
   Board,
-  GameState,
-  GameStateDone,
-  GameStatePlaying,
-  PenguinColor,
-  Player,
-  Players,
-} from "../states/game-state/game-state-data-definition";
-import {
-  ScoreSchema,
-  StateSchema,
-} from "../states/schema-state/schema-state-data-definition";
-import { cStateToSchema } from "../states/state-to-state-translators/compact-state-to-schema-state";
-import { Schema, ArraySchema, type } from "@colyseus/schema";
-import { schemaToCompact } from "../states/state-to-state-translators/schema-state-to-compact-state";
-import { cStateToGameState } from "../states/state-to-state-translators/compact-state-to-game-state";
-import {
-  GET_GameStateBoard,
-  GET_GameStateKind,
-  GET_GameStateNextToPlace,
-  GET_GameStatePlayers,
-  GET_OnTile,
-  GET_OnUsableSpace,
-  GET_penguinColor,
-  GET_PlayerColor,
-  GET_PlayerScore,
-} from "../states/game-state/game-state-selectors";
-import {
-  addFinalScore,
-  getAllPenguinPositionsForGameBoard,
-  getPenguinPositions,
-  moveGameState,
-  placePenguinAtPosn,
-} from "../states/game-state/game-state-functions";
-import {
-  Action,
-  BoardMove,
+  Color,
+  currentPlayer,
+  getWinners,
   isGameOver,
-  isValidAction,
-} from "../game-tree/game-tree-state";
-import { stateToCState } from "../states/state-to-state-translators/game-state-to-compact-game-state";
-import { BoardPosn } from "../utils/other-data-definitions";
-import { movePenguin } from "../frontend/frontend";
-import { PRED_isCSpaceACPenguin } from "../states/compact-state/compact-state-predicates";
-import { getReachable } from "../states/game-state/game-state-reachable";
-
-let SHOULD_SKIP: [PenguinColor | "", boolean] = ["", false];
-
-// import { all_places } from "../../Player/strategy";
-// import { stateList } from "../states/compact-state/compact-state-examples";
-// import { cStateToSchema } from "../states/state-to-state-translators/compact-state-to-schema-state";
-
-/**
- * For our Fish Game we are using a ,multiplayer gaming framework for Typescript called 'COLYSEUS' : https://colyseus.io/
- * A "room" in Colyseus will represent the referee in our Fish Game.
- *
- * NOTE : in our class FishRoom we are keeping track of players that get kicked out.
- *        when the game is over the referee can report the kickedPlayers list
- *        and also the final GameState. This way the tournament manager will
- *        have access to the outcome of the game and the failing and cheating players.
- */
+  isPenguinAtPosn,
+  isUnreachablePosn,
+  moveAvatar,
+  movesLeft,
+  placeAvatar,
+  Posn,
+  skipMove,
+  State,
+  validMovePosns,
+} from "../../../common";
+import { ArraySchema } from "@colyseus/schema";
+import { newStateToNewSchema } from "../new-state/new-state-to-new-schema";
+import { schemaToNewState } from "../new-state/new-schema-to-new-state";
+import { ScoreSchema, StateSchema } from "../new-state/new-schema-state";
 
 export class FishRoom extends Room<StateSchema> {
   maxClients = 2;
 
-  // rows of column dimensions of board
-  // when tournament manager is implemented,
-  // the referee will receive these from there
-  private DEFAULT_ROWS = 6;
-  private DEFAULT_COLS = 5;
   private players: ScoreSchema[];
-  private colors: PenguinColor[];
-  private initBoard: CBoard;
-  private initCState: CState;
+  private colors: Color[];
+  private initBoard: Board;
+  private initNewState: State;
   private initState: StateSchema;
-  private totalTiles: number;
-  private playerMap: Map<string, PenguinColor>;
-  private kickedPlayers: string[];
+  private playerMap: Map<string, Color>;
 
   constructor() {
     super();
-    // list of players for this game (initially empty)
     this.players = new ArraySchema<ScoreSchema>();
-    // colors to be assigned to the players
     this.colors = ["red", "black", "brown", "white"];
-    // initial board that the referee sets up (no holes)
-    this.initBoard = dimToBinBoard(this.DEFAULT_ROWS, this.DEFAULT_COLS);
-    // total no. of tiles on the given board
-    this.totalTiles = this.DEFAULT_ROWS * this.DEFAULT_COLS;
-    // state customized by referee by adding random holes and different no. of fish
-    // on each tile
-    this.initCState = customizeState(
-      ["placing", this.initBoard, []],
-      this.totalTiles
-    );
-    // converting to schemaState which will be used by Colyseus
-    this.initState = cStateToSchema(this.initCState);
-    // map of player colors with their client id as key
-    this.playerMap = new Map<string, PenguinColor>();
-    // list of client ids of players that are kicked out during the game
-    this.kickedPlayers = [];
+    this.initBoard = createBoard(6, 5, Math.floor(Math.random() * 10));
+    this.initNewState = {
+      stage: "placing",
+      board: this.initBoard,
+      players: [],
+    };
+    this.initState = newStateToNewSchema(this.initNewState);
+    this.playerMap = new Map<string, Color>();
   }
 
   onCreate(options) {
-    // sets the state of the game room as the customised initial state
-    // this ensures that all client who join first see this state
-    // (if they join before the game starts)
+    //setting intial state
     this.setState(this.initState);
 
-    // if there are 2 or more clients that have joined,
-    // the game begins
-
-    // if the referee receives a "place" message
+    //handling place messages from client
     this.onMessage("place", (client, message) => {
-      // we will convert from the Colyseus Schema state representation to our GameState representation
-      // so we can use our GameState interface to perform referee functions.
-      let currentGameState: GameState = cStateToGameState(
-        schemaToCompact(this.state)
-      );
-      console.log("CURRENT", currentGameState);
-      console.log("PLACE MESSAGE", message);
+      let currentGameState: State = schemaToNewState(this.state);
+      let placementPosn: Posn = [message.row, message.col];
 
       if (this.players.length > 1) {
-        // we first check if the game is OVER according to the currentGameState
+        let currentTurn: Color = currentPlayer(currentGameState).color as Color;
+        let clientColor: Color = <Color>this.playerMap.get(client.sessionId);
         if (
-          GET_GameStateKind(currentGameState) === "playing" &&
-          isGameOver(currentGameState)
+          currentGameState.stage === "placing" &&
+          clientColor === currentTurn &&
+          !isUnreachablePosn(currentGameState, placementPosn)
         ) {
-          let endGameState = addFinalScore(currentGameState);
-          // we create a GameState at the "done" stage which contains
-          // the final positions and scores of all players
-          let newState: GameState = MAKE_GameStateDone(
-            "done",
-            GET_GameStateBoard(endGameState),
-            GET_GameStatePlayers(endGameState)
-          );
-          // we then update our current Colyseus Schema state with this state
-          changeState(newState, this.state);
-          this.broadcast(
-            "update",
-            new Date().toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }) +
-              ": " +
-              "GAME IS OVER"
-          );
-        } else {
-          let currentPlayer: Player = GET_GameStateNextToPlace(
-            currentGameState
-          );
-          let currentTurn: PenguinColor = GET_PlayerColor(currentPlayer);
-          let clientColor: PenguinColor = <PenguinColor>(
-            this.playerMap.get(client.sessionId)
-          );
-          let action: Action = {
-            kind: "place",
-            posn: message,
-            player: currentPlayer,
-          };
-          console.log("clientcolor", clientColor);
-          console.log(currentTurn);
-          console.log(clientColor === currentTurn);
-          // the referee will check if the message has been received from a client
-          // whose turn it currently is
-          // the referee will also check if the desired placement position is a
-          // valid position
-          if (
-            GET_GameStateKind(currentGameState) === "placing" &&
-            clientColor === currentTurn &&
-            isValidAction(action, currentGameState)
-          ) {
-            // if all is valid, referee will place the penguin at that positon
-            let newState: GameState = placePenguinAtPosn(
-              message,
-              currentGameState
-            );
-            // then update our current Colyseus Schema state with the newState
-            console.log("PLACED?", allPenguinsPlaced(newState));
-            if (allPenguinsPlaced(newState)) {
-              newState.gameStateKind = "playing";
-            }
-            changeState(newState, this.state);
-            this.broadcast(
-              "update",
-              new Date().toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              }) +
-                ": " +
-                clientColor +
-                " placed it's \npenguin"
-            );
+          let newState: State = placeAvatar(placementPosn, currentGameState);
+          if (allPenguinsPlaced(newState)) {
+            newState.stage = "playing";
           }
-          // if the message was sent out-of-turn or if it was invalid,
-          // the referee will delete that player from the list of players in the gameState
-          // the referee will also remove all of that player's penguins from the board.
-          // then update our current Colyseus Schema state with the removed player state
-          else {
-            if (clientColor !== currentTurn) {
-              this.broadcast("updateAndRender", {
-                text:
-                  new Date().toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }) +
-                  ": " +
-                  clientColor +
-                  " it is not   " +
-                  "\nyour turn to place",
-                state: schemaToCompact(this.state),
-              });
-            } else if (!isValidAction(action, currentGameState)) {
-              this.broadcast("updateAndRender", {
-                text:
-                  new Date().toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }) +
-                  ": " +
-                  clientColor +
-                  ", that is an   " +
-                  "\ninvalid tile. Try again.",
-                state: schemaToCompact(this.state),
-              });
-            }
+          changeState(newState, this.state);
+          broadcastUpdate(this, clientColor, " placed it's \npenguin");
+        } else {
+          if (clientColor !== currentTurn) {
+            broadcastUpdateAndRender(
+              this,
+              this.state,
+              ": " + clientColor + " it is not   \nyour turn to place"
+            );
+          } else if (isUnreachablePosn(currentGameState, placementPosn)) {
+            broadcastUpdateAndRender(
+              this,
+              this.state,
+              ": " + clientColor + ", that is an   \ninvalid tile. Try again."
+            );
           }
         }
       }
     });
 
-    // if the referee receives a "move" message
+    // handling move messages from client
     this.onMessage("move", (client, message) => {
-      // we will convert from the Colyseus Schema state representation to our GameState representation
-      // so we can use our GameState interface to perform referee functions.
-      let currentGameState: GameState = cStateToGameState(
-        schemaToCompact(this.state)
-      );
-      console.log("CURRENT", currentGameState);
-      console.log("MOVE MESSAGE", message);
+      let currentGameState: State = schemaToNewState(this.state);
+      let from: Posn = [message[0].row, message[0].col];
+      let to: Posn = [message[1].row, message[1].col];
 
       if (this.players.length > 1) {
-        // we first check if the game is OVER according to the currentGameState
+        let currentTurn: Color = currentPlayer(currentGameState).color as Color;
+        let clientColor: Color = <Color>this.playerMap.get(client.sessionId);
         if (
-          GET_GameStateKind(currentGameState) === "playing" &&
-          isGameOver(currentGameState)
+          isValidMovementTurn(
+            from,
+            to,
+            currentGameState,
+            clientColor,
+            currentTurn
+          )
         ) {
-          let endGameState = addFinalScore(currentGameState);
-          // we create a GameState at the "done" stage which contains
-          // the final positions and scores of all players
-          let newState: GameState = MAKE_GameStateDone(
-            "done",
-            GET_GameStateBoard(endGameState),
-            GET_GameStatePlayers(endGameState)
-          );
-          // we then update our current Colyseus Schema state with this state
+          let newState: State = moveAvatar(from, to, currentGameState);
+          broadcastUpdate(this, clientColor, " made a move");
+          if (!canKeepPlaying(newState)) {
+            let skippedPlayer = currentPlayer(newState).color;
+            newState = skipMove(newState);
+            broadcastUpdateAndRender(
+              this,
+              this.state,
+              ": " + skippedPlayer + " has no   \nmoves left"
+            );
+          }
           changeState(newState, this.state);
-        } else {
-          let currentPlayer: Player = GET_GameStateNextToPlace(
-            currentGameState
-          );
-          let currentTurn: PenguinColor = GET_PlayerColor(currentPlayer);
-          let clientColor: PenguinColor = <PenguinColor>(
-            this.playerMap.get(client.sessionId)
-          );
-          let action: Action = { kind: "move", posn: message };
-
-          // the referee will check if the message has been received from a client
-          // whose turn it currently is
-          // the referee will also check if the desired move is a
-          // valid move
-          console.log(
-            "IS VALID ACTION",
-            isValidAction(action, currentGameState)
-          );
-          if (
-            GET_GameStateKind(currentGameState) === "playing" &&
-            clientColor === currentTurn &&
-            isValidAction(action, currentGameState) &&
-            PRED_isCSpaceACPenguin(
-              GET__CBoardFromCState(stateToCState(currentGameState))[
-                (action.posn[0] as BoardPosn).row
-              ][(action.posn[0] as BoardPosn).col]
-            ) &&
-            (GET__CBoardFromCState(stateToCState(currentGameState))[
-              (action.posn[0] as BoardPosn).row
-            ][(action.posn[0] as BoardPosn).col] as CPenguin)[0] === currentTurn
-          ) {
-            let newState: GameState = moveGameState(currentGameState, message);
+          if (isGameOver(newState)) {
             this.broadcast(
               "update",
-              new Date().toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              }) +
-                ": " +
-                clientColor +
-                " made a move"
+              "GAME OVER    \n" + getWinners(newState)[0].color + " WON!"
             );
-            // then update our current Colyseus Schema state with the newState
-
-            if (
-              GET_GameStateKind(newState) === "playing" &&
-              isGameOver(newState)
-            ) {
-              let endGameState = addFinalScore(newState);
-              newState = MAKE_GameStateDone(
-                "done",
-                GET_GameStateBoard(endGameState),
-                GET_GameStatePlayers(endGameState)
-              );
-              console.log("GAME IS OVER");
-            } else if (
-              !hasMovesLeft(
-                GET_GameStateNextToPlace(newState),
-                newState as GameStatePlaying
-              )
-            ) {
-              let skippedPlayer = GET_GameStateNextToPlace(newState)
-                .penguinColor;
-              newState = moveGameState(newState, "SKIP");
-
-              this.broadcast("updateAndRender", {
-                text:
-                  new Date().toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }) +
-                  ": " +
-                  skippedPlayer +
-                  " has no   " +
-                  "\nmoves left",
-                state: stateToCState(newState),
-              });
-            }
-            changeState(newState, this.state);
-            if (GET_GameStateKind(newState) === "done") {
-              console.log("disconnecting all clients");
-              this.broadcast(
-                "update",
-                "GAME OVER    " +
-                  "\n" +
-                  getWinner(newState as GameStateDone) +
-                  " WON!"
-              );
-              this.broadcast("game over", "bye");
-            }
+            this.broadcast("game over", "bye");
           }
-
-          // if the message was sent out-of-turn or if it was invalid,
-          // the referee will delete that player from the list of players in the gameState
-          // the referee will also remove all of that player's penguins from the board.
-          // then update our current Colyseus Schema state with the removed player state
-          else {
-            if (clientColor !== currentTurn) {
-              this.broadcast("updateAndRender", {
-                text:
-                  new Date().toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }) +
-                  ": " +
-                  clientColor +
-                  " it is not   " +
-                  "\nyour turn to move",
-                state: schemaToCompact(this.state),
-              });
-            } else if (
-              !isValidAction(action, currentGameState) ||
-              (GET__CBoardFromCState(stateToCState(currentGameState))[
-                (action.posn[0] as BoardPosn).row
-              ][(action.posn[0] as BoardPosn).col] as CPenguin)[0] !==
-                currentTurn
-            ) {
-              this.broadcast("updateAndRender", {
-                text:
-                  new Date().toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }) +
-                  ": " +
-                  clientColor +
-                  ", that is an   " +
-                  "\ninvalid move. Try again.",
-                state: schemaToCompact(this.state),
-              });
-            }
+        } else {
+          if (clientColor !== currentTurn) {
+            broadcastUpdateAndRender(
+              this,
+              this.state,
+              ": " + clientColor + " it is not   \nyour turn to move"
+            );
+          } else if (
+            !isValidMove(from, to, currentGameState) ||
+            !isPenguinAtPosn(currentGameState, from) ||
+            !isPlayersPenguin(currentGameState, from)
+          ) {
+            broadcastUpdateAndRender(
+              this,
+              this.state,
+              ": " + clientColor + ", that is an   \ninvalid move. Try again."
+            );
           }
         }
       }
     });
   }
 
-  // everytime a client joins the room, the referee assigns the client
-  // an unused penguin color
-  // and also adds the client to the list of players for this game
+  // setting up a new player with a penguin color
   onJoin(client: Client) {
     let randIdx: number = Math.floor(Math.random() * this.colors.length);
     let clientColor = this.colors[randIdx];
     this.colors.splice(randIdx, 1);
-    this.players.push(new ScoreSchema(clientColor, 0));
+    this.players.push(new ScoreSchema(clientColor as string, 0, []));
     this.playerMap.set(client.sessionId, clientColor);
-    // this updates the list of players as clients join the room.
     this.state.players = this.players;
-    this.broadcast("updateAndRender", {
-      text:
-        new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }) +
-        ": " +
-        clientColor +
-        " has joined    " +
-        "\nthe game",
-      state: schemaToCompact(this.state),
-    });
+    broadcastUpdateAndRender(
+      this,
+      this.state,
+      ": " + clientColor + " has joined    \nthe game"
+    );
     if (this.players.length === 1) {
-      this.broadcast("updateAndRender", {
-        text:
-          new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }) +
-          ": " +
-          "waiting .......",
-        state: schemaToCompact(this.state),
-      });
+      broadcastUpdateAndRender(this, this.state, ": waiting .......");
     } else if (this.players.length === 2) {
-      this.broadcast("updateAndRender", {
-        text:
-          new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }) +
-          ": " +
-          "you can start the   " +
-          "\ngame",
-        state: schemaToCompact(this.state),
-      });
+      broadcastUpdateAndRender(
+        this,
+        this.state,
+        ": you can start the   \ngame"
+      );
     }
   }
-
-  onLeave(Client) {}
-
-  onDispose() {}
 
   onAuth(Client, options, req) {
     return true;
   }
 }
 
-// CBoard Number -> void
-// adds given number of holes at random places in the given game board
-export function addRandomHoles(board: CBoard, holeCount: number): void {
-  for (let i = 0; i < holeCount; i++) {
-    let randRow = Math.floor(Math.random() * board.length);
-    let randCol = Math.floor(Math.random() * board[0].length);
-    board[randRow][randCol] = "hole";
-  }
-}
+/** ----------------------------------------------------- helper functions -------------------------------------------------------- */
+// checks whether the current player have moves left
+const canKeepPlaying = (newState: State): boolean => {
+  let moves: Posn[] = currentPlayer(newState).places.filter((p) =>
+    movesLeft(newState, p)
+  );
+  return moves.length > 0;
+};
 
-// CBoard -> void
-// adds random number of fish (1-5) in each tile of the given board
-export function addRandomFish(board: CBoard): void {
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board.length; j++) {
-      let randFishNo = Math.floor(Math.random() * 5) + 1;
-      board[i][j] = randFishNo;
-    }
-  }
-}
-
-// CState Number -> CState
-// customizes the given state by adding holes and random number of fishes
-export function customizeState(state: CState, totalTiles: number): CState {
-  let nboard: CBoard = GET__CBoardFromCState(state);
-  addRandomFish(nboard);
-  if (totalTiles > 9) {
-    const holeCount = Math.floor(Math.random() * (totalTiles - 9));
-    addRandomHoles(nboard, holeCount);
-  }
-  return [GET__CStageFromCState(state), nboard, GET__CScoresFromCState(state)];
-}
-
-// PenguinColor ScoreSchema[] -> Number
 // gets the index at which the player with the given penguinColor lies
 // in the given list
-export function getIdx(col: PenguinColor, list: ScoreSchema[]): number {
+export const getIdx = (col: Color, list: ScoreSchema[]): number => {
   let res = 0;
   let i: number = 0;
   list.forEach((element) => {
@@ -518,98 +195,111 @@ export function getIdx(col: PenguinColor, list: ScoreSchema[]): number {
     i = i + 1;
   });
   return res;
-}
+};
 
-// PenguinColor Players -> Number
-// gets the index at which the player with the given penguinColor lies
-// in the given list
-export function getIdxForRemoval(col: PenguinColor, list: Players): number {
-  for (let i = 0; i < list.length; i++) {
-    if (list[i].penguinColor === col) {
-      return i;
-    }
-  }
-  throw console.error("no such penguin in Players");
-}
-
-// PenguinColor GameState -> GameState
-// removes all occurrences of the given player fromt he given GameState
-export function removePenguin(
-  player: PenguinColor,
-  state: GameState
-): GameState {
-  let gsPlayers: Players = GET_GameStatePlayers(state);
-  let playerIdx: number = getIdxForRemoval(player, gsPlayers);
-  let mainPlayer: Player = gsPlayers[playerIdx];
-  let penguinPosns: BoardPosn[] = getPenguinPositions(mainPlayer, state);
-  let board: Board = GET_GameStateBoard(state);
-  for (let i = 0; i < penguinPosns.length; i++) {
-    board[penguinPosns[i].row][penguinPosns[i].col] = MAKE_FishesSpace(0);
-  }
-
-  if (GET_GameStateKind(state) === "playing") {
-    return MAKE_GameStatePlaying(
-      "playing",
-      board,
-      GET_GameStateNextToPlace(state),
-      GET_GameStatePlayers(state)
-    );
-  } else {
-    return MAKE_GameStatePlacing(
-      "placing",
-      board,
-      GET_GameStateNextToPlace(state),
-      GET_GameStatePlayers(state)
-    );
-  }
-}
-
-// GameState StateSchema -> void
-// updates the current Colyseus Schema state
-export function changeState(state: GameState, ourState: StateSchema): void {
-  let schemaState: StateSchema = cStateToSchema(stateToCState(state));
+// updates the colyseus state with our game state
+export const changeState = (state: State, ourState: StateSchema): void => {
+  state.players.forEach((p) => {});
+  let schemaState: StateSchema = newStateToNewSchema(state);
   ourState.board = schemaState.board;
   ourState.gamestage = schemaState.gamestage;
   ourState.players = schemaState.players;
   ourState.rowlen = schemaState.rowlen;
-}
+};
 
-export function allPenguinsPlaced(state: GameState): boolean {
-  let noOfPlayers: number = GET_GameStatePlayers(state).length;
-  let noOfPenguinsOnBoard: number = getAllPenguinPositionsForGameBoard(state)
-    .length;
+// checks whether all the players' penguins have been placed
+export const allPenguinsPlaced = (state: State): boolean => {
+  let num: number = 0;
+  state.players.forEach((p) => (num += p.places.length));
+  let noOfPlayers: number = state.players.length;
+  let noOfPenguinsOnBoard: number = num;
   let noOfPenguinsAllowed: number = (6 - noOfPlayers) * noOfPlayers;
-  console.log("no of players", noOfPlayers);
-  console.log("no of penguins on board", noOfPenguinsOnBoard);
-  console.log("no of penguins allowed", noOfPenguinsAllowed);
   return noOfPenguinsOnBoard === noOfPenguinsAllowed;
-}
+};
 
-// checks if the given player has moves left in the given game state
-export function hasMovesLeft(
-  penguin: Player,
-  state: GameStatePlaying
-): boolean {
-  let fromPosns: BoardPosn[] = getPenguinPositions(penguin, state);
+// checks if given move is a valid turn
+const isValidMovementTurn = (
+  from: Posn,
+  to: Posn,
+  currentGameState: State,
+  clientColor: Color,
+  currentTurn: Color
+): boolean => {
+  return (
+    currentGameState.stage === "playing" &&
+    clientColor === currentTurn &&
+    isValidMove(from, to, currentGameState) &&
+    isPenguinAtPosn(currentGameState, from) &&
+    isPlayersPenguin(currentGameState, from)
+  );
+};
 
-  let res = 0;
-
-  fromPosns.forEach((p) => {
-    let res_temp = getReachable(state.board, p).length;
-    res += res_temp;
+// checks if given move is valid
+const isValidMove = (from: Posn, to: Posn, state: State): boolean => {
+  let validPosns: Posn[] = validMovePosns(state, from);
+  let res = validPosns.filter((posn) => {
+    return posn[0] === to[0] && posn[1] === to[1];
   });
+  return res.length > 0;
+};
 
-  return res > 0;
-}
+// checks if the given from postition belongs to the current player's penguin
+const isPlayersPenguin = (state: State, from: Posn): boolean => {
+  let curPlaces: Posn[] = currentPlayer(state).places;
+  let res = curPlaces.filter((posn) => {
+    return posn[0] === from[0] && posn[1] === from[1];
+  });
+  return res.length > 0;
+};
 
-export const getWinner = (state: GameStateDone): PenguinColor => {
-  let maxScore: number = Number.NEGATIVE_INFINITY;
-  let winner: PenguinColor | string = "";
-  GET_GameStatePlayers(state).forEach((p) => {
-    if (GET_PlayerScore(p) > maxScore) {
-      winner = GET_PlayerColor(p);
+// creates a Board according to the given specs
+const createBoard = (rows: number, cols: number, holes: number): Board => {
+  var result: number[][] = [];
+  for (var i = 0; i < rows; i++) {
+    result[i] = [];
+    for (var j = 0; j < cols; j++) {
+      result[i][j] = Math.floor(Math.random() * 5) + 1;
     }
-  });
+  }
+  for (let i = 0; i < holes; i++) {
+    result[Math.floor(Math.random() * rows)][
+      Math.floor(Math.random() * cols)
+    ] = -1;
+  }
+  return result;
+};
 
-  return winner as PenguinColor;
+// broadcasts the given message to all clients
+const broadcastUpdate = (
+  room: Room,
+  clientColor: Color,
+  text: string
+): void => {
+  room.broadcast(
+    "update",
+    new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }) +
+      ": " +
+      clientColor +
+      text
+  );
+};
+
+// broadcasts the given message to all clients as well as the updated state
+// occurs when colyseus state has not been changed, but there are updates in the game that need to be rendered.
+const broadcastUpdateAndRender = (
+  room: Room,
+  state: StateSchema,
+  text: string
+): void => {
+  room.broadcast("updateAndRender", {
+    text:
+      new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }) + text,
+    state: state,
+  });
 };
