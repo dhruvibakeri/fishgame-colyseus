@@ -1,0 +1,53 @@
+<ng-container *ngIf="page_state === 'landing_page'">
+  <h1 style="text-align: center; padding: 10px;">Hey! That's My Fish!</h1>
+
+  <div style="text-align: center;"
+       id="buttons-div">
+    <button style="margin: 10px;"
+            (click)="play_as_guest()">Play as Guest</button>
+    <button disabled
+            style="margin: 10px;">Sign In</button>
+  </div>
+
+</ng-container>
+
+
+<ng-container *ngIf="page_state === 'home_page'">
+  <div>
+    <h1 style="text-align: center; padding: 10px;">Hey! That's My Fish!</h1>
+    <div style="text-align: center;"
+         id="buttons-div">
+      <button style="margin: 10px;"
+              (click)="play_offline_with_humans()">Play Offline with Humans</button>
+      <button disabled
+              style="margin: 10px;">Play Online with Humans</button>
+      <button disabled
+              style="margin: 10px;">Play with AI</button>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="page_state === 'humans_offline_page'">
+  <h1 style="text-align: center; padding: 10px;">You're Playing Offline</h1>
+
+  <p style="text-align: center;">How many players do you want to play with?</p>
+
+  <div style="text-align: center;"
+       id="buttons-div">
+    <button style="margin: 10px;"
+            (click)="play_2_player()">2</button>
+    <button disabled
+            style="margin: 10px;">3</button>
+    <button disabled
+            style="margin: 10px;">4</button>
+  </div>
+</ng-container>
+
+
+<ng-container *ngIf="page_state === '2_player'">
+  <h1 style="text-align: center; padding: 10px;">Hey! That's My Fish!</h1>
+  <h3 style="text-align: center;">You're Playing 2-Player Offline.</h3>
+
+  <!-- game board -->
+  <app-board></app-board>
+
+</ng-container>
