@@ -1,0 +1,23 @@
+<div align="center">
+  <svg width="500"
+       height="500">
+    <rect [attr.width]="penguinSpec.penguinSize"
+          [attr.height]="penguinSpec.penguinSize"
+          [attr.x]="penguinSpec.x"
+          [attr.y]="penguinSpec.y"
+          [attr.rx]="penguinSpec.cornerRounding"
+          [attr.style]="penguinSpec.penguinSkinColor" />
+    <ellipse [attr.cx]="penguinSpec.leftEye.center.x"
+             [attr.cy]="penguinSpec.leftEye.center.y"
+             [attr.rx]="penguinSpec.leftEye.radius"
+             [attr.ry]="penguinSpec.leftEye.radius"
+             [attr.style]="penguinSpec.leftEye.color" />
+    <ellipse [attr.cx]="penguinSpec.rightEye.center.x"
+             [attr.cy]="penguinSpec.rightEye.center.y"
+             [attr.rx]="penguinSpec.rightEye.radius"
+             [attr.ry]="penguinSpec.rightEye.radius"
+             [attr.style]="penguinSpec.rightEye.color" />
+    <polygon [attr.points]="penguinSpec.nose.corners"
+             [attr.style]="penguinSpec.nose.color" />
+  </svg>
+</div>

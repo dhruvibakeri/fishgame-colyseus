@@ -5,12 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BoardComponent } from './board/board.component';
 import { SvgBoardComponent } from './svg-board/svg-board.component';
+import { PenguinComponent } from './penguin/penguin.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BoardComponent,
-    SvgBoardComponent
+    SvgBoardComponent,
+    PenguinComponent
   ],
   imports: [
     BrowserModule,
