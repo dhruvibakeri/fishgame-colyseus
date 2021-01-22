@@ -12,9 +12,9 @@
                                   x2="100%"
                                   y2="0%">
                         <stop offset="0%"
-                              style="stop-color:rgb(255,255,0);stop-opacity:1" />
+                              style="stop-color:rgb(161, 215, 205);stop-opacity:1" />
                         <stop offset="90%"
-                              style="stop-color:rgb(255,0,0);stop-opacity:1" />
+                              style="stop-color:rgb(51, 196, 222);stop-opacity:1" />
                   </linearGradient>
             </defs>
             <defs>
@@ -24,9 +24,9 @@
                                   x2="100%"
                                   y2="0%">
                         <stop offset="0%"
-                              style="stop-color:rgb(255,255,0);stop-opacity:1" />
+                              style="stop-color:rgb(18, 133, 154);stop-opacity:1" />
                         <stop offset="90%"
-                              style="stop-color:rgb(0, 123, 255);stop-opacity:1" />
+                              style="stop-color:rgb(87, 169, 154);stop-opacity:1" />
                   </linearGradient>
             </defs>
             <rect width="100%"
@@ -34,20 +34,44 @@
                   fill-opacity="0" />
 
             <!-- make p groups -->
-            <g *ngFor="let p of ps">
+            <g *ngFor="let p of boardCells">
                   <!-- within each group, make a subgroup based on p! -->
-                  <g *ngIf="isPolySelected(p)">
-                        <polygon (click)="clickEvent(p.id)"
+                  <g *ngIf="isPolySelected(p) && p.type !== -1">
+                        <polygon (mouseover)="onMouseOverPoly(p)"
+                                 (click)="clickEvent(p.id)"
                                  [attr.points]="p.corners"
                                  [attr.id]="p.id"
                                  style="fill:url(#grad2)" />
                   </g>
-                  <g *ngIf="!isPolySelected(p)">
-                        <polygon (click)="clickEvent(p.id)"
+                  <g *ngIf="!isPolySelected(p) && p.type !== -1">
+                        <polygon (mouseover)="onMouseOverPoly(p)"
+                                 (click)="clickEvent(p.id)"
                                  [attr.points]="p.corners"
                                  [attr.id]="p.id"
                                  style="fill:url(#grad1)" />
                   </g>
+            </g>
+
+            <!-- displaying the pengiuns! -->
+            <g *ngFor="let penguin of penguinInfo">
+                  <rect [attr.width]="penguin.penguinSize"
+                        [attr.height]="penguin.penguinSize"
+                        [attr.x]="penguin.x"
+                        [attr.y]="penguin.y"
+                        [attr.rx]="penguin.cornerRounding"
+                        [attr.style]="penguin.penguinSkinColor" />
+                  <ellipse [attr.cx]="penguin.leftEye.center.x"
+                           [attr.cy]="penguin.leftEye.center.y"
+                           [attr.rx]="penguin.leftEye.radius"
+                           [attr.ry]="penguin.leftEye.radius"
+                           [attr.style]="penguin.leftEye.color" />
+                  <ellipse [attr.cx]="penguin.rightEye.center.x"
+                           [attr.cy]="penguin.rightEye.center.y"
+                           [attr.rx]="penguin.rightEye.radius"
+                           [attr.ry]="penguin.rightEye.radius"
+                           [attr.style]="penguin.rightEye.color" />
+                  <polygon [attr.points]="penguin.nose.corners"
+                           [attr.style]="penguin.nose.color" />
             </g>
 
       </svg>
