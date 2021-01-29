@@ -1,8 +1,13 @@
-<p align="center">from: {{ from | json}}; to: {{to | json}}
-      &nbsp;
-      <button (click)="resetSelectedButton()">reset</button>
-</p>
 <div [attr.align]="'center'">
+      <p>from: {{ from | json}}; to: {{to | json}}
+            &nbsp;
+            <button (click)="resetSelectedButton()">reset</button>
+      </p>
+      <p>size: {{size}}
+            <button (click)="this.size = this.size + 1;">up</button>
+            <button (click)="this.size = this.size - 1">down</button>
+
+      </p>
       <svg [attr.width]="backDim.width"
            [attr.height]="backDim.height">
             <defs>
@@ -45,9 +50,7 @@
                   height="100%"
                   fill-opacity="0" />
 
-            <!-- make p groups -->
             <g *ngFor="let p of boardCells">
-                  <!-- within each group, make a subgroup based on p! -->
                   <g *ngIf="isPolySelected(p) && p.type !== -1">
                         <polygon (click)="clickEvent(p.id)"
                                  [attr.points]="p.corners"
