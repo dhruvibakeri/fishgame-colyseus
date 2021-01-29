@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { equals, includes } from 'ramda';
 import { take } from "lodash";
-import { boardDimToCorners, hexCoordToCorners, Posn, State, validMovePosns } from '../common';
+import { hexCoordToCorners, Posn, State, validMovePosns } from '../common';
 
 
 let state: State = {
@@ -60,19 +60,13 @@ let backDim = backgDimFromBoardDim(state.board.length, state.board[0].length, SI
 export class SvgBoardComponent implements OnInit {
 
   backDim = { width: backDim.width, height: backDim.height };
-
   from: false | Posn = false;
   to: false | Posn = false;
-  moveOptions: false | Posn[] = false;
 
   clickEvent(clickedstr) {
     let clicked = JSON.parse(`[${clickedstr}]`)
-
     if (this.from === false && this.to === false) {
       this.from = clicked;
-
-      this.moveOptions = validMovePosns(<any>state, <any>this.from)
-
     } else if (this.from !== false && this.to === false) {
       if (equals(clicked, this.from)) {
         this.from = false;
@@ -83,22 +77,15 @@ export class SvgBoardComponent implements OnInit {
           this.to = false;
           this.from = false;
         }
-
       }
     } else if (this.from !== false && this.to !== false) {
-
+      // 
     } else {
-
+      // 
     }
   }
 
 
-  // 1. add types for these two things. 
-  // 2. then merge them.
-  // 
-  // Better: rethink how I can generate this data directly from the state.
-  //         Efficiently.
-  // 
   boardCells = this.getBoardCells();
   penguinInfo = this.getPenguinInfo();
   fishInfo = this.getFishInfo(state as any);
@@ -144,14 +131,7 @@ export class SvgBoardComponent implements OnInit {
     return fishSpecs;
   }
 
-
-
-
-  constructor() {
-    // console.log(this.boardCells);
-    // console.log(this.penguinInfo);
-    console.log(this.fishInfo);
-  }
+  constructor() { }
 
   ngOnInit(): void { }
 }
