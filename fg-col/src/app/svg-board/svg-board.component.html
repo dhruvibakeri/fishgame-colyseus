@@ -37,23 +37,13 @@
             <g *ngFor="let p of boardCells">
                   <!-- within each group, make a subgroup based on p! -->
                   <g *ngIf="isPolySelected(p) && p.type !== -1">
-<<<<<<< HEAD
                         <polygon (click)="clickEvent(p.id)"
-=======
-                        <polygon (mouseover)="onMouseOverPoly(p)"
-                                 (click)="clickEvent(p.id)"
->>>>>>> e86fc8b0744477117ed59dcf7048cde0ae89692d
                                  [attr.points]="p.corners"
                                  [attr.id]="p.id"
                                  style="fill:url(#grad2)" />
                   </g>
                   <g *ngIf="!isPolySelected(p) && p.type !== -1">
-<<<<<<< HEAD
                         <polygon (click)="clickEvent(p.id)"
-=======
-                        <polygon (mouseover)="onMouseOverPoly(p)"
-                                 (click)="clickEvent(p.id)"
->>>>>>> e86fc8b0744477117ed59dcf7048cde0ae89692d
                                  [attr.points]="p.corners"
                                  [attr.id]="p.id"
                                  style="fill:url(#grad1)" />
@@ -67,25 +57,18 @@
                         [attr.x]="penguin.x"
                         [attr.y]="penguin.y"
                         [attr.rx]="penguin.cornerRounding"
-<<<<<<< HEAD
                         (click)="clickEvent(penguin.id)"
-=======
->>>>>>> e86fc8b0744477117ed59dcf7048cde0ae89692d
                         [attr.style]="penguin.penguinSkinColor" />
                   <ellipse [attr.cx]="penguin.leftEye.center.x"
                            [attr.cy]="penguin.leftEye.center.y"
                            [attr.rx]="penguin.leftEye.radius"
                            [attr.ry]="penguin.leftEye.radius"
-<<<<<<< HEAD
                            (click)="clickEvent(penguin.id)"
-=======
->>>>>>> e86fc8b0744477117ed59dcf7048cde0ae89692d
                            [attr.style]="penguin.leftEye.color" />
                   <ellipse [attr.cx]="penguin.rightEye.center.x"
                            [attr.cy]="penguin.rightEye.center.y"
                            [attr.rx]="penguin.rightEye.radius"
                            [attr.ry]="penguin.rightEye.radius"
-<<<<<<< HEAD
                            (click)="clickEvent(penguin.id)"
                            [attr.style]="penguin.rightEye.color" />
                   <polygon [attr.points]="penguin.nose.corners"
@@ -108,12 +91,5 @@
 
 
 
-=======
-                           [attr.style]="penguin.rightEye.color" />
-                  <polygon [attr.points]="penguin.nose.corners"
-                           [attr.style]="penguin.nose.color" />
-            </g>
-
->>>>>>> e86fc8b0744477117ed59dcf7048cde0ae89692d
       </svg>
 </div>
