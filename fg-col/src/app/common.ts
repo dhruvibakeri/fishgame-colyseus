@@ -298,7 +298,7 @@ const reachablePathInDirAcc =
     !unreachable(s, next) ? reachablePathInDirAcc(s, move, unreachable, append(next, path), move(next)) : path;
 
 /** Posn in one step in specified direction in an infinite hex board*/
-export const north = ([r, c]: Posn): Posn => [r - 2, c];
+export const north = ([r, c]: Posn): Posn => [r - 2, c]
 export const northEast = ([r, c]: Posn): Posn => (r % 2 === 0) ? [r - 1, c] : [r - 1, c + 1]
 export const southEast = ([r, c]: Posn): Posn => (r % 2 === 0) ? [r + 1, c] : [r + 1, c + 1]
 export const south = ([r, c]: Posn): Posn => [r + 2, c];

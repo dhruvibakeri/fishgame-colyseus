@@ -15,7 +15,6 @@ export class AppComponent {
   title = 'fg-col';
   page_state: PageState = initPage
 
-
   play_as_guest() {
     this.page_state = "home_page";
   }

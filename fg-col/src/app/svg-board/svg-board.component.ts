@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { equals } from 'ramda';
+import { equals, includes } from 'ramda';
 import { take } from "lodash";
 import { boardDimToCorners, hexCoordToCorners, Posn, State, validMovePosns } from '../common';
 
@@ -59,10 +59,7 @@ let backDim = backgDimFromBoardDim(state.board.length, state.board[0].length, SI
 })
 export class SvgBoardComponent implements OnInit {
 
-  backDim = {
-    width: backDim.width,
-    height: backDim.height,
-  };
+  backDim = { width: backDim.width, height: backDim.height };
 
   from: false | Posn = false;
   to: false | Posn = false;
@@ -80,12 +77,18 @@ export class SvgBoardComponent implements OnInit {
       if (equals(clicked, this.from)) {
         this.from = false;
       } else {
-        this.to = clicked;
+        if (includes(clicked, validMovePosns(state, this.from))) {
+          this.to = clicked;
+        } else {
+          this.to = false;
+          this.from = false;
+        }
+
       }
     } else if (this.from !== false && this.to !== false) {
-      console.log("from and to have been selected already")
-    } else { // if (this.from === false && this.to !== false) {
-      console.log("this is not possible")
+
+    } else {
+
     }
   }
 
