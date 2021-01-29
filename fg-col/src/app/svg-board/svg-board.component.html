@@ -3,7 +3,7 @@
       <button (click)="resetSelectedButton()">reset</button>
 </p>
 <div [attr.align]="'center'">
-      <svg [attr.width]="backDim.width "
+      <svg [attr.width]="backDim.width"
            [attr.height]="backDim.height">
             <defs>
                   <linearGradient id="grad1"
@@ -37,15 +37,13 @@
             <g *ngFor="let p of boardCells">
                   <!-- within each group, make a subgroup based on p! -->
                   <g *ngIf="isPolySelected(p) && p.type !== -1">
-                        <polygon (mouseover)="onMouseOverPoly(p)"
-                                 (click)="clickEvent(p.id)"
+                        <polygon (click)="clickEvent(p.id)"
                                  [attr.points]="p.corners"
                                  [attr.id]="p.id"
                                  style="fill:url(#grad2)" />
                   </g>
                   <g *ngIf="!isPolySelected(p) && p.type !== -1">
-                        <polygon (mouseover)="onMouseOverPoly(p)"
-                                 (click)="clickEvent(p.id)"
+                        <polygon (click)="clickEvent(p.id)"
                                  [attr.points]="p.corners"
                                  [attr.id]="p.id"
                                  style="fill:url(#grad1)" />
@@ -59,20 +57,39 @@
                         [attr.x]="penguin.x"
                         [attr.y]="penguin.y"
                         [attr.rx]="penguin.cornerRounding"
+                        (click)="clickEvent(penguin.id)"
                         [attr.style]="penguin.penguinSkinColor" />
                   <ellipse [attr.cx]="penguin.leftEye.center.x"
                            [attr.cy]="penguin.leftEye.center.y"
                            [attr.rx]="penguin.leftEye.radius"
                            [attr.ry]="penguin.leftEye.radius"
+                           (click)="clickEvent(penguin.id)"
                            [attr.style]="penguin.leftEye.color" />
                   <ellipse [attr.cx]="penguin.rightEye.center.x"
                            [attr.cy]="penguin.rightEye.center.y"
                            [attr.rx]="penguin.rightEye.radius"
                            [attr.ry]="penguin.rightEye.radius"
+                           (click)="clickEvent(penguin.id)"
                            [attr.style]="penguin.rightEye.color" />
                   <polygon [attr.points]="penguin.nose.corners"
+                           (click)="clickEvent(penguin.id)"
                            [attr.style]="penguin.nose.color" />
             </g>
+
+
+            <g *ngFor="let fishes of fishInfo">
+                  <g *ngFor="let fish of fishes">
+                        <ellipse (click)="clickEvent(fish.id)"
+                                 [attr.cx]="fish.cx"
+                                 [attr.cy]="fish.cy"
+                                 [attr.rx]="fish.rx"
+                                 [attr.ry]="fish.ry"
+                                 [attr.style]="'fill:grey'" />
+                  </g>
+            </g>>
+
+
+
 
       </svg>
 </div>

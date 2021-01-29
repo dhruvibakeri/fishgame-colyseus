@@ -1,25 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { equals } from 'ramda';
-import { hexCoordToCorners, Posn, State, validMovePosns } from '../common';
-
-// TODO: 
-// - selection of the first one highlights the poly
-// - if you click the first one again -- deselection happens
-// - if you select an unreachable poly -- deselection happens
-// - all reachable polys are marked
-// - if you select a reachable poly, the penguin is moved, and the
-//   `from` and `to` positions are marked!
-
+import { take } from "lodash";
+import { boardDimToCorners, hexCoordToCorners, Posn, State, validMovePosns } from '../common';
 
 
 let state: State = {
   "stage": "playing",
   "board": [
-    [2, 2, 2, 2, 2],
-    [2, 2, 2, -1, 2],
-    [2, -1, 2, 2, 2],
-    [2, 2, 2, 0, 2],
-    [2, 2, -1, 2, 2]
+    [4, 3, 2, 1, 0],
+    [3, 2, 2, -1, 2],
+    [2, -1, 2, 4, 2],
+    [2, 2, 4, 0, 2],
+    [1, 2, -1, 2, 2]
   ],
   "players": [
     {
@@ -57,16 +49,8 @@ let state: State = {
   ]
 }
 
-const SIZE = 40
-
-let backDim = backgDimFromBoardDim(
-  // get this out
-  state.board.length,
-  state.board[0].length,
-  SIZE
-)
-
-
+const SIZE = 40;
+let backDim = backgDimFromBoardDim(state.board.length, state.board[0].length, SIZE)
 
 @Component({
   selector: 'app-svg-board',
@@ -112,8 +96,9 @@ export class SvgBoardComponent implements OnInit {
   // Better: rethink how I can generate this data directly from the state.
   //         Efficiently.
   // 
-  boardCells = this.getBoardCells()
-  penguinInfo = this.getPenguinInfo()
+  boardCells = this.getBoardCells();
+  penguinInfo = this.getPenguinInfo();
+  fishInfo = this.getFishInfo(state as any);
 
 
   isPolySelected(pin) {
@@ -134,35 +119,118 @@ export class SvgBoardComponent implements OnInit {
     }))
   }
 
-
-
-
-
-
-
   getPenguinInfo() {
     return stateToPenguinDisplayInfo(state as any).map(penguinInfo => {
       let corn = hexCoordToCorners(SIZE, penguinInfo.place[0], penguinInfo.place[1], 0)[1] // end corner posn
-      let cornOb = { x: corn[1], y: corn[0] + SIZE / 2 /** vertical centering  */ };
-      return generatePenguinSpecObject(penguinInfo.color, SIZE, cornOb)
+      let cornOb = { x: corn[1], y: corn[0] + ((SIZE / 2)) /** vertical centering  */ };
+      return generatePenguinSpecObject(penguinInfo.color, SIZE, cornOb, { x: penguinInfo.place[0], y: penguinInfo.place[1] })
     })
+  }
+
+  getFishInfo(state) {
+    let fishSpecs = []
+    for (let i = 0; i < state.board.length; i++) {
+      for (let j = 0; j < state.board[i].length; j++) {
+        let totalFishes = state.board[i][j]
+        if (totalFishes > 0) {
+          let corn = hexCoordToCorners(SIZE, i, j, 0)[1]
+          fishSpecs.push(genFishSpec(totalFishes, corn[1], corn[0], SIZE, { x: i, y: j }, hasPenguin(state, [i, j])))
+        }
+      }
+    }
+    return fishSpecs;
   }
 
 
 
 
   constructor() {
-    console.log(this.boardCells);
-    console.log(this.penguinInfo);
+    // console.log(this.boardCells);
+    // console.log(this.penguinInfo);
+    console.log(this.fishInfo);
   }
 
   ngOnInit(): void { }
+}
 
-  onMouseOverPoly(p) {
-    // console.log(JSON.stringify(p));
+function hasPenguin(state: State, pos: [number, number]) {
+  const players = state.players;
+  for (let i = 0; i < players.length; i++) {
+    const player = players[i];
+    const places = player.places;
+    for (let j = 0; j < places.length; j++) {
+      const place = places[j];
+      if (equals(place, pos)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+
+
+// assuming that the [x,y] position is the top left position on the board. 
+function genFishSpec(totalFishes: number, x: number, y: number, hexSize: number,
+  boardPos: { x: number, y: number }, hasPenguin: boolean): {
+    cx: number, cy: number, rx: number, ry: number
+  }[] {
+  const subGrid = hexSize / 4;
+
+  if (hasPenguin) {
+    const topFish = {
+      cx: x + subGrid * 2,
+      cy: y + subGrid,
+      rx: subGrid * 2.5,
+      ry: subGrid / 2,
+      id: idToString(boardPos)
+    }
+
+    const bottomFish = {
+      cx: x + subGrid * 2,
+      cy: y + subGrid * 7,
+      rx: subGrid * 2.5,
+      ry: subGrid / 2,
+      id: idToString(boardPos)
+    }
+
+    const leftFish = {
+      cx: x - subGrid,
+      cy: y + subGrid * 4,
+      rx: subGrid / 2,
+      ry: subGrid * 2.5,
+      id: idToString(boardPos)
+    }
+
+    const rightFish = {
+      cx: x + subGrid * 5,
+      cy: y + subGrid * 4,
+      rx: subGrid / 2,
+      ry: subGrid * 2.5,
+      id: idToString(boardPos)
+    }
+
+    return take([topFish, bottomFish, leftFish, rightFish], totalFishes);
+  } else {
+    let fishes = [];
+    for (let i = 0; i < totalFishes; i++) {
+      fishes.push({
+        id: idToString(boardPos),
+        cx: x + (subGrid * 2),
+        cy: y + (subGrid * 2) + (i * (subGrid * 1.1)),
+        rx: subGrid * 2.5,
+        ry: subGrid / 2
+      })
+    }
+    return fishes;
   }
 
+
+
 }
+
+// genFishSpec(1, 0, 0, 400)
+// => [{ cx: 200, cy: 525, rx: 300, ry: 25 }]
 
 
 function mapColorToGrad(color: string): string {
@@ -276,11 +344,13 @@ function backgDimFromBoardDim(
 function generatePenguinSpecObject(
   color: string,
   size: number,
-  offset: { x: number, y: number }
+  offset: { x: number, y: number },
+  penguinPlace: { x: number, y: number }
 ) {
   const gridSize = size / 8;
   const eyeSize = gridSize * 2;
   return {
+    id: idToString(penguinPlace),
     x: offset.x,
     y: offset.y,
     penguinSkinColor: colorToSVGFillStyle(color),
