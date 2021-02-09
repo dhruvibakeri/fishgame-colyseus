@@ -1,0 +1,59 @@
+<div>
+  <br />
+  <h3>create a room</h3>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Enter name"
+    id="name"
+    required
+    [(ngModel)]="nameValue"
+    name="name"
+  />
+  <button (click)="createRoom()">create game room</button>
+  <br />
+  <h3>Join an existing room</h3>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Enter name"
+    id="name"
+    required
+    [(ngModel)]="nameValue2"
+    name="name"
+  />
+  <br />
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Enter room id"
+    id="roomid"
+    required
+    [(ngModel)]="roomidValue"
+    name="roomid"
+  />
+  <br />
+  <button (click)="joinGameRoom()">join game room</button>
+
+  <h3>Room data</h3>
+  <div>
+    <table style="border: 1px solid black">
+      <tr>
+        <th>Room ID</th>
+        <th>Room full?</th>
+        <th>Player names</th>
+      </tr>
+      <tr *ngFor="let room of roomsRef">
+        <td>{{ room.key }}</td>
+        <td>{{ room.full }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let player of room.players | keyvalue">
+              {{ player.key }}
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

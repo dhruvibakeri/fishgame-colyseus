@@ -3,7 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebase: {
+    apiKey: 'AIzaSyBCowbyPu3j9vDgUgX99rUrZX8xt6tKqFY',
+    authDomain: 'fish-game-angular.firebaseapp.com',
+    projectId: 'fish-game-angular',
+    storageBucket: 'fish-game-angular.appspot.com',
+    messagingSenderId: '444931954631',
+    appId: '1:444931954631:web:c2d6d60061e69a2b36ebe2',
+    measurementId: 'G-9X0CWF4MMK',
+  },
 };
 
 /*
