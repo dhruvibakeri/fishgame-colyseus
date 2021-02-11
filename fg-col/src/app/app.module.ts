@@ -8,9 +8,15 @@ import { SvgBoardComponent } from './svg-board/svg-board.component';
 import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { GameRoomComponent } from './game-room/gameRoom.component';
+import { PrivateGameRoomComponent } from './private-game-room/private-game-room.component';
 
 @NgModule({
-  declarations: [AppComponent, SvgBoardComponent, GameRoomComponent],
+  declarations: [
+    AppComponent,
+    SvgBoardComponent,
+    GameRoomComponent,
+    PrivateGameRoomComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -17,6 +17,8 @@ export class GameRoomComponent {
   nameValue = '';
   nameValue2 = '';
   roomidValue = '';
+  roomidValue2 = '';
+  join_room = 'no';
 
   constructor(public db: AngularFireDatabase) {
     this.rooms = db.list(this.dbPath2);
@@ -30,16 +32,17 @@ export class GameRoomComponent {
       .subscribe((roomsRef) => {
         this.roomsRef = roomsRef;
       });
-    //this.items = db.list('items').valueChanges()
   }
 
   createRoom() {
-    this.db.list(this.dbPath2).push({
+    this.roomidValue2 = this.db.list(this.dbPath2).push({
       active: true,
       full: false,
-      privacy: 'public',
+      privacy: 'private',
       players: { [this.nameValue]: true },
-    });
+    }).key;
+
+    this.join_room = 'yes';
   }
 
   joinGameRoom(): void {
@@ -48,6 +51,12 @@ export class GameRoomComponent {
         this.db.object('/rooms/' + this.roomidValue).update({ full: true });
       }
       if (Object.keys(this.getRoom(this.roomidValue).players).length < 4) {
+        if (this.nameValue2 in this.getRoom(this.roomidValue).players) {
+          this.nameValue2 =
+            this.nameValue2 +
+            '_' +
+            Object.keys(this.getRoom(this.roomidValue).players).length;
+        }
         this.db
           .object('/rooms/' + this.roomidValue + '/players')
           .update({ [this.nameValue2]: true });

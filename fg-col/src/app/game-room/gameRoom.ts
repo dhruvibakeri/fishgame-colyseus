@@ -1,5 +1,6 @@
 export type GameRoom = {
-  key: string;
+  active: boolean;
   full: boolean;
   players: any[];
+  privacy: 'public' | 'private';
 };

@@ -1,0 +1,18 @@
+<div>
+  <h3>Players in this room:</h3>
+  <br />
+  <ng-container>
+    <div *ngFor="let name of roomRefPlayers | keyvalue">{{ name.key }}</div>
+  </ng-container>
+  <br />
+  <ng-container *ngIf="start_game === 'no'">
+    <button (click)="startGame()">start game</button>
+    <br />
+    <br />
+    Invite friends with this code : {{ roomidurl }}
+  </ng-container>
+
+  <ng-container *ngIf="start_game === 'yes'">
+    <app-svg-board></app-svg-board>
+  </ng-container>
+</div>

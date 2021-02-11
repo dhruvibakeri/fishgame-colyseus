@@ -10,7 +10,26 @@
     [(ngModel)]="nameValue"
     name="name"
   />
+  <br />
+  <br />
   <button (click)="createRoom()">create game room</button>
+  <br />
+  <br />
+  <ng-container *ngIf="join_room === 'yes'">
+    <nav>
+      <a
+        [routerLink]="['/rooms/', roomidValue2]"
+        class="btn btn-primary active"
+        role="button"
+        routerLinkActive="active"
+        >room has been created, join game room</a
+      >
+      <br />
+      <br />
+    </nav>
+    <router-outlet></router-outlet>
+  </ng-container>
+  <br />
   <br />
   <h3>Join an existing room</h3>
   <input
@@ -23,6 +42,7 @@
     name="name"
   />
   <br />
+  <br />
   <input
     type="text"
     class="form-control"
@@ -33,27 +53,19 @@
     name="roomid"
   />
   <br />
-  <button (click)="joinGameRoom()">join game room</button>
-
-  <h3>Room data</h3>
-  <div>
-    <table style="border: 1px solid black">
-      <tr>
-        <th>Room ID</th>
-        <th>Room full?</th>
-        <th>Player names</th>
-      </tr>
-      <tr *ngFor="let room of roomsRef">
-        <td>{{ room.key }}</td>
-        <td>{{ room.full }}</td>
-        <td>
-          <ul>
-            <li *ngFor="let player of room.players | keyvalue">
-              {{ player.key }}
-            </li>
-          </ul>
-        </td>
-      </tr>
-    </table>
-  </div>
+  <br />
+  <nav>
+    <a
+      [routerLink]="['/rooms/', roomidValue]"
+      class="btn btn-primary active"
+      role="button"
+      routerLinkActive="active"
+      (click)="joinGameRoom()"
+      >join game room</a
+    >
+    <br />
+    <br />
+  </nav>
+  <router-outlet></router-outlet>
+  <br />
 </div>

@@ -1,4 +1,4 @@
-<ng-container *ngIf="page_state === 'landing_page'">
+<!--ng-container *ngIf="page_state === 'landing_page'">
   <h1 style="text-align: center; padding: 10px">Hey! That's My Fish!</h1>
 
   <div style="text-align: center" id="buttons-div">
@@ -35,29 +35,17 @@
 
 <ng-container *ngIf="page_state === '2_player'">
   <h1 style="text-align: center; padding: 10px">Hey! That's My Fish!</h1>
-  <h3 style="text-align: center">You're Playing 2-Player Offline.</h3>
+  <h3 style="text-align: center">You're Playing 2-Player Offline.</h3-->
 
-  <!-- game board -->
-  <!-- <app-board></app-board> -->
-  <app-svg-board></app-svg-board>
-  <button style="margin: 10px" (click)="home_page2()">Game Rooms</button>
+<!-- game board -->
+<!-- <app-board></app-board> -->
+<!--app-svg-board></app-svg-board>
+  <button style="margin: 10px" (click)="home_page2()">Game Rooms</button-->
 
-  <!-- <app-fish></app-fish> -->
-</ng-container>
+<!-- <app-fish></app-fish> -->
+<!--/ng-container-->
 
-<ng-container *ngIf="page_state === 'home_page2'">
-  <nav>
-    <a
-      routerLink="rooms"
-      class="btn btn-primary active"
-      role="button"
-      routerLinkActive="active"
-      >Game Rooms</a
-    >
-    <br />
-    <br />
-  </nav>
+<ng-container>
   <router-outlet></router-outlet>
   <br />
-  <button style="margin: 10px" (click)="play_2_player()">2-player</button>
 </ng-container>
