@@ -1,6 +1,90 @@
+@import url("https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap");
+
+.change-font {
+  font-family: "Anonymous Pro", monospace;
+}
+
+.text-large {
+  font-size: 1.5vw;
+}
+
+.text-semi-large {
+  font-size: 1.12vw;
+}
+
+.text-boldness-medium {
+  font-weight: 800;
+}
+
 td,
 th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
+}
+
+.same-line-elements {
+  display: flex;
+  justify-content: space-between;
+}
+
+.style-card {
+  width: 28vw;
+  height: 68vh;
+  border-radius: 0;
+  border-color: #e0ece5;
+  border-width: 0.9vw;
+}
+
+.style-inner-card {
+  margin-left: 2%;
+  margin-right: 2%;
+  background-color: #e0ece5;
+  border: none;
+  border-radius: 5%;
+  text-align: center;
+}
+
+input[type="text"] {
+  border-width: 0;
+  border-radius: 5% !important;
+  text-align: center;
+  display: block;
+  margin: 0 auto;
+}
+
+.room-form {
+  top: 6vh;
+}
+
+.main {
+  margin-left: -8px;
+  margin-right: 0% !important;
+  position: relative;
+  margin-top: 10vh;
+  width: 100%;
+  height: 80vh;
+  z-index: 1;
+}
+.home-page-penguins {
+  position: absolute;
+  z-index: -1;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0.31;
+
+  margin-top: 10vh;
+  width: 101%;
+  height: 80vh;
+  background-image: url("../../assets/homeimage.png");
+  background-size: cover;
+}
+
+#hoverbutton button:hover,
+a:hover {
+  transition: 0.5s ease;
+  transform: scale(1.2, 1.2);
+  -webkit-transform: scale(1.2, 1.2);
+  -moz-transform: scale(1.2, 1.2);
 }
