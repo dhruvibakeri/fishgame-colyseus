@@ -1,110 +1,113 @@
 <div [attr.align]="'center'">
-      <p>from: {{ from | json}}; to: {{to | json}}
-            &nbsp;
-            <button (click)="resetSelectedButton()">reset</button>
-      </p>
-      <p>size: {{size}}
-            <button (click)="this.size = this.size + 1;">up</button>
-            <button (click)="this.size = this.size - 1">down</button>
+  <p>
+    from: {{ from | json }}; to: {{ to | json }}
+    &nbsp;
+    <button (click)="resetSelectedButton()">reset</button>
+  </p>
+  <svg [attr.width]="backDim.width" [attr.height]="backDim.height">
+    <defs>
+      <linearGradient id="grad1" x1="0%" y1="33%" x2="100%" y2="0%">
+        <stop
+          offset="0%"
+          style="stop-color: rgb(161, 215, 205); stop-opacity: 1"
+        />
+        <stop
+          offset="90%"
+          style="stop-color: rgb(51, 196, 222); stop-opacity: 1"
+        />
+      </linearGradient>
+    </defs>
+    <defs>
+      <linearGradient id="grad2" x1="0%" y1="33%" x2="100%" y2="0%">
+        <stop
+          offset="0%"
+          style="stop-color: rgb(18, 133, 154); stop-opacity: 1"
+        />
+        <stop
+          offset="90%"
+          style="stop-color: rgb(87, 169, 154); stop-opacity: 1"
+        />
+      </linearGradient>
+    </defs>
+    <defs>
+      <linearGradient id="grad3" x1="0%" y1="33%" x2="100%" y2="0%">
+        <stop
+          offset="0%"
+          style="stop-color: rgb(154, 174, 177); stop-opacity: 1"
+        />
+        <stop
+          offset="90%"
+          style="stop-color: rgb(73, 77, 76); stop-opacity: 1"
+        />
+      </linearGradient>
+    </defs>
+    <rect width="100%" height="100%" fill-opacity="0" />
 
-      </p>
-      <svg [attr.width]="backDim.width"
-           [attr.height]="backDim.height">
-            <defs>
-                  <linearGradient id="grad1"
-                                  x1="0%"
-                                  y1="33%"
-                                  x2="100%"
-                                  y2="0%">
-                        <stop offset="0%"
-                              style="stop-color:rgb(161, 215, 205);stop-opacity:1" />
-                        <stop offset="90%"
-                              style="stop-color:rgb(51, 196, 222);stop-opacity:1" />
-                  </linearGradient>
-            </defs>
-            <defs>
-                  <linearGradient id="grad2"
-                                  x1="0%"
-                                  y1="33%"
-                                  x2="100%"
-                                  y2="0%">
-                        <stop offset="0%"
-                              style="stop-color:rgb(18, 133, 154);stop-opacity:1" />
-                        <stop offset="90%"
-                              style="stop-color:rgb(87, 169, 154);stop-opacity:1" />
-                  </linearGradient>
-            </defs>
-            <defs>
-                  <linearGradient id="grad3"
-                                  x1="0%"
-                                  y1="33%"
-                                  x2="100%"
-                                  y2="0%">
-                        <stop offset="0%"
-                              style="stop-color:rgb(154, 174, 177);stop-opacity:1" />
-                        <stop offset="90%"
-                              style="stop-color:rgb(73, 77, 76);stop-opacity:1" />
-                  </linearGradient>
-            </defs>
-            <rect width="100%"
-                  height="100%"
-                  fill-opacity="0" />
+    <g *ngFor="let p of boardCells">
+      <g *ngIf="isPolySelected(p) && p.type !== -1">
+        <polygon
+          (click)="clickEvent(p.id)"
+          [attr.points]="p.corners"
+          [attr.id]="p.id"
+          style="fill: url(#grad2)"
+        />
+      </g>
+      <g *ngIf="!isPolySelected(p) && p.type !== -1">
+        <polygon
+          (click)="clickEvent(p.id)"
+          [attr.points]="p.corners"
+          [attr.id]="p.id"
+          style="fill: url(#grad1)"
+        />
+      </g>
+    </g>
 
-            <g *ngFor="let p of boardCells">
-                  <g *ngIf="isPolySelected(p) && p.type !== -1">
-                        <polygon (click)="clickEvent(p.id)"
-                                 [attr.points]="p.corners"
-                                 [attr.id]="p.id"
-                                 style="fill:url(#grad2)" />
-                  </g>
-                  <g *ngIf="!isPolySelected(p) && p.type !== -1">
-                        <polygon (click)="clickEvent(p.id)"
-                                 [attr.points]="p.corners"
-                                 [attr.id]="p.id"
-                                 style="fill:url(#grad1)" />
-                  </g>
-            </g>
+    <!-- displaying the pengiuns! -->
+    <g *ngFor="let penguin of penguinInfo">
+      <rect
+        [attr.width]="penguin.penguinSize"
+        [attr.height]="penguin.penguinSize"
+        [attr.x]="penguin.x"
+        [attr.y]="penguin.y"
+        [attr.rx]="penguin.cornerRounding"
+        (click)="clickEvent(penguin.id)"
+        [attr.style]="penguin.penguinSkinColor"
+      />
+      <ellipse
+        [attr.cx]="penguin.leftEye.center.x"
+        [attr.cy]="penguin.leftEye.center.y"
+        [attr.rx]="penguin.leftEye.radius"
+        [attr.ry]="penguin.leftEye.radius"
+        (click)="clickEvent(penguin.id)"
+        [attr.style]="penguin.leftEye.color"
+      />
+      <ellipse
+        [attr.cx]="penguin.rightEye.center.x"
+        [attr.cy]="penguin.rightEye.center.y"
+        [attr.rx]="penguin.rightEye.radius"
+        [attr.ry]="penguin.rightEye.radius"
+        (click)="clickEvent(penguin.id)"
+        [attr.style]="penguin.rightEye.color"
+      />
+      <polygon
+        [attr.points]="penguin.nose.corners"
+        (click)="clickEvent(penguin.id)"
+        [attr.style]="penguin.nose.color"
+      />
+    </g>
 
-            <!-- displaying the pengiuns! -->
-            <g *ngFor="let penguin of penguinInfo">
-                  <rect [attr.width]="penguin.penguinSize"
-                        [attr.height]="penguin.penguinSize"
-                        [attr.x]="penguin.x"
-                        [attr.y]="penguin.y"
-                        [attr.rx]="penguin.cornerRounding"
-                        (click)="clickEvent(penguin.id)"
-                        [attr.style]="penguin.penguinSkinColor" />
-                  <ellipse [attr.cx]="penguin.leftEye.center.x"
-                           [attr.cy]="penguin.leftEye.center.y"
-                           [attr.rx]="penguin.leftEye.radius"
-                           [attr.ry]="penguin.leftEye.radius"
-                           (click)="clickEvent(penguin.id)"
-                           [attr.style]="penguin.leftEye.color" />
-                  <ellipse [attr.cx]="penguin.rightEye.center.x"
-                           [attr.cy]="penguin.rightEye.center.y"
-                           [attr.rx]="penguin.rightEye.radius"
-                           [attr.ry]="penguin.rightEye.radius"
-                           (click)="clickEvent(penguin.id)"
-                           [attr.style]="penguin.rightEye.color" />
-                  <polygon [attr.points]="penguin.nose.corners"
-                           (click)="clickEvent(penguin.id)"
-                           [attr.style]="penguin.nose.color" />
-            </g>
-
-
-            <g *ngFor="let fishes of fishInfo">
-                  <g *ngFor="let fish of fishes">
-                        <ellipse (click)="clickEvent(fish.id)"
-                                 [attr.cx]="fish.cx"
-                                 [attr.cy]="fish.cy"
-                                 [attr.rx]="fish.rx"
-                                 [attr.ry]="fish.ry"
-                                 [attr.style]="'fill:url(#grad3)'" />
-                  </g>
-            </g>>
-
-
-
-
-      </svg>
+    <g *ngFor="let fishes of fishInfo">
+      <g *ngFor="let fish of fishes">
+        <ellipse
+          (click)="clickEvent(fish.id)"
+          [attr.cx]="fish.cx"
+          [attr.cy]="fish.cy"
+          [attr.rx]="fish.rx"
+          [attr.ry]="fish.ry"
+          [attr.style]="'fill:url(#grad3)'"
+        />
+      </g>
+    </g>
+    >
+  </svg>
 </div>

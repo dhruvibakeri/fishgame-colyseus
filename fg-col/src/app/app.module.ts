@@ -8,6 +8,7 @@ import { SvgBoardComponent } from './svg-board/svg-board.component';
 import { environment } from '../environments/environment';
 import { FormsModule } from '@angular/forms';
 import { GameRoomComponent } from './game-room/gameRoom.component';
+import { CookieModule } from 'ngx-cookie';
 import { PrivateGameRoomComponent } from './private-game-room/private-game-room.component';
 
 @NgModule({
@@ -23,6 +24,7 @@ import { PrivateGameRoomComponent } from './private-game-room/private-game-room.
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     FormsModule,
+    CookieModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

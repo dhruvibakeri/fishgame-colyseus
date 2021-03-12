@@ -2,6 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { GameRoom } from './gameRoom';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/database';
 import { map } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie';
+import { v4 as uuid } from 'uuid';
 
 @Component({
   selector: 'app-gameRoom',
@@ -20,7 +22,10 @@ export class GameRoomComponent {
   roomidValue2 = '';
   join_room = 'no';
 
-  constructor(public db: AngularFireDatabase) {
+  constructor(
+    public db: AngularFireDatabase,
+    private cookieService: CookieService
+  ) {
     this.rooms = db.list(this.dbPath2);
     this.rooms
       .snapshotChanges()
@@ -34,12 +39,78 @@ export class GameRoomComponent {
       });
   }
 
+  ngOnInit() {
+    this.cookieService.put('uuid', uuid());
+  }
+
+  getCookie(key: string) {
+    return this.cookieService.get(key);
+  }
+
   createRoom() {
     this.roomidValue2 = this.db.list(this.dbPath2).push({
       active: true,
       full: false,
       privacy: 'private',
-      players: { [this.nameValue]: true },
+      players: { [this.nameValue]: this.getCookie('uuid') },
+      gameStarted: false,
+      size: 40,
+      gameState: {
+        stage: 'placing',
+        board: [
+          [4, 3, 2, 1, 0],
+          [3, 2, 2, -1, 2],
+          [2, -1, 2, 4, 2],
+          [2, 2, 4, 0, 2],
+          [1, 2, -1, 2, 2],
+        ],
+        players: [
+          /*{
+            color: 'red',
+            score: 0,
+            places: [
+              [0, 0],
+              [0, 4],
+            ],
+            status: 'online',
+            name: 'atharva',
+            depth: 2,
+          },
+          {
+            color: 'white',
+            score: 0,
+            places: [
+              [0, 1],
+              [1, 0],
+            ],
+            status: 'online',
+            name: 'dhruvi',
+            depth: 2,
+          },
+          {
+            color: 'brown',
+            score: 0,
+            places: [
+              [0, 2],
+              [1, 1],
+            ],
+            status: 'online',
+            name: 'thomas',
+            depth: 2,
+          },
+          {
+            color: 'black',
+            score: 0,
+            places: [
+              [0, 3],
+              [1, 2],
+            ],
+            status: 'online',
+            name: 'john',
+            depth: 2,
+          },*/
+        ],
+      },
     }).key;
 
     this.join_room = 'yes';
@@ -59,7 +130,7 @@ export class GameRoomComponent {
         }
         this.db
           .object('/rooms/' + this.roomidValue + '/players')
-          .update({ [this.nameValue2]: true });
+          .update({ [this.nameValue2]: this.getCookie('uuid') });
       }
     }
   }

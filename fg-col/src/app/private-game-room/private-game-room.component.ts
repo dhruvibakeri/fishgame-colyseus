@@ -17,6 +17,8 @@ export class PrivateGameRoomComponent {
   showRoom1 = false;
   roomidValue = '';
   roomRefPlayers: any[];
+  canStartGame = false;
+  size = 40;
 
   constructor(public db: AngularFireDatabase, private route: ActivatedRoute) {
     this.room = db.object('/rooms/' + this.roomidurl);
@@ -30,10 +32,41 @@ export class PrivateGameRoomComponent {
       .subscribe((roomRef) => {
         this.roomRef = roomRef;
         this.roomRefPlayers = this.roomRef.players;
+        if (Object.keys(this.roomRef.players).length >= 2) {
+          this.canStartGame = true;
+        }
       });
   }
 
   startGame() {
     this.start_game = 'yes';
+    this.db.object('/rooms/' + this.roomidurl).update({ gameStarted: true });
+    this.db
+      .object('/rooms/' + this.roomidurl + '/gameState')
+      .update({ players: this.getPlayers() });
+  }
+
+  sizeUp() {
+    this.size = this.size + 1;
+  }
+
+  sizeDown() {
+    this.size = this.size - 1;
+  }
+
+  getPlayers() {
+    let res = [];
+    let colors = ['red', 'brown', 'black', 'white'];
+    for (let name of Object.keys(this.roomRefPlayers)) {
+      res.push({
+        color: colors.pop(),
+        score: 0,
+        places: [],
+        status: 'online',
+        name: name,
+        depth: 2,
+      });
+    }
+    return res;
   }
 }

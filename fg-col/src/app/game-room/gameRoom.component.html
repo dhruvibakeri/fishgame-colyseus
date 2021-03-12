@@ -1,6 +1,6 @@
 <div class="main">
   <div class="home-page-penguins"></div>
-  <div class="same-line-elements" style="margin-left: 29vh; margin-right: 29vh">
+  <div class="same-line-elements">
     <div class="room-form card style-card" style="overflow-y: scroll">
       <div class="card-body change-font">
         <div class="text-large text-boldness-medium text-center">ABOUT</div>
@@ -29,6 +29,7 @@
         </div>
       </div>
     </div>
+    <!-- break -->
     <div class="room-form card style-card" id="hoverbutton">
       <div class="card-body">
         <div class="card style-inner-card" style="height: 23vh">
@@ -65,7 +66,6 @@
                   <button
                     class="btn btn-dark btn-sm change-font text-center font-weight-bold text-semi-large"
                     style="margin-top: 2vh; white-space: normal !important"
-                    (click)="createRoom()"
                   >
                     room created, join the room
                   </button></a
@@ -104,19 +104,46 @@
               [(ngModel)]="roomidValue"
               name="roomid"
             />
-            <nav>
-              <a
-                [routerLink]="['/rooms/', roomidValue]"
-                class="btn btn-dark btn-sm change-font text-center font-weight-bold text-semi-large"
-                style="margin-top: 2vh; white-space: normal !important"
-                role="button"
-                routerLinkActive="active"
-                (click)="joinGameRoom()"
+            <ng-container *ngIf="roomidValue">
+              <ng-container
+                *ngIf="
+                  getRoom(roomidValue).full === false &&
+                  getRoom(roomidValue).gameStarted === false
+                "
               >
-                JOIN</a
-              >
-            </nav>
-            <router-outlet></router-outlet>
+                <nav>
+                  <a
+                    [routerLink]="['/rooms/', roomidValue]"
+                    class="btn btn-dark btn-sm change-font text-center font-weight-bold text-semi-large"
+                    style="margin-top: 2vh; white-space: normal !important"
+                    role="button"
+                    routerLinkActive="active"
+                    (click)="joinGameRoom()"
+                  >
+                    JOIN</a
+                  >
+                </nav>
+                <router-outlet></router-outlet>
+              </ng-container>
+              <ng-container *ngIf="getRoom(roomidValue).full === true">
+                <br />
+                <div
+                  class="change-font font-weight-bold"
+                  style="color: red; background-color: seashell"
+                >
+                  This room is full
+                </div>
+              </ng-container>
+              <ng-container *ngIf="getRoom(roomidValue).gameStarted === true">
+                <br />
+                <div
+                  class="change-font font-weight-bold"
+                  style="color: red; background-color: seashell"
+                >
+                  Game has started, cannot join.
+                </div>
+              </ng-container>
+            </ng-container>
           </div>
         </div>
       </div>
