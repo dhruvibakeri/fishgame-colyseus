@@ -202,11 +202,18 @@ export const placeAvatar = (p: Posn, s: State): State =>
     append(p, head(getPlayers(s)).places), head(getPlayers(s))), tail(getPlayers(s))), s)
 
 /** Move the penguin from "from" to "to" in "state" */
-export const moveAvatar = (from: Posn, to: Posn, s: State): State => ({
-  stage: s.stage,
-  board: mkHole(from, s.board),
-  players: moveAvatarInPlayers(from, to, getPlayers(s), s.board[head(from)][last(from)])
-})
+export const moveAvatar = (from: Posn, to: Posn, s: State): State => {
+  let res = {
+    stage: s.stage,
+    board: mkHole(from, s.board),
+    players: moveAvatarInPlayers(from, to, getPlayers(s), s.board[head(from)][last(from)])
+  }
+  console.log("has moves left", hasMovesLeft(res), res.players)
+  if (!hasMovesLeft(res)) {
+    res = skipMove(res)
+  }
+  return res;
+}
 
 export const mkHole = (p: Posn, b: Board): Board => boardMap(b, (_r, rid, c, cid) => equals([rid, cid], p) ? -1 : c)
 
@@ -214,6 +221,7 @@ export const mkHole = (p: Posn, b: Board): Board => boardMap(b, (_r, rid, c, cid
 export const moveAvatarInPlayers = (from: Posn, to: Posn, players: Player[], fishesToCollect: number): Player[] =>
   append(assoc('score', head(players).score + fishesToCollect,
     assoc('places', replacePosn(head(players).places, from, to), head(players))), tail(players))
+
 
 /** Replaces one position with another in an array of positions.  */
 export const replacePosn = (posns: Posn[], from: Posn, to: Posn): Posn[] => update(findIndex(equals(from), posns), to, posns)
@@ -234,6 +242,15 @@ export const isGameOver = (state: State): boolean => !canAnyPlayerMoveAvatar(sta
 
 /** Are there valid move position from p in s? */
 export const movesLeft = (s: State, p: Posn): boolean => validMovePosns(s, p).length > 0
+
+/** Does current player have moves left */
+export const hasMovesLeft = (s: State): boolean => {
+  let res = false;
+  getPlaces(currentPlayer(s)).map((posn) => {
+    res = res || movesLeft(s, posn)
+  })
+  return res;
+}
 
 /** --------------------------------------------------------- state ---------------------------------------------------------- */
 
