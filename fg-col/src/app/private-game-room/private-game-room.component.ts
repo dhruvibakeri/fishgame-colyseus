@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { GameRoom } from '../game-room/gameRoom';
 import { ActivatedRoute } from '@angular/router';
+import { faSearchPlus, faSearchMinus } from '@fortawesome/free-solid-svg-icons';
+import { CookieService } from 'ngx-cookie';
 
 @Component({
   selector: 'app-private-game-room',
@@ -18,10 +20,21 @@ export class PrivateGameRoomComponent {
   roomidValue = '';
   roomRefPlayers: any[];
   canStartGame = false;
-  size = 40;
+  size = 50;
+  faSearchPlus = faSearchPlus;
+  faSearchMinus = faSearchMinus;
+  yourName: string;
 
-  constructor(public db: AngularFireDatabase, private route: ActivatedRoute) {
+  constructor(
+    public db: AngularFireDatabase,
+    private route: ActivatedRoute,
+    private cookieService: CookieService
+  ) {
     this.room = db.object('/rooms/' + this.roomidurl);
+  }
+
+  getCookie(key: string) {
+    return this.cookieService.get(key);
   }
 
   ngOnInit() {
@@ -35,6 +48,11 @@ export class PrivateGameRoomComponent {
         if (Object.keys(this.roomRef.players).length >= 2) {
           this.canStartGame = true;
         }
+        Object.keys(this.roomRef.players).forEach((key) => {
+          if (this.roomRef.players[key] === this.getCookie('uuid')) {
+            this.yourName = key;
+          }
+        });
       });
   }
 
@@ -68,5 +86,9 @@ export class PrivateGameRoomComponent {
       });
     }
     return res;
+  }
+
+  getPenguinColor(color: string) {
+    return 'fill : ' + color + ';';
   }
 }

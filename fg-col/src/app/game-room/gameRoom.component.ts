@@ -64,52 +64,7 @@ export class GameRoomComponent {
           [2, 2, 4, 0, 2],
           [1, 2, -1, 2, 2],
         ],
-        players: [
-          /*{
-            color: 'red',
-            score: 0,
-            places: [
-              [0, 0],
-              [0, 4],
-            ],
-            status: 'online',
-            name: 'atharva',
-            depth: 2,
-          },
-          {
-            color: 'white',
-            score: 0,
-            places: [
-              [0, 1],
-              [1, 0],
-            ],
-            status: 'online',
-            name: 'dhruvi',
-            depth: 2,
-          },
-          {
-            color: 'brown',
-            score: 0,
-            places: [
-              [0, 2],
-              [1, 1],
-            ],
-            status: 'online',
-            name: 'thomas',
-            depth: 2,
-          },
-          {
-            color: 'black',
-            score: 0,
-            places: [
-              [0, 3],
-              [1, 2],
-            ],
-            status: 'online',
-            name: 'john',
-            depth: 2,
-          },*/
-        ],
+        players: [],
       },
     }).key;
 

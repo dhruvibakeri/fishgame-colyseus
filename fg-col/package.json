@@ -20,6 +20,10 @@
     "@angular/platform-browser": "~11.2.3",
     "@angular/platform-browser-dynamic": "~11.2.3",
     "@angular/router": "~11.2.3",
+    "@fortawesome/angular-fontawesome": "^0.8.2",
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@sweetalert2/ngx-sweetalert2": "^9.0.0",
     "@types/fabric": "^4.2.1",
     "bootstrap": "^4.6.0",
     "fabric": "^4.3.0",
@@ -29,6 +33,7 @@
     "ngx-cookie": "^5.0.2",
     "ramda": "^0.27.1",
     "rxjs": "~6.6.6",
+    "sweetalert2": "^10.15.6",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
   },

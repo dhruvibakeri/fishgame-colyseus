@@ -10,6 +10,9 @@ import { FormsModule } from '@angular/forms';
 import { GameRoomComponent } from './game-room/gameRoom.component';
 import { CookieModule } from 'ngx-cookie';
 import { PrivateGameRoomComponent } from './private-game-room/private-game-room.component';
+import { CommonComponent } from './common/common.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 @NgModule({
   declarations: [
@@ -17,6 +20,7 @@ import { PrivateGameRoomComponent } from './private-game-room/private-game-room.
     SvgBoardComponent,
     GameRoomComponent,
     PrivateGameRoomComponent,
+    CommonComponent,
   ],
   imports: [
     BrowserModule,
@@ -25,6 +29,8 @@ import { PrivateGameRoomComponent } from './private-game-room/private-game-room.
     AngularFireDatabaseModule,
     FormsModule,
     CookieModule.forRoot(),
+    FontAwesomeModule,
+    SweetAlert2Module.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

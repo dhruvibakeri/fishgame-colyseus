@@ -1,0 +1,26 @@
+.roster {
+  background-color: #e0ece5;
+  width: 100%;
+  height: 15vh;
+}
+
+.same-line-elements {
+  display: flex;
+  justify-content: center;
+}
+
+.player-stats {
+  background-color: lightgray;
+  width: 10%;
+  height: 80%;
+  margin: 0.75%;
+  border-radius: 10%;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap");
+
+.new-font {
+  font-family: "Anonymous Pro", monospace;
+  font-weight: 200;
+  font-size: 1.25vw;
+}
