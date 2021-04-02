@@ -1,23 +1,128 @@
-<div>
+<div style="background-color: #fdf3e6">
   <!--display when game has not started-->
   <ng-container *ngIf="roomRef">
     <ng-container *ngIf="roomRef.gameStarted === false">
-      <h3>Players in this room:</h3>
-      <br />
-      <ng-container>
-        <div *ngFor="let name of roomRefPlayers | keyvalue">{{ name.key }}</div>
-      </ng-container>
-      <br />
-      <ng-container *ngIf="canStartGame === false">
-        need 2 or more players to start a game.
-      </ng-container>
-      <ng-container *ngIf="canStartGame === true">
-        <ng-container *ngIf="roomRef.gameStarted === false">
-          <button (click)="startGame()">start game</button>
-          <br />
+      <div
+        style="
+          background-color: #fff;
+          width: 60vw;
+          height: 100vh;
+          margin-left: 20%;
+          position: fixed;
+        "
+      >
+        <h1
+          style="text-align: center; font-size: 200%; margin-top: 10%"
+          class="new-font"
+        >
+          PLAYERS IN THIS ROOM:
+        </h1>
+        <div
+          style="
+            background-color: #f0f1f1;
+            width: 55%;
+            height: 50%;
+            border-radius: 2.5%;
+            margin-top: 5%;
+            margin-left: 22.5%;
+            margin-right: 22.5%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+          "
+        >
+          <div
+            *ngFor="
+              let name of roomRefPlayers | keyvalue;
+              let indexOfelement = index
+            "
+            class="new-font"
+            style="
+              width: 50%;
+              height: 50%;
+              display: flex;
+              justify-content: center;
+              text-align: center;
+              border: #ebebeb solid 1.5vw;
+              border-radius: 5%;
+            "
+          >
+            <svg
+              width="100%"
+              height="100%"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              style="margin-left: 5%"
+            >
+              <style>
+                .change-font {
+                  font: 80% sans-serif;
+                }
+              </style>
+              <g transform="translate(35, 20)">
+                <rect
+                  width="30%"
+                  height="33%"
+                  rx="6%"
+                  ry="6%"
+                  [attr.style]="getPlayerColor(indexOfelement)"
+                />
+                <ellipse
+                  cx="7%"
+                  cy="10%"
+                  rx="4%"
+                  ry="4%"
+                  style="fill: goldenrod"
+                />
+                <ellipse
+                  cx="23%"
+                  cy="10%"
+                  rx="4%"
+                  ry="4%"
+                  style="fill: goldenrod"
+                />
+                <polygon points="11,18 19,18 15,25" style="fill: goldenrod" />
+              </g>
+              <text
+                x="50%"
+                y="70%"
+                dominant-baseline="middle"
+                text-anchor="middle"
+                class="change-font"
+              >
+                {{ name.key }}
+              </text>
+            </svg>
+          </div>
+        </div>
+        <h1
+          style="text-align: center; font-size: 150%; margin-top: 5%"
+          class="new-font"
+        >
+          INVITE CODE: {{ roomidurl }}
+        </h1>
+        <ng-container *ngIf="canStartGame === false">
+          <div class="text-center">
+            <h1
+              style="text-align: center; font-size: 130%; margin-top: 5%"
+              class="new-font"
+            >
+              ** Need two or more players to start the game **
+            </h1>
+          </div>
         </ng-container>
-      </ng-container>
-      Invite friends with this code : {{ roomidurl }}
+        <ng-container *ngIf="canStartGame === true">
+          <ng-container *ngIf="roomRef.gameStarted === false">
+            <div class="text-center">
+              <br />
+              <button (click)="startGame()" class="btn btn-dark">
+                START GAME
+              </button>
+            </div>
+            <br />
+          </ng-container>
+        </ng-container>
+      </div>
     </ng-container>
   </ng-container>
 
@@ -73,6 +178,7 @@
           </svg>
         </div>
       </div>
+
       <br />
       <br />
       <br />

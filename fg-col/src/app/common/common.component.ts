@@ -435,9 +435,15 @@ export const moveAvatar = (from: Posn, to: Posn, s: State): State => {
       s.board[head(from)][last(from)]
     ),
   };
-  if (!hasMovesLeft(res)) {
-    res = skipMove(res);
+
+  if (!isGameOver(res)) {
+    while (!hasMovesLeft(res)) {
+      res = skipMove(res);
+    }
   }
+  /*if (!hasMovesLeft(res)) {
+    res = skipMove(res);
+  }*/
   return res;
 };
 

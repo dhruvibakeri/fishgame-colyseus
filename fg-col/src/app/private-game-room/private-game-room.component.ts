@@ -24,6 +24,7 @@ export class PrivateGameRoomComponent {
   faSearchPlus = faSearchPlus;
   faSearchMinus = faSearchMinus;
   yourName: string;
+  colors = ['white', 'black', 'brown', 'red'];
 
   constructor(
     public db: AngularFireDatabase,
@@ -90,5 +91,9 @@ export class PrivateGameRoomComponent {
 
   getPenguinColor(color: string) {
     return 'fill : ' + color + ';';
+  }
+
+  getPlayerColor(index: number) {
+    return 'fill :' + this.colors[index] + ';';
   }
 }

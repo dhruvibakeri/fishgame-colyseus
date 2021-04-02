@@ -1,7 +1,6 @@
 <div class="main">
   <div class="home-page-penguins"></div>
   <div class="same-line-elements">
-
     <div class="room-form card style-card" id="hoverbutton">
       <div class="card-body">
         <div class="card style-inner-card" style="height: 23vh">
@@ -30,7 +29,7 @@
             <ng-container *ngIf="join_room === 'yes'">
               <nav>
                 <a
-                  [routerLink]="['/rooms/', roomidValue2]"
+                  [routerLink]="['/', roomidValue2]"
                   class=""
                   role="button"
                   routerLinkActive="active"
@@ -85,7 +84,7 @@
               >
                 <nav>
                   <a
-                    [routerLink]="['/rooms/', roomidValue]"
+                    [routerLink]="['/', roomidValue]"
                     class="btn btn-dark btn-sm change-font text-center font-weight-bold text-semi-large"
                     style="margin-top: 2vh; white-space: normal !important"
                     role="button"
@@ -141,14 +140,28 @@
           3. Once a room has 2-4 players, you can start the game.
           <br />
           <br />
-          4. ...
+          4. Once the game has started, each player places all their penguins on
+          tiles according to their turn.
           <br />
           <br />
-          5. ...
+          5. After all penguins have been placed, players can start moving their
+          penguins to their desired tile (one that would get them the most
+          fish).
+          <br />
+          <br />
+          6. A penguin can only move in straight lines (across the edges of the
+          hexagon tile).
+          <br />
+          <br />
+          7. After each move, the number of fish on the tile the penguin moved
+          from is added to the player's score.
+          <br />
+          <br />
+          8. The game ends when none of the players have any moves left (the
+          player with the highest score wins).
         </div>
       </div>
     </div>
     <!-- break -->
-
   </div>
 </div>

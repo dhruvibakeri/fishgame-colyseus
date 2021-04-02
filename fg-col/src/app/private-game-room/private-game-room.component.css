@@ -17,6 +17,14 @@
   border-radius: 10%;
 }
 
+.player-names {
+  background-color: #f0f1f1;
+  width: 45%;
+  height: 30%;
+  margin: 2%;
+  border-radius: 10%;
+}
+
 @import url("https://fonts.googleapis.com/css2?family=Anonymous+Pro&display=swap");
 
 .new-font {

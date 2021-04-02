@@ -4,9 +4,9 @@ import { GameRoomComponent } from './game-room/gameRoom.component';
 import { PrivateGameRoomComponent } from './private-game-room/private-game-room.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'rooms', pathMatch: 'full' },
-  { path: 'rooms', component: GameRoomComponent },
-  { path: 'rooms/:id', component: PrivateGameRoomComponent },
+  /*{ path: '', redirectTo: 'rooms', pathMatch: 'full' },*/
+  { path: '', component: GameRoomComponent },
+  { path: ':id', component: PrivateGameRoomComponent },
 ];
 
 @NgModule({

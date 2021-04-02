@@ -25,6 +25,7 @@ import {
   validMovePosns,
   isGameOver,
   getWinners,
+  hasMovesLeft,
 } from '../common/common.component';
 import { AngularFireDatabase, AngularFireObject } from '@angular/fire/database';
 import { GameRoom } from '../game-room/gameRoom';
@@ -101,6 +102,7 @@ export class SvgBoardComponent {
       if (isGameOver(stateChange)) {
         this.gameOver = true;
         const winners = getWinners(stateChange);
+        console.log(winners);
         Swal.fire({
           title: 'GAME OVER!',
           html:
@@ -157,16 +159,37 @@ export class SvgBoardComponent {
             !isPenguinAtPosn(this.curState, clicked) &&
             !isHoleAtPos(this.curState, clicked)
           ) {
+            let gameStateTemp: State = placeAvatar(clicked, this.curState);
             this.db
               .object('/rooms/' + this.roomidurl)
-              .update({ gameState: placeAvatar(clicked, this.curState) });
+              .update({ gameState: gameStateTemp });
             if (
               getPenguinPosns(this.curState).length ===
-              (6 - getPlayers(this.curState).length) * 2 - 1
+              (6 - getPlayers(this.curState).length) *
+                getPlayers(this.curState).length -
+                1
             ) {
+              while (!hasMovesLeft(gameStateTemp)) {
+                gameStateTemp = skipMove(gameStateTemp);
+              }
+
+              this.db
+                .object('/rooms/' + this.roomidurl)
+                .update({ gameState: gameStateTemp });
               this.db
                 .object('/rooms/' + this.roomidurl + '/gameState')
                 .update({ stage: 'playing' });
+              Swal.fire({
+                title: 'All penguins have been placed.',
+                html: 'You can start begin moving the penguins :)',
+                focusConfirm: false,
+                confirmButtonText: 'OK',
+                background: '#e0ece5',
+                buttonsStyling: false,
+                customClass: {
+                  confirmButton: 'btn btn-dark',
+                },
+              });
             }
           }
         } else {
